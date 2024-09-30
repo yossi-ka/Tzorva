@@ -1,15 +1,15 @@
-import React, {  useState } from "react";
-import { useNavigate } from "react-router-dom";
+import classes from "../css/home.module.css";
+import React, { useEffect} from "react";
 
 function Home() {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-//   useEffect(() => {
-//     if (!user) {
-//       navigate("/login", { replace: true });
-//     }
-//   }, []);
-  return <div>Home</div>;
+
+  useEffect(() => {
+    document.title = "צורבא - דף הבית";
+  }, []);
+  return (
+    <div className={classes.container}>
+    </div>
+  );
 }
 
 export default Home;

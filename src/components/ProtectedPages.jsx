@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
+import Header from "./Header";
 
 function ProtectedPages() {
   const navigate = useNavigate();
   const auth = getAuth();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         navigate("/login");
@@ -16,7 +17,11 @@ function ProtectedPages() {
     return () => unsubscribe();
   }, [auth, navigate]);
 
-  return <Outlet />;
+  return (
+    <>
+      <Header /> <Outlet />
+    </>
+  );
 }
 
 export default ProtectedPages;

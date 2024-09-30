@@ -1,12 +1,16 @@
-import './App.css';
-import Routing from './Routing.jsx';
+import { useState, createContext } from "react";
+import "./App.css";
+import Routing from "./Routing.jsx";
+
+export const UserContext = createContext();
 
 function App() {
+  const [user, setUser] = useState({});
   return (
     <div className="App">
-      <header className="App-header">
+      <UserContext.Provider value={{ user, setUser }}>
         <Routing />
-      </header>
+      </UserContext.Provider>
     </div>
   );
 }

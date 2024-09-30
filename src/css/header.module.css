@@ -1,0 +1,49 @@
+.header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  z-index: 1;
+}
+
+.header .img {
+  width: 170px;
+  cursor: pointer;
+}
+
+.btnProfile,
+.btnLogout {
+  padding: 10px 15px; /* צמצום הרוחב של padding */
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btnProfile {
+  font-size: 20px;
+  background-color: #dbdbdb;
+
+  color: black;
+  margin-right: 10px;
+}
+
+.btnProfile:hover {
+  background-color: rgb(203, 202, 202);
+}
+
+.btnLogout {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btnLogout:hover {
+  background-color: #c82333;
+}

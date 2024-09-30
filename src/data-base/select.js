@@ -1,5 +1,5 @@
-import db from "./config.js";
-import { getDocs, collection, doc } from "firebase/firestore";
+import { db } from "./config.js";
+import { getDocs, collection, query, where } from "firebase/firestore";
 
 const getAllUsers = async () => {
   const arr = [];
@@ -12,16 +12,21 @@ const getAllUsers = async () => {
   return arr;
 };
 
-const getUser = async (id) => {
-  const docRef = doc(collection(db, "users", id));
-  const document = await docRef.get();
-  if (!document.exists) {
+const findUserByUID = async (uid) => {
+  const q = query(collection(db, "users"), where("UID", "==", uid));
+  const querySnapshot = await getDocs(q);
+
+  if (querySnapshot.empty) {
     console.log("No such document!");
+    return null;
   } else {
-    console.log("Document data:", document.data());
+    let userData = null;
+    querySnapshot.forEach((doc) => {
+      userData = { id: doc.id, ...doc.data() };
+    });
+    console.log("Document data:", userData);
+    return userData;
   }
 };
 
-getUser("5t2C1JbaFIT6hLQO6bJb");
-
-export { getAllUsers };
+export { getAllUsers, findUserByUID };
