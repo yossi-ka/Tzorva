@@ -1,13 +1,25 @@
 import classes from "../css/header.module.css";
 import { logout } from "../data-base/authentication";
 import React, { useEffect, useContext } from "react";
+import { getCurrentUser } from "../data-base/authentication";
+import { findUserByUID } from "../data-base/select";
 
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
 
 function Header() {
   const { user, setUser } = useContext(UserContext);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const unsubscribe = getCurrentUser(async (user) => {
+      const userDetails = await findUserByUID(user.uid);
+      setUser(userDetails);
+    });
+    return () => {
+      if (typeof unsubscribe === "function") {
+        unsubscribe(); // בטל את ההאזנה בעת הצורך
+      }
+    };
+  }, []);
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();

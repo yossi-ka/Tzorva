@@ -1,0 +1,85 @@
+/* .studentsContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.student {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+} */
+
+/* עיצוב כותרות */
+.title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 20px 0;
+  color: #333;
+}
+
+.h4 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* עיצוב קונטיינר הכרטיסים */
+.studentCardContainer {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+
+  /* גובה ורוחב אחידים לכל הכרטיסים */
+  min-height: 200px;
+  width: 300px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.studentsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.studentCardContainer:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* עיצוב שם תלמיד */
+.studentName {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+/* עיצוב עיר */
+.studentCity {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+/* עיצוב כללי לכרטיס */
+.student {
+  display: flex;
+  justify-content: center;
+}

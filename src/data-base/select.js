@@ -5,8 +5,6 @@ const getAllUsers = async () => {
   const arr = [];
   const querySnapshot = await getDocs(collection(db, "users"));
   querySnapshot.forEach((doc) => {
-    // console.log("Document data:", doc.data());
-
     arr.push(doc.data());
   });
   return arr;
@@ -24,9 +22,41 @@ const findUserByUID = async (uid) => {
     querySnapshot.forEach((doc) => {
       userData = { id: doc.id, ...doc.data() };
     });
-    console.log("Document data:", userData);
     return userData;
   }
 };
 
-export { getAllUsers, findUserByUID };
+const getAllStudents = async () => {
+  const arr = [];
+  const querySnapshot = await getDocs(collection(db, "students"));
+  querySnapshot.forEach((doc) => {
+    arr.push(doc.data());
+  });
+  return arr;
+};
+
+const getStudents = async (uid) => {
+  const allStudents = await getAllStudents();
+  try {
+    const user = await findUserByUID(uid);
+    if (user.job_title === "מנהל") {
+      return allStudents;
+    } else {
+      const students = [];
+      const studArr = user["access permissions"]?.students || [];
+      studArr.forEach((id) => {
+        const student = allStudents.find(
+          (student) => student.student_id === id
+        );
+        if (student) {
+          students.push(student);
+        }
+      });
+      return students;
+    }
+  } catch (e) {
+    return [];
+  }
+};
+
+export { getAllUsers, findUserByUID, getStudents };

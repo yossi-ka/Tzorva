@@ -1,5 +1,5 @@
 import classes from "../css/home.module.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
@@ -7,6 +7,7 @@ function Home() {
   useEffect(() => {
     document.title = "צורבא - דף הבית";
   }, []);
+
   return (
     <div className={classes.container}>
       <h1 className={classes.title}>ברוך הבא למערכת ניהול צורבא</h1>
@@ -16,7 +17,7 @@ function Home() {
             <h1 className={classes.h1}>ניהול תלמידים</h1>
             <span
               style={{ fontSize: "40px" }}
-              class="material-symbols-outlined"
+              className="material-symbols-outlined"
             >
               diversity_3
             </span>
@@ -39,7 +40,7 @@ function Home() {
             <h1 className={classes.h1}>ניהול כספים</h1>{" "}
             <span
               style={{ fontSize: "40px" }}
-              class="material-symbols-outlined"
+              className="material-symbols-outlined"
             >
               attach_money
             </span>
@@ -61,8 +62,7 @@ function Home() {
             <h1 className={classes.h1}> ניהול משתמשים</h1>
             <span
               style={{ fontSize: "40px" }}
-              
-              class="material-symbols-outlined"
+              className="material-symbols-outlined"
             >
               manage_accounts
             </span>

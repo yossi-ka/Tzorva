@@ -5,6 +5,7 @@ import {
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { app } from "./config.js"; // ייבוא האפליקציה שיצרנו קודם
 
@@ -27,10 +28,19 @@ const login = async (email, password) => {
 const logout = async () => {
   try {
     await signOut(auth);
-    console.log("המשתמש התנתק בהצלחה");
   } catch (error) {
     console.error("שגיאה במהלך ניתוק המשתמש:", error);
   }
+};
+
+const getCurrentUser = (callback) => {
+  return onAuthStateChanged(auth, (user) => {
+    if (user) {
+      callback(user);  // אם יש משתמש, העבר אותו חזרה דרך ה-callback
+    } else {
+      callback(null);  // אם אין משתמש, העבר null
+    }
+  });
 };
 
 const getCurrentPassword = async (email, currentPassword) => {
@@ -55,4 +65,4 @@ const updateUserPassword = async (newPassword) => {
   }
 };
 
-export { login, logout, updateUserPassword, getCurrentPassword };
+export { login, logout, updateUserPassword, getCurrentPassword, getCurrentUser };
