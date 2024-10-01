@@ -4,6 +4,9 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import ProtectedPages from "./components/ProtectedPages";
 import Profile from "./components/Profile";
+import Finance from "./components/Finance";
+import Students from "./components/Students";
+import UsersManage from "./components/UsersManage";
 
 function Routing() {
   return (
@@ -13,6 +16,9 @@ function Routing() {
         <Route element={<ProtectedPages />}>
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/finance" element={<Finance />} />
+          <Route path="/students" element={<Students />} />
+          <Route path="/users-manage" element={<UsersManage />} />
         </Route>
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
