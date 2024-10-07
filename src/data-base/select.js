@@ -39,7 +39,7 @@ const getStudents = async (uid) => {
   const allStudents = await getAllStudents();
   try {
     const user = await findUserByUID(uid);
-    if (user.job_title === "מנהל") {
+    if (user.job_title === "מנהל ארגון") {
       return allStudents;
     } else {
       const students = [];

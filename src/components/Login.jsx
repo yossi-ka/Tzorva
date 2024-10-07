@@ -40,7 +40,7 @@ function Login() {
           />
           <h1 className={classes.h1}>התחברות למערכת</h1>
           <label className={classes.label} htmlFor="username">
-            שם משתמש:
+            מייל:
           </label>
           <input
             className={classes.input}

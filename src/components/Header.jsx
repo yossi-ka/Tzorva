@@ -11,12 +11,16 @@ function Header() {
   const { user, setUser } = useContext(UserContext);
   useEffect(() => {
     const unsubscribe = getCurrentUser(async (user) => {
-      const userDetails = await findUserByUID(user.uid);
-      setUser(userDetails);
+      if (user) {
+        const userDetails = await findUserByUID(user.uid);
+        setUser(userDetails);
+      } else {
+        setUser(null);
+      }
     });
     return () => {
       if (typeof unsubscribe === "function") {
-        unsubscribe(); // בטל את ההאזנה בעת הצורך
+        unsubscribe();
       }
     };
   }, [setUser]);

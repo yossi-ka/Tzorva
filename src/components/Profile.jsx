@@ -36,7 +36,7 @@ function Profile() {
       >
         <h1 className={classes.title}>פרופיל משתמש</h1>
         <p className={classes.info}>
-          שם משתמש: {user.first_name + " " + user.last_name}
+          שם: {user.first_name + " " + user.last_name}
         </p>
         <p className={classes.info}>תפקיד: {user.job_title}</p>
         <p className={classes.info}>
@@ -60,7 +60,7 @@ function Profile() {
             🔑 שנה סיסמא
           </button>
           <button className={classes.button} onClick={() => navigate(-1)}>
-            חזרה
+            חזרה ⬅️
           </button>
         </div>
       </div>
