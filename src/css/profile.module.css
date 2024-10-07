@@ -113,6 +113,7 @@
   opacity: 0.5;
 }
 .optionsProfile {
+  z-index: 1000;
   position: absolute;
   top: 50%;
   left: 50%;
