@@ -45,6 +45,7 @@ function Header() {
       </button>
       <button className={classes.btnLogout} onClick={handleLogout}>
         התנתקות
+        <span class="material-symbols-outlined">logout</span>
       </button>
     </div>
   );

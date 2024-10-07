@@ -1,3 +1,25 @@
+.headerAddStudentBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -20px 20px 20px 20px;
+  font-size: 20px;
+}
+
+.addStudentBtn {
+  background-color: #cd21f3;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 20px;
+}
+
+.addStudentBtn:hover {
+  background-color: #a91dc8;
+}
 .studentCardContainer {
   display: flex;
   align-items: center;
@@ -103,6 +125,81 @@
   transform: translateY(-2px);
 }
 
+.addStudentForm {
+  position: fixed;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  font-size: 20px;
+}
+
+.addStudentForm label {
+  margin-bottom: 10px;
+}
+
+.addStudentForm input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.addStudentForm input:focus {
+  outline: none;
+  border: 2px solid #1c81d3;
+}
+
+.saveBtn {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.cancelBtn {
+  width: 100%;
+  padding: 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.saveBtn:hover,
+.cancelBtn:hover {
+  opacity: 0.8;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* רקע כהה עם שקיפות */
+  z-index: 999; /* מתחת ל-studentDetails */
+}
+
 @media (max-width: 1200px) {
   .studentCardContainer {
     flex-wrap: wrap;
@@ -134,4 +231,20 @@
     flex: 1 1 calc(50% - 5px);
     margin: 5px 0;
   }
+}
+
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.formControl {
+  width: 130px;
+  margin: 10px;
+  background-color: #fff;
 }
