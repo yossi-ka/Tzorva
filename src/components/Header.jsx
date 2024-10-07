@@ -19,7 +19,7 @@ function Header() {
         unsubscribe(); // בטל את ההאזנה בעת הצורך
       }
     };
-  }, []);
+  }, [setUser]);
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
