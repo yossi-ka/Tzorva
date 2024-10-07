@@ -79,6 +79,30 @@ function Home() {
             </button>
           </div>
         </div>
+        <div className={`${classes.option} ${classes.treatmentsArea}`}>
+          <div
+            className={`${classes.treatmentsAreaTitle} ${classes.areaTitle}`}
+          >
+            <h1 className={classes.h1}>ניהול טיפולים</h1>
+            <span
+              style={{ fontSize: "40px" }}
+              className="material-symbols-outlined"
+            >
+              format_list_bulleted
+            </span>
+          </div>
+          <div className={classes.areaBot}>
+            <p className={classes.p}>
+              צפייה בדוחו"ת טיפולים, עדכון והוספת טיפולים לתלמידים.
+            </p>
+            <button
+              className={`${classes.treatmentsBtn} ${classes.btn}`}
+              onClick={() => navigate("/treatments")}
+            >
+              כניסה לניהול טיפולים
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

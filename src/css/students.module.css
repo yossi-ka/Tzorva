@@ -1,85 +1,137 @@
-/* .studentsContainer {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 36px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.student {
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-} */
-
-/* עיצוב כותרות */
-.title {
-  font-size: 2.5rem;
-  text-align: center;
-  margin: 20px 0;
-  color: #333;
-}
-
-.h4 {
-  text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: #555;
-}
-
-/* עיצוב קונטיינר הכרטיסים */
 .studentCardContainer {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  text-align: center;
-
-  /* גובה ורוחב אחידים לכל הכרטיסים */
-  min-height: 200px;
-  width: 300px;
-  box-sizing: border-box;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.studentsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin: 0px 20px 20px 20px;
+  transition: all 0.3s ease;
 }
 
 .studentCardContainer:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: #eeeeee;
 }
 
-/* עיצוב שם תלמיד */
+.urgencyLevel {
+  width: 8px;
+  height: 60px;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
 .studentName {
-  font-size: 1.8rem;
-  color: #2c3e50;
-  margin-bottom: 10px;
+  flex: 2;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
 }
 
-/* עיצוב עיר */
-.studentCity {
-  font-size: 1.2rem;
-  color: #7f8c8d;
-}
-
-/* עיצוב כללי לכרטיס */
-.student {
+.studentSchoolAndClass {
+  flex: 2;
   display: flex;
+  flex-direction: column;
+}
+
+.city,
+.class {
+  margin: 0;
+  color: #666;
+}
+
+.city {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.class {
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.btns {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.editBtn,
+.deleteBtn,
+.docsBtn,
+.treatmentsBtn {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  width: 110px; /* קובע רוחב אחיד לכל הכפתורים */
+  white-space: nowrap;
+}
+
+.editBtn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.deleteBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+.docsBtn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.treatmentsBtn {
+  background-color: #ffc107;
+  color: black;
+}
+
+.editBtn:hover,
+.deleteBtn:hover,
+.docsBtn:hover,
+.treatmentsBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1200px) {
+  .studentCardContainer {
+    flex-wrap: wrap;
+  }
+
+  .studentName,
+  .studentSchoolAndClass {
+    flex: 1 1 100%;
+    margin-bottom: 15px;
+  }
+
+  .btns {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .btns {
+    flex-wrap: wrap;
+  }
+
+  .editBtn,
+  .deleteBtn,
+  .docsBtn,
+  .treatmentsBtn {
+    flex: 1 1 calc(50% - 5px);
+    margin: 5px 0;
+  }
 }

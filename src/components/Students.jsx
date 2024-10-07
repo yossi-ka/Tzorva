@@ -1,7 +1,7 @@
 import classes from "../css/students.module.css";
 import React, { useEffect, useState, useContext } from "react";
 // import { useNavigate } from "react-router-dom";
-import StudentsCard from "./StudentsCard";
+import StudentsCard from "./students-comp/StudentsCard";
 import { getStudents } from "../data-base/select";
 
 import { UserContext } from "../App";
@@ -25,8 +25,10 @@ function Students() {
       <div className={classes.studentsContainer}>
         {students.map((student, index) => {
           return (
-            <div className={classes.student} key={index}>
-              <StudentsCard {...student} />
+            <div key={index}>
+              <div className={classes.student}>
+                <StudentsCard student={student} />
+              </div>
             </div>
           );
         })}

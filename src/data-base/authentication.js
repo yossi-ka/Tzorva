@@ -59,7 +59,6 @@ const getCurrentPassword = async (email, currentPassword) => {
 const updateUserPassword = async (newPassword) => {
   try {
     await updatePassword(auth.currentUser, newPassword);
-    console.log("הסיסמא עודכנה בהצלחה");
   } catch (error) {
     console.error("שגיאה במהלך עדכון הסיסמא:", error);
   }

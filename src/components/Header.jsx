@@ -38,7 +38,10 @@ function Header() {
         className={classes.btnProfile}
         onClick={() => navigate("/profile")}
       >
-        שלום, הרב {user.first_name + " " + user.last_name}
+        שלום, הרב{" "}
+        {user?.first_name && user?.last_name
+          ? user.first_name + " " + user.last_name
+          : "..."}
       </button>
       <button className={classes.btnLogout} onClick={handleLogout}>
         התנתקות
