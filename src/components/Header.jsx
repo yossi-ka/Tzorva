@@ -19,7 +19,7 @@ function Header() {
         unsubscribe(); // בטל את ההאזנה בעת הצורך
       }
     };
-  }, [setUser]);
+  }, []);
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
@@ -45,7 +45,7 @@ function Header() {
       </button>
       <button className={classes.btnLogout} onClick={handleLogout}>
         התנתקות
-        <span class="material-symbols-outlined">logout</span>
+        <span className="material-symbols-outlined">logout</span>
       </button>
     </div>
   );

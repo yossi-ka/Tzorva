@@ -36,9 +36,9 @@ const logout = async () => {
 const getCurrentUser = (callback) => {
   return onAuthStateChanged(auth, (user) => {
     if (user) {
-      callback(user);  // אם יש משתמש, העבר אותו חזרה דרך ה-callback
+      callback(user); // אם יש משתמש, העבר אותו חזרה דרך ה-callback
     } else {
-      callback(null);  // אם אין משתמש, העבר null
+      callback(null); // אם אין משתמש, העבר null
     }
   });
 };
@@ -64,4 +64,10 @@ const updateUserPassword = async (newPassword) => {
   }
 };
 
-export { login, logout, updateUserPassword, getCurrentPassword, getCurrentUser };
+export {
+  login,
+  logout,
+  updateUserPassword,
+  getCurrentPassword,
+  getCurrentUser,
+};

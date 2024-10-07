@@ -43,7 +43,7 @@ const getStudents = async (uid) => {
       return allStudents;
     } else {
       const students = [];
-      const studArr = user["access permissions"]?.students || [];
+      const studArr = user["access_permissions"]?.students || [];
       studArr.forEach((id) => {
         const student = allStudents.find(
           (student) => student.student_id === id

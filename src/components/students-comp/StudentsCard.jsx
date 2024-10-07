@@ -1,8 +1,7 @@
 import React from "react";
 import classes from "../../css/students.module.css";
 
-function Student({ student }) {
-
+function StudentCard({ student, deleteStudent, showDocs }) {
   const colorUrgency =
     student.urgency_level === "גבוה"
       ? "red"
@@ -24,13 +23,13 @@ function Student({ student }) {
         <p className={classes.class}>{`כיתה ${student.class}'`}</p>
       </div>
       <div className={classes.btns}>
-        <button className={classes.editBtn}>📝 ערוך</button>
-        <button className={classes.deleteBtn}>🗑️ מחק</button>
-        <button className={classes.docsBtn}>📄 מסמכים</button>
+        {deleteStudent && <button className={classes.editBtn}>📝 ערוך</button>}
+        {deleteStudent && <button className={classes.deleteBtn}>🗑️ מחק</button>}
+        {showDocs && <button className={classes.docsBtn}>📄 מסמכים</button>}
         <button className={classes.treatmentsBtn}>📃 טיפולים</button>
       </div>
     </div>
   );
 }
 
-export default Student;
+export default StudentCard;
