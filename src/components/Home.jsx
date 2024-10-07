@@ -1,5 +1,5 @@
 import classes from "../css/home.module.css";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 
 function Home() {

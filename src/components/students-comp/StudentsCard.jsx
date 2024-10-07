@@ -1,9 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import classes from "../../css/students.module.css";
-import { UserContext } from "../../App";
 
 function Student({ student }) {
-  const { user } = useContext(UserContext);
 
   const colorUrgency =
     student.urgency_level === "גבוה"

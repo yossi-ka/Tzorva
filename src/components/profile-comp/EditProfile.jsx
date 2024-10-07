@@ -1,12 +1,9 @@
 import classes from "../../css/profile.module.css";
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-
 import { UserContext } from "../../App";
 
 function EditProfile({ setUpdateProfile }) {
-  const { user, setUser } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
