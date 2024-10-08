@@ -7,6 +7,7 @@ import Profile from "./components/Profile";
 import Finance from "./components/Finance";
 import Students from "./components/Students";
 import UsersManage from "./components/UsersManage";
+import Archive from "./components/Archive";
 
 function Routing() {
   return (
@@ -19,6 +20,7 @@ function Routing() {
           <Route path="/finance" element={<Finance />} />
           <Route path="/students" element={<Students />} />
           <Route path="/users-manage" element={<UsersManage />} />
+          <Route path="/archive" element={<Archive />} />
         </Route>
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

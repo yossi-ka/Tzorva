@@ -59,4 +59,11 @@ const getStudents = async (uid) => {
   }
 };
 
-export { getAllUsers, findUserByUID, getStudents };
+
+
+export {
+  getAllUsers,
+  findUserByUID,
+  getStudents,
+  getAllStudents,
+};

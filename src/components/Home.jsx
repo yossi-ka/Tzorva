@@ -90,6 +90,7 @@ function Home() {
             </div>
           </div>
         )}
+
         <div className={`${classes.option} ${classes.treatmentsArea}`}>
           <div
             className={`${classes.treatmentsAreaTitle} ${classes.areaTitle}`}
@@ -111,6 +112,29 @@ function Home() {
               onClick={() => navigate("/treatments")}
             >
               כניסה לניהול טיפולים
+            </button>
+          </div>
+        </div>
+
+        <div className={`${classes.option} ${classes.archiveArea}`}>
+          <div className={`${classes.archiveAreaTitle} ${classes.areaTitle}`}>
+            <h1 className={classes.h1}>ארכיון</h1>
+            <span
+              style={{ fontSize: "40px" }}
+              className="material-symbols-outlined"
+            >
+              archive
+            </span>
+          </div>
+          <div className={classes.areaBot}>
+            <p className={classes.p}>
+              צפיה בארכיון התלמידים שטופלו ע"י הארגון, עדכון ומחיקת תיעודים.{" "}
+            </p>
+            <button
+              className={`${classes.archiveBtn} ${classes.btn}`}
+              onClick={() => navigate("/archive")}
+            >
+              כניסה לארכיון
             </button>
           </div>
         </div>

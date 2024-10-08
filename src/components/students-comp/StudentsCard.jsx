@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "../../css/students.module.css";
+import DeleteStudent from "./DeleteStudent";
 
-function StudentCard({ student, deleteStudent, showDocs }) {
+function StudentCard({ student, deleteStudent, showDocs, getstud }) {
+  const [showDeleteForm, setShowDeleteForm] = useState(false);
   const colorUrgency =
     student.urgency_level === "גבוה"
       ? "red"
@@ -24,10 +26,25 @@ function StudentCard({ student, deleteStudent, showDocs }) {
       </div>
       <div className={classes.btns}>
         {deleteStudent && <button className={classes.editBtn}>📝 ערוך</button>}
-        {deleteStudent && <button className={classes.deleteBtn}>🗑️ מחק</button>}
+        {deleteStudent && (
+          <button
+            className={classes.deleteBtn}
+            onClick={() => setShowDeleteForm(!showDeleteForm)}
+          >
+            🗑️ מחק
+          </button>
+        )}
         {showDocs && <button className={classes.docsBtn}>📄 מסמכים</button>}
         <button className={classes.treatmentsBtn}>📃 טיפולים</button>
       </div>
+      {showDeleteForm && (
+        <>
+          <div className={classes.overlay} onClick={() => setShowDeleteForm(false)}></div>
+          <div className={classes.deleteFormArea}>
+            <DeleteStudent getstud={getstud} student={student} setShowDeleteForm={setShowDeleteForm}  />
+          </div>
+        </>
+      )}
     </div>
   );
 }

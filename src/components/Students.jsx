@@ -10,8 +10,8 @@ function Students() {
   //   const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
-  const [addStudent, setAddStudent] = useState(null);
-  const [deleteStudent, setDeleteStudent] = useState(null);
+  const [addStudent, setAddStudent] = useState(false);
+  const [deleteStudent, setDeleteStudent] = useState(false);
   const [showDocs, setShowDocs] = useState(false);
   const [students, setStudents] = useState([]);
 
@@ -41,6 +41,7 @@ function Students() {
             <div key={index}>
               <div className={classes.student}>
                 <StudentsCard
+                  getstud={getstud}
                   student={student}
                   deleteStudent={deleteStudent}
                   showDocs={showDocs}

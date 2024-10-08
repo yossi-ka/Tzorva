@@ -67,6 +67,11 @@
   background-color: #f50bed;
 }
 
+.archiveAreaTitle,
+.archiveBtn {
+  background-color: brown;
+}
+
 .h1 {
   font-size: 1.75rem;
   font-weight: bold;

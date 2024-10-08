@@ -9,4 +9,8 @@ const addUser = async (user) => {
   await addDoc(collection(db, "users"), user);
 };
 
-export { addStudent, addUser };
+const addArchive = async (archive) => {
+  await addDoc(collection(db, "archive"), archive);
+};
+
+export { addStudent, addUser, addArchive };
