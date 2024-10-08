@@ -1,50 +1,208 @@
+/* users.module.css */
+
+/* סגנונות כלליים */
+.h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.h1Header {
+  font-size: 2rem;
+  color: #333;
+}
+
+.pHeader {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* סגנונות עבור UsersManage */
 .headerAddUserBtn {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f0f0f0;
-    border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f0f0f0;
+  margin-bottom: 1rem;
+  margin-top: -2.5rem;
+}
+
+/* users.module.css */
+
+.userContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: flex-start; /* מוסיף שורה זו */
+}
+
+.userCard {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 100%;
+  max-width: 300px;
+  transition: box-shadow 0.3s ease;
+  display: flex; /* מוסיף שורה זו */
+  flex-direction: column; /* מוסיף שורה זו */
+}
+
+.userCard:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.moreBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #333;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moreBtn:hover {
+  transform: translateY(2px);
+}
+
+.moreBtn.rotated span {
+  transform: rotate(180deg);
+}
+
+.moreBtn span {
+  transition: transform 0.3s ease;
+}
+
+.moreDetails {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.editUserBtn,
+.deleteUserBtn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.editUserBtn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.deleteUserBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+.editUserBtn:hover,
+.deleteUserBtn:hover {
+  opacity: 0.9;
+}
+
+/* סגנונות עבור AddUserBtn */
+.addUserBtn {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addUserBtn:hover {
+  background-color: #1976d2;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.addUserForm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  z-index: 1001;
+  width: 90%;
+  max-width: 400px;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.saveBtn,
+.cancelBtn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.saveBtn {
+  background-color: #4caf50;
+  color: white;
+  margin-right: 0.5rem;
+}
+
+.cancelBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+.saveBtn:hover,
+.cancelBtn:hover {
+  opacity: 0.9;
+}
+
+/* מדיה קוורי לתצוגה מותאמת במסכים קטנים */
+@media (max-width: 768px) {
+  .headerAddUserBtn {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .h1 {
-    font-size: 2.5rem;
-    color: #333;
-    margin: 0;
+
+  .userContainer {
+    justify-content: center;
   }
-  
-  .p {
-    font-size: 1.2rem;
-    color: #666;
-    margin: 10px 0;
+
+  .userCard {
+    max-width: 100%;
   }
-  
-  .usersContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    justify-content: space-around;
-    background-color: #fafafa;
-  }
-  
-  @media (max-width: 768px) {
-    .headerAddUserBtn {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .h1 {
-      font-size: 2rem;
-    }
-  
-    .p {
-      font-size: 1rem;
-    }
-  
-    .usersContainer {
-      padding: 10px;
-      gap: 10px;
-    }
-  }
-  
+}

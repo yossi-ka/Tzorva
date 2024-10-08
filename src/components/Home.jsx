@@ -11,8 +11,8 @@ function Home() {
   const navigate = useNavigate();
   useEffect(() => {
     document.title = "צורבא - דף הבית";
-    setAccessFinance(user.access_permissions?.finance);
-    setUsersManage(user.access_permissions?.users_manage);
+    setAccessFinance(user?.access_permissions?.finance);
+    setUsersManage(user?.access_permissions?.users_manage);
   }, [setAccessFinance, setUsersManage, user]);
 
   return (

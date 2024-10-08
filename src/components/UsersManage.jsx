@@ -18,15 +18,18 @@ function UsersManage() {
   return (
     <div>
       <div className={classes.headerAddUserBtn}>
-        <h1 className={classes.h1}>ניהול משתמשים</h1>
-        <p className={classes.p}>נא בחר במשתמש הרצוי</p>
+        <h1 className={classes.h1Header}>ניהול משתמשים</h1>
+        <p className={classes.pHeader}>נא בחר במשתמש הרצוי</p>
         <AddUserBtn getUsers={getUsers} />
       </div>
-      {users.map((user, index) => (
-        <div key={index} className={classes.usersContainer}>
-          <UserCard user={user} />
-        </div>
-      ))}
+
+      <div className={classes.userContainer}>
+        {users.map((user, index) => (
+          // <div key={index} className={classes.userContainer}>
+            <UserCard key={index} user={user} />
+          // </div>
+        ))}
+      </div>
     </div>
   );
 }
