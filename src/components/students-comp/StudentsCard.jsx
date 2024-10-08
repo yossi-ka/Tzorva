@@ -1,15 +1,25 @@
 import React, { useState } from "react";
 import classes from "../../css/students.module.css";
 import DeleteStudent from "./DeleteStudent";
+import EditStudent from "./EditStudent";
 
 function StudentCard({ student, deleteStudent, showDocs, getstud }) {
   const [showDeleteForm, setShowDeleteForm] = useState(false);
+  const [showEditStudent, setShowEditStudent] = useState(false);
   const colorUrgency =
     student.urgency_level === "גבוה"
       ? "red"
       : student.urgency_level === "בינוני"
       ? "orange"
       : "lightgreen";
+
+  const textClass = () => {
+    if (student.class === "גן" || student.class === "מכינה") {
+      return `כיתה ${student.class}`;
+    } else {
+      return `כיתה ${student.class}'`;
+    }
+  };
 
   return (
     <div className={classes.studentCardContainer}>
@@ -22,10 +32,17 @@ function StudentCard({ student, deleteStudent, showDocs, getstud }) {
       </h3>
       <div className={classes.studentSchoolAndClass}>
         <p className={classes.city}>{student.city_of_school}</p>
-        <p className={classes.class}>{`כיתה ${student.class}'`}</p>
+        <p className={classes.class}>{textClass()}</p>
       </div>
       <div className={classes.btns}>
-        {deleteStudent && <button className={classes.editBtn}>📝 ערוך</button>}
+        {deleteStudent && (
+          <button
+            onClick={() => setShowEditStudent(!showEditStudent)}
+            className={classes.editBtn}
+          >
+            📝 ערוך
+          </button>
+        )}
         {deleteStudent && (
           <button
             className={classes.deleteBtn}
@@ -39,9 +56,31 @@ function StudentCard({ student, deleteStudent, showDocs, getstud }) {
       </div>
       {showDeleteForm && (
         <>
-          <div className={classes.overlay} onClick={() => setShowDeleteForm(false)}></div>
+          <div
+            className={classes.overlay}
+            onClick={() => setShowDeleteForm(false)}
+          ></div>
           <div className={classes.deleteFormArea}>
-            <DeleteStudent getstud={getstud} student={student} setShowDeleteForm={setShowDeleteForm}  />
+            <DeleteStudent
+              getstud={getstud}
+              student={student}
+              setShowDeleteForm={setShowDeleteForm}
+            />
+          </div>
+        </>
+      )}
+      {showEditStudent && (
+        <>
+          <div
+            className={classes.overlay}
+            onClick={() => setShowEditStudent(!showEditStudent)}
+          ></div>
+          <div className={classes.editStudentArea}>
+            <EditStudent
+              getstud={getstud}
+              setShowEditStudent={setShowEditStudent}
+              student={student}
+            />
           </div>
         </>
       )}
