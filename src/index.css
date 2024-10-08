@@ -1,5 +1,11 @@
 * {
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
+}
+
+html {
+ font-size: 100%;
 }
 body {
   width: 100%; /* שינוי ל-100% במקום 100vw */
