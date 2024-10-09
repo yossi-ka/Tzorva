@@ -6,7 +6,6 @@ function EditUser({ user, setShowEditUser, getuse }) {
   const phoneRef = useRef();
   const emailRef = useRef();
   const jobRef = useRef();
-  const urgencyRef = useRef();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = {};

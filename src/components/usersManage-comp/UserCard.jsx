@@ -2,11 +2,13 @@ import classes from "../../css/users.module.css";
 import React, { useState } from "react";
 import DeleteUser from "./DeleteUser";
 import EditUser from "./EditUser";
+import UpdatePermissions from "./UpdatePermissions";
 
 function UserCard({ user, getuse }) {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
+  const [showUpdatePermissions, setShowUpdatePermissions] = useState(false);
 
   return (
     <div className={classes.userCard}>
@@ -36,6 +38,12 @@ function UserCard({ user, getuse }) {
               📝 ערוך
             </button>
             <button
+              className={classes.updatePermissionsBtn}
+              onClick={() => setShowUpdatePermissions(true)}
+            >
+              עדכן הרשאות
+            </button>
+            <button
               className={classes.deleteUserBtn}
               onClick={() => setShowDeleteWarning(true)}
             >
@@ -45,23 +53,40 @@ function UserCard({ user, getuse }) {
         </div>
       )}
       {showDeleteWarning && (
-        <div className={classes.deleteUserArea}>
-          <DeleteUser
-            user={user}
-            getuse={getuse}
-            setShowDeleteForm={setShowDeleteWarning}
-          />
-        </div>
+        <>
+          <div className={classes.overlaySure}></div>
+          <div className={classes.deleteUserArea}>
+            <DeleteUser
+              user={user}
+              getuse={getuse}
+              setShowDeleteForm={setShowDeleteWarning}
+            />
+          </div>
+        </>
       )}
       {showEditUser && (
         <>
-          <div className={classes.overlay} onClick={() => setShowEditUser(false)}></div>
+          <div
+            className={classes.overlay}
+            onClick={() => setShowEditUser(false)}
+          ></div>
           <div className={classes.editUserArea}>
             <EditUser
               user={user}
               getuse={getuse}
               setShowEditUser={setShowEditUser}
             />
+          </div>
+        </>
+      )}
+      {showUpdatePermissions && (
+        <>
+          <div
+            className={classes.overlay}
+            onClick={() => setShowUpdatePermissions(false)}
+          ></div>
+          <div className={classes.updatePermissionsArea}>
+            <UpdatePermissions />
           </div>
         </>
       )}

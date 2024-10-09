@@ -1,5 +1,5 @@
 import classes from "../../css/users.module.css";
-import React, { useRef, useState } from "react";
+import React from "react";
 import { deleteUser } from "../../data-base/delete";
 
 function DeleteUser({ user, getuse, setShowDeleteForm }) {
@@ -10,15 +10,10 @@ function DeleteUser({ user, getuse, setShowDeleteForm }) {
   };
 
   return (
-    <>
-    <div className={classes.overlaySure}></div>
     <div className={classes.warning}>
       <h1 className={classes.h1Warning}>האם אתה בטוח?</h1>
       <div className={classes.lastBtns}>
-        <button
-          className={classes.deleteUserBtn}
-          onClick={handleDeleteUser}
-        >
+        <button className={classes.deleteUserBtn} onClick={handleDeleteUser}>
           מחק
         </button>
         <button
@@ -29,7 +24,6 @@ function DeleteUser({ user, getuse, setShowDeleteForm }) {
         </button>
       </div>
     </div>
-  </>
   );
 }
 

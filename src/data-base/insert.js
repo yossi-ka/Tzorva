@@ -1,4 +1,3 @@
-import { register } from "./authentication.js";
 import { db } from "./config.js";
 import { collection, addDoc } from "firebase/firestore";
 
