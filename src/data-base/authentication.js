@@ -6,10 +6,26 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { app } from "./config.js"; // ייבוא האפליקציה שיצרנו קודם
+import { app } from "./config.js";
 
-const auth = getAuth(app); // עכשיו משתמשים במופע האפליקציה
+const auth = getAuth(app);
+
+const register = async (email, password) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    console.log("user", user);
+    return user.uid;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const login = async (email, password) => {
   try {
@@ -65,6 +81,7 @@ const updateUserPassword = async (newPassword) => {
 };
 
 export {
+  register,
   login,
   logout,
   updateUserPassword,

@@ -1,3 +1,4 @@
+import { register } from "./authentication.js";
 import { db } from "./config.js";
 import { collection, addDoc } from "firebase/firestore";
 
@@ -6,6 +7,8 @@ const addStudent = async (student) => {
 };
 
 const addUser = async (user) => {
+//   const uid = await register(user.email, "123456");
+  user.UID = "123456";
   await addDoc(collection(db, "users"), user);
 };
 

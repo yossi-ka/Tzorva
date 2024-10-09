@@ -7,27 +7,25 @@ import AddUserBtn from "./usersManage-comp/AddUserBtn";
 function UsersManage() {
   const [users, setUsers] = useState([]);
 
-  const getUsers = async () => {
+  const getuse = async () => {
     const usersData = await getAllUsers();
     setUsers(usersData);
   };
   useEffect(() => {
     document.title = "ניהול משתמשים";
-    getUsers();
+    getuse();
   }, []);
   return (
     <div>
       <div className={classes.headerAddUserBtn}>
         <h1 className={classes.h1Header}>ניהול משתמשים</h1>
         <p className={classes.pHeader}>נא בחר במשתמש הרצוי</p>
-        <AddUserBtn getUsers={getUsers} />
+        <AddUserBtn getUsers={getuse} />
       </div>
 
       <div className={classes.userContainer}>
         {users.map((user, index) => (
-          // <div key={index} className={classes.userContainer}>
-            <UserCard key={index} user={user} />
-          // </div>
+            <UserCard key={index} user={user} getuse={getuse} />
         ))}
       </div>
     </div>

@@ -44,20 +44,29 @@
   align-items: flex-start; /* מוסיף שורה זו */
 }
 
-.userCard {
+.userCard,
+.basicDetails {
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
   width: 100%;
   max-width: 300px;
   transition: box-shadow 0.3s ease;
   display: flex; /* מוסיף שורה זו */
   flex-direction: column; /* מוסיף שורה זו */
+  min-height: 200px;
+}
+
+.userCard {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .userCard:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.basicDetails {
+  padding: 1rem;
+  justify-content: space-between;
 }
 
 .moreBtn {
@@ -85,8 +94,7 @@
 }
 
 .moreDetails {
-  margin-top: 1rem;
-  padding-top: 1rem;
+  padding: 1rem;
   border-top: 1px solid #eee;
 }
 
@@ -142,7 +150,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 500;
 }
 
 .addUserForm {
@@ -161,9 +169,14 @@
 .input {
   width: 100%;
   padding: 0.5rem;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
 }
 
 .saveBtn,
@@ -191,6 +204,98 @@
   opacity: 0.9;
 }
 
+.overlaySure {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 800;
+}
+
+.warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  z-index: 1001;
+  width: 90%;
+  max-width: 400px;
+}
+
+.lastBtns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.deleteUserBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+.cancelBtn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 800;
+}
+
+.editUserForm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    background-color: white;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 200px;
+    z-index: 1001;
+    border-radius: 8px;
+  }
+  
+  @media (max-height: 670px) {
+    .editUserForm {
+      transform: translate(-50%, -50%) scale(0.9); /* שומר על מרכזיות תוך הקטנה */
+    }
+  }
+  
+  @media (max-height: 600px) {
+    .editUserForm {
+      transform: translate(-50%, -50%) scale(0.8); /* הקטנה נוספת עם מרכזיות */
+    }
+  }
+  
+  @media (max-height: 500px) {
+    .editUserForm {
+      transform: translate(-50%, -40%) scale(0.7); /* שימור של המרכזיות */
+    }
+  }
+  
+
+.updateBtns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
 /* מדיה קוורי לתצוגה מותאמת במסכים קטנים */
 @media (max-width: 768px) {
   .headerAddUserBtn {
@@ -206,3 +311,4 @@
     max-width: 100%;
   }
 }
+

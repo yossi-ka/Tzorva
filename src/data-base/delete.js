@@ -20,11 +20,31 @@ const deleteStudent = async (student) => {
     });
   } catch (error) {
     if (error.code === "permission-denied") {
-      console.error("אין לך הרשאה למחוק את המסמך.");
+      console.error("אין לך הרשאה למחוק את התלמיד.");
     } else {
-      console.error("שגיאה במחיקת המסמך:", error);
+      console.error("שגיאה במחיקת התלמיד:", error);
     }
   }
 };
 
-export { deleteStudent };
+const deleteUser = async (user) => {
+    try {
+        const q = query(
+          collection(db, "users"),
+          where("user_id", "==", user.user_id)
+        );
+        const querySnapshot = await getDocs(q);
+    
+        querySnapshot.forEach(async (docSnap) => {
+          await deleteDoc(docSnap.ref);
+        });
+      } catch (error) {
+        if (error.code === "permission-denied") {
+          console.error("אין לך הרשאה למחוק את המשתמש.");
+        } else {
+          console.error("שגיאה במחיקת המשתמש:", error);
+        }
+      }
+};
+
+export { deleteStudent , deleteUser };
