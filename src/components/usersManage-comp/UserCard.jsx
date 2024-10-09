@@ -10,7 +10,9 @@ function UserCard({ user, getuse }) {
   const [showEditUser, setShowEditUser] = useState(false);
   const [showUpdatePermissions, setShowUpdatePermissions] = useState(false);
 
-  return (
+  return user?.job_title === "מנהל ארגון" ? (
+    ""
+  ) : (
     <div className={classes.userCard}>
       <div className={classes.basicDetails}>
         <h1 className={classes.h1}>{`${user.first_name} ${user.last_name}`}</h1>
