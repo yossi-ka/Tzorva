@@ -5,6 +5,8 @@ import { getStudents } from "../data-base/select";
 
 import { UserContext } from "../App";
 import AddStudentBtn from "./students-comp/AddStudentBtn";
+import SearchField from "./SearchField";
+import SortStudents from "./students-comp/SortStudents";
 
 function Students() {
   //   const navigate = useNavigate();
@@ -14,10 +16,12 @@ function Students() {
   const [deleteStudent, setDeleteStudent] = useState(false);
   const [showDocs, setShowDocs] = useState(false);
   const [students, setStudents] = useState([]);
+  const [studentsToShow, setStudentsToShow] = useState([]);
 
   const getstud = useCallback(async () => {
     const studentsData = await getStudents(user.UID);
     setStudents(studentsData);
+    setStudentsToShow(studentsData);
   }, [user.UID]);
 
   useEffect(() => {
@@ -31,12 +35,18 @@ function Students() {
     <div>
       <div className={classes.headerAddStudentBtn}>
         <h1 className={classes.h1}>ניהול תלמידים</h1>
-        <p className={classes.p}>נא בחר בתלמיד הרצוי</p>
+        <SearchField
+          allItems={students}
+          itemsToShow={studentsToShow}
+          setItemsToShow={setStudentsToShow}
+          placeholder="חיפוש תלמיד"
+        />
+        <SortStudents allStudents={students} setStudentsToShow={setStudentsToShow} />
         {addStudent && <AddStudentBtn getstud={getstud} />}
       </div>
 
       <div className={classes.studentsContainer}>
-        {students.map((student, index) => {
+        {studentsToShow.map((student, index) => {
           return (
             <div key={index}>
               <div className={classes.student}>

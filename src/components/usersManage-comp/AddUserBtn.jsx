@@ -25,6 +25,7 @@ function AddUserBtn({ getUsers }) {
           delete_treatments: false,
           delete_student: false,
           add_student: false,
+          show_docs: false,
         },
         finance: false,
         archive: false,

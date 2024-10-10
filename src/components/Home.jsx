@@ -128,7 +128,7 @@ function Home() {
           </div>
           <div className={classes.areaBot}>
             <p className={classes.p}>
-              צפיה בארכיון התלמידים שטופלו ע"י הארגון, עדכון ומחיקת תיעודים.{" "}
+              צפייה בארכיון התלמידים שטופלו ע"י הארגון, עדכון ומחיקת תיעודים.
             </p>
             <button
               className={`${classes.archiveBtn} ${classes.btn}`}
