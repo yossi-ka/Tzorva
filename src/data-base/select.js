@@ -59,6 +59,24 @@ const getStudents = async (uid) => {
   }
 };
 
+const getFinance = async () => {
+  const arr = [];
+  const querySnapshot = await getDocs(collection(db, "finance"));
+  querySnapshot.forEach((doc) => {
+    arr.push(doc.data());
+  });
+  return arr;
+};
+
+const getArchive = async () => {
+  const arr = [];
+  const querySnapshot = await getDocs(collection(db, "archive"));
+  querySnapshot.forEach((doc) => {
+    arr.push(doc.data());
+  });
+  return arr;
+}
+
 
 
 export {
@@ -66,4 +84,6 @@ export {
   findUserByUID,
   getStudents,
   getAllStudents,
+  getFinance,
+  getArchive
 };

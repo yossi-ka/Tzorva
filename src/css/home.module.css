@@ -113,6 +113,12 @@
 .userMngBtn:hover {
   background-color: #c47d17;
 }
+.treatmentsBtn:hover {
+  background-color: #ca09c4;
+}
+.archiveBtn:hover {
+  background-color: rgb(117, 30, 30);
+}
 
 @media (max-width: 768px) {
   .homeOptions {

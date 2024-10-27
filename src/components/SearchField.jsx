@@ -9,10 +9,6 @@ function SearchField({ allItems, itemsToShow, setItemsToShow, placeholder }) {
 
     const query = e.target.value;
     setSearchQuery(query); // עדכון ה-state לפני החיפוש
-    console.log(query);
-
-    console.log(itemsToShow);
-
     if (!query) {
       setItemsToShow(allItems); // אם אין ערך, הצג את כל הפריטים
       return;
@@ -32,14 +28,29 @@ function SearchField({ allItems, itemsToShow, setItemsToShow, placeholder }) {
 
   return (
     <div className={classes.searchFieldContainer}>
-      <input
-        className={classes.searchField}
-        type="text"
-        value={searchQuery}
-        onChange={handleSearch}
-        placeholder={`${placeholder} ...`}
-      />
-
+      <div className={classes.searchField}>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearch}
+          placeholder={`${placeholder} ...`}
+        />
+        {searchQuery ? (
+          <span
+            style={{ cursor: "pointer" }}
+            className="material-symbols-outlined"
+            onClick={() => {
+              setSearchQuery("");
+              setItemsToShow(allItems);
+              setSearchNotFound(false);
+            }}
+          >
+            close
+          </span>
+        ) : (
+          <span className="material-symbols-outlined">search</span>
+        )}
+      </div>
       {searchNotFound && (
         <div className={classes.SearchotFound}>אין תוצאות חיפוש</div>
       )}

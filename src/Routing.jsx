@@ -8,6 +8,7 @@ import Finance from "./components/Finance";
 import Students from "./components/Students";
 import UsersManage from "./components/UsersManage";
 import Archive from "./components/Archive";
+// import { RTL } from "./RTL.jsx";
 
 function Routing() {
   return (

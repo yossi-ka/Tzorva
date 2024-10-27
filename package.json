@@ -4,12 +4,15 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.5",
     "@mui/x-data-grid": "^7.18.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.21.5",
     "dotenv": "^16.4.5",
     "firebase": "^10.13.2",
     "react": "^18.3.1",
@@ -45,5 +48,9 @@
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "stylis-plugin-rtl": "^2.1.1"
+  }
 }

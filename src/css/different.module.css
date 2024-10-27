@@ -5,33 +5,84 @@
   justify-content: center;
   /* height: 100vh; */
 }
+
 .searchField {
-  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   border-radius: 0.5rem;
   background-color: #f3f4f6;
   color: #4b5563;
+  /* font-size: 1rem; */
+  padding-left: 0.5rem;
+}
+.searchField input {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #f3f4f6;
   font-size: 1rem;
 }
 
+.searchField input:focus {
+  outline: none;
+}
+
 .SearchotFound {
+  margin-top: 1rem;
   color: red;
   font-size: 1rem;
   text-align: center;
 }
-.select {
-  padding: 0.5rem;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: #f3f4f6;
-  color: #4b5563;
-  font-size: 1rem;
-}
-.option {
-  padding: 0.5rem;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: #f3f4f6;
-  color: #4b5563;
-  font-size: 1rem;
-}
+
+.sortContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .select {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    /* מונע את החץ הדיפולטיבי של הדפדפן */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* מוסיף חץ מותאם אישית */
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: left 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-left: 2.5rem;
+  }
+  
+  .select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  }
+  
+  .option {
+    background-color: white;
+    color: #4b5563;
+    padding: 0.5rem;
+  }
+  
+  /* תווית "מיין לפי" */
+  .label {
+    color: #4b5563;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+  }
+  
+  /* הוספת אנימציה קלה בעת מעבר עכבר */
+  .select:hover {
+    background-color: #e5e7eb;
+  }
