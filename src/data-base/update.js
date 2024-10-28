@@ -49,4 +49,25 @@ const updateUser = async (user, updatedData) => {
     }
   };
 
-export { updateStudent, updateUser };
+  const updateFinance = async (finance, updatedData) => {
+    try {
+      const q = query(
+        collection(db, "finance"),
+        where("time", "==", finance.time)
+      );
+      const querySnapshot = await getDocs(q);
+  
+      if (!querySnapshot.empty) {
+        // בדיקה אם יש מסמכים
+        await updateDoc(querySnapshot.docs[0].ref, updatedData);
+      } else {
+        console.log("לא נמצאה פעולה עם חותמת זמן זו.");
+        // טיפול במקרה שלא נמצא משתמש
+      }
+    } catch (error) {
+      console.error("שגיאה בעדכון פעולה:", error);
+      // טיפול בשגיאות
+    }
+  };
+
+export { updateStudent, updateUser, updateFinance };

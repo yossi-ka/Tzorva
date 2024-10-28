@@ -1,7 +1,7 @@
 import classes from "../css/different.module.css";
 import React, { useState } from "react";
 
-function SearchField({ allItems, itemsToShow, setItemsToShow, placeholder }) {
+function SearchField({ allItems, setItemsToShow, placeholder }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchNotFound, setSearchNotFound] = useState(false);
   const handleSearch = (e) => {
@@ -14,10 +14,11 @@ function SearchField({ allItems, itemsToShow, setItemsToShow, placeholder }) {
       return;
     }
 
-    const filteredItems = allItems.filter(
-      (item) =>
-        item.first_name.includes(query) || item.last_name.includes(query)
-    );
+    const filteredItems = allItems.filter((item) => {
+      return !item.details
+        ? item.first_name.includes(query) || item.last_name.includes(query)
+        : item.details.includes(query);
+    });
     setItemsToShow(filteredItems);
 
     if (!filteredItems.length) {
