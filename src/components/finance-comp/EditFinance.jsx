@@ -33,7 +33,7 @@ function EditFinance({ finance, fetchData }) {
   return (
     <>
       <button className={classes.editBtn} onClick={() => setShowEditForm(true)}>
-        ערןך
+        📝 ערוך
       </button>
 
       {showEditForm && (
@@ -41,12 +41,12 @@ function EditFinance({ finance, fetchData }) {
           <div className={classes.overlay}></div>
           <div className={classes.editForm}>
             <form onSubmit={handleEdit}>
-              <h1>עריכת פעולה</h1>
+              <h1>עריכת שורה</h1>
               <label htmlFor="date">תאריך:</label>
               <input
                 type="text"
-                id="text"
-                name="text"
+                id="date"
+                name="date"
                 defaultValue={formatDateToHebrew(finance.time)}
                 disabled
               />

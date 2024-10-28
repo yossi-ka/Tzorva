@@ -3,12 +3,16 @@ import React, { useEffect, useContext, useState } from "react";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import { getFinance } from "../data-base/select";
-import { Table } from "antd";
-import AddFinance from "./finance-comp/AddFinance";
+import { ConfigProvider, Table } from "antd";
+import AddFinance, {
+  expensesArr,
+  revenuesArr,
+} from "./finance-comp/AddFinance";
 import DeleteFinance from "./finance-comp/DeleteFinance";
 import EditFinance from "./finance-comp/EditFinance";
 import Hebcal from "hebcal";
 import SearchField from "./SearchField";
+import he_IL from "antd/lib/locale/he_IL";
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp.seconds * 1000);
@@ -78,9 +82,8 @@ function Finance() {
         { text: "הכנסה", value: "הכנסה" },
         { text: "הוצאה", value: "הוצאה" },
       ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.name.startsWith(value),
+
+      onFilter: (value, record) => record.type.startsWith(value),
     },
     {
       title: "סכום",
@@ -88,14 +91,26 @@ function Finance() {
       key: "amount",
       sorter: { compare: (a, b) => a.amount - b.amount, multiple: 3 },
     },
-    { title: "קטגוריה", dataIndex: "category", key: "category" },
+    {
+      title: "קטגוריה",
+      dataIndex: "category",
+      key: "category",
+      filters: [
+        ...revenuesArr.map((item) => ({ text: item, value: item })),
+        ...expensesArr.map((item) => ({ text: item, value: item })),
+      ],
+
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.category.startsWith(value),
+    },
     { title: "פרטים", dataIndex: "details", key: "details" },
     {
       title: "פעולות",
       dataIndex: "actions",
       key: "actions",
       render: (text, record) => (
-        <div>
+        <div className={classes.rowActions}>
           <EditFinance fetchData={fetchData} finance={record} />
           <DeleteFinance fetchData={fetchData} finance={record} />
         </div>
@@ -115,16 +130,18 @@ function Finance() {
         <AddFinance fetchData={fetchData} />
       </header>
       <div className={classes.financeContainer}>
-        <div className={classes.financeTable}>
-          <Table
-            columns={columns}
-            pagination={{ pageSize: 10 }}
-            dataSource={financeToShow}
-            bordered
-            className={classes.financeTable}
-            rowKey="time"
-            locale={{ emptyText: "אין נתונים פיננסים" }}
-          />
+        <div className={classes.financeTable} dir="rtl">
+          <ConfigProvider locale={he_IL} diraction="rtl">
+            <Table
+              columns={columns}
+              pagination={{ pageSize: 10 }}
+              dataSource={financeToShow}
+              bordered
+              className={classes.financeTable}
+              rowKey="time"
+              locale={{ emptyText: "אין נתונים פיננסים" }}
+            />
+          </ConfigProvider>
         </div>
       </div>
     </>

@@ -11,7 +11,7 @@ function DeleteFinance({ finance, fetchData }) {
   };
   return (
     <div className={classes.warningForm}>
-      <button onClick={() => setShowWarningForm(true)}>מחק</button>
+      <button className={classes.deleteBtn} onClick={() => setShowWarningForm(true)}>🗑️ מחק</button>
       {showWarningForm && (
         <>
           <div className={classes.underlay}></div>
