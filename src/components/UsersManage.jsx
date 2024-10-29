@@ -21,7 +21,6 @@ function UsersManage() {
     <div>
       <div className={classes.headerAddUserBtn}>
         <h1 className={classes.h1Header}>ניהול משתמשים</h1>
-        <p className={classes.pHeader}>נא בחר במשתמש הרצוי</p>
         <SearchField
           allItems={users}
           itemsToShow={usersToShow}

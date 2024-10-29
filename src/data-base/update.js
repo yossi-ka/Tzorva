@@ -91,4 +91,31 @@ const updateArchive = async (archive, updatedData) => {
   }
 };
 
-export { updateStudent, updateUser, updateFinance, updateArchive };
+const updateIntervention = async (intervention, updatedData) => {
+  try {
+    const q = query(
+      collection(db, "interventions"),
+      where("time", "==", intervention.time)
+    );
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // בדיקה אם יש מסמכים
+      await updateDoc(querySnapshot.docs[0].ref, updatedData);
+    } else {
+      console.log("לא נמצא טיפול עם חותמת זמן זו.");
+      // טיפול במקרה שלא נמצא מסמך
+    }
+  } catch (error) {
+    console.error("שגיאה בעדכון הטיפול:", error);
+    // טיפול בשגיאות
+  }
+};
+
+export {
+  updateStudent,
+  updateUser,
+  updateFinance,
+  updateArchive,
+  updateIntervention,
+};

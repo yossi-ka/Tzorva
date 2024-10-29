@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import classes from "../../css/students.module.css";
 import DeleteStudent from "./DeleteStudent";
 import EditStudent from "./EditStudent";
+import { useNavigate } from "react-router-dom";
 
 function StudentCard({ student, deleteStudent, showDocs, getstud }) {
+  const navigate = useNavigate();
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [showEditStudent, setShowEditStudent] = useState(false);
   const colorUrgency =
@@ -52,7 +54,12 @@ function StudentCard({ student, deleteStudent, showDocs, getstud }) {
           </button>
         )}
         {showDocs && <button className={classes.docsBtn}>📄 מסמכים</button>}
-        <button className={classes.treatmentsBtn}>📃 טיפולים</button>
+        <button
+          onClick={() => navigate(`/intervention/${student.student_id}`)}
+          className={classes.interventionsBtn}
+        >
+          📃 טיפולים
+        </button>
       </div>
       {showDeleteForm && (
         <>

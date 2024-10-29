@@ -1,7 +1,8 @@
 import classes from "../css/different.module.css";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 function SearchField({ allItems, setItemsToShow, placeholder, searchBy }) {
+  const inputRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchNotFound, setSearchNotFound] = useState(false);
   const handleSearch = (e) => {
@@ -21,6 +22,8 @@ function SearchField({ allItems, setItemsToShow, placeholder, searchBy }) {
         ? item.full_name.includes(query)
         : item.full_name && searchBy === "body"
         ? item.body.includes(query)
+        : item.intervention_title
+        ? item.student_name.includes(query)
         : item.details.includes(query);
     });
     setItemsToShow(filteredItems);
@@ -35,6 +38,7 @@ function SearchField({ allItems, setItemsToShow, placeholder, searchBy }) {
     <div className={classes.searchFieldContainer}>
       <div className={classes.searchField}>
         <input
+          ref={inputRef}
           type="text"
           value={searchQuery}
           onChange={handleSearch}
@@ -48,6 +52,7 @@ function SearchField({ allItems, setItemsToShow, placeholder, searchBy }) {
               setSearchQuery("");
               setItemsToShow(allItems);
               setSearchNotFound(false);
+              inputRef.current.focus();
             }}
           >
             close

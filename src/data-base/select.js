@@ -75,9 +75,71 @@ const getArchive = async () => {
     arr.push(doc.data());
   });
   return arr;
-}
+};
 
+const getAllInterventions = async () => {
+  const arr = [];
+  const querySnapshot = await getDocs(collection(db, "interventions"));
+  querySnapshot.forEach((doc) => {
+    arr.push(doc.data());
+  });
+  return arr;
+};
 
+const getInterventionsByStudent = async (studentId) => {
+  const arr = [];
+  const q = query(
+    collection(db, "interventions"),
+    where("student_id", "==", studentId)
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    arr.push(doc.data());
+  });
+  return arr;
+};
+
+const getInterventionsByTutor = async (tutorId) => {
+  const arr = [];
+  const q = query(
+    collection(db, "interventions"),
+    where("tutor_id", "==", tutorId)
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    arr.push(doc.data());
+  });
+  return arr;
+};
+
+const getInterventionsByCity = async (city) => {
+  const studetsArr = await getAllStudents();
+  const filteredStudets = studetsArr.filter(
+    (student) => student.city_of_school === city
+  );
+  const interventionsArr = await getAllInterventions();
+
+  const arr = filteredStudets.flatMap((docu) =>
+    interventionsArr.filter((doc) => doc.student_id === docu.student_id)
+  );
+
+  return arr;
+};
+
+const getIntervention = async (user, student_id) => {
+  if (!student_id) {
+    if (user.job_title === "מנהל ארגון" || user.job_title === "יועץ") {
+      return await getAllInterventions();
+    } else if (user.job_title === `מנהל ת"ת`) {
+      return await getInterventionsByCity(user.city);
+    } else if (user.job_title === "מטפל") {
+      return await getInterventionsByTutor(user.user_id);
+    }
+  } else if (student_id) {
+    return await getInterventionsByStudent(student_id);
+  }
+  return [];
+};
 
 export {
   getAllUsers,
@@ -85,5 +147,6 @@ export {
   getStudents,
   getAllStudents,
   getFinance,
-  getArchive
+  getArchive,
+  getIntervention,
 };

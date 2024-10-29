@@ -62,8 +62,8 @@
   background-color: #f59e0b;
 }
 
-.treatmentsAreaTitle,
-.treatmentsBtn {
+.interventionsAreaTitle,
+.interventionsBtn {
   background-color: #f50bed;
 }
 
@@ -113,7 +113,7 @@
 .userMngBtn:hover {
   background-color: #c47d17;
 }
-.treatmentsBtn:hover {
+.interventionsBtn:hover {
   background-color: #ca09c4;
 }
 .archiveBtn:hover {

@@ -8,7 +8,7 @@ import Finance from "./components/Finance";
 import Students from "./components/Students";
 import UsersManage from "./components/UsersManage";
 import Archive from "./components/Archive";
-// import { RTL } from "./RTL.jsx";
+import Intervention from "./components/Intervention";
 
 function Routing() {
   return (
@@ -22,6 +22,7 @@ function Routing() {
           <Route path="/students" element={<Students />} />
           <Route path="/users-manage" element={<UsersManage />} />
           <Route path="/archive" element={<Archive />} />
+          <Route path="/intervention/*" element={<Intervention />} />
         </Route>
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

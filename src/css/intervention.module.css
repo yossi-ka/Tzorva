@@ -1,0 +1,142 @@
+/* intervention.module.css */
+
+.interventionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -20px 20px 20px 20px;
+  font-size: 1rem;
+}
+.interventionContainer {
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+.interventionTable {
+  height: 600px;
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rowActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.expense {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.income {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.interventionTitle {
+  font-size: 2rem;
+}
+
+/*  add  */
+
+.addInterventionBtn {
+    background-color: #4caf50; /* צבע רקע ירוק */
+    color: white; /* צבע טקסט לבן */
+    padding: 10px 20px; /* ריפוד */
+    border: none; /* ללא גבול */
+    border-radius: 5px; /* פינות מעוגלות */
+    cursor: pointer; /* מחוון עכבר */
+    font-size: 16px; /* גודל טקסט */
+    transition: background-color 0.3s; /* תנועת צבע */
+}
+
+.addInterventionBtn:hover {
+  background-color: #45a049;
+}
+
+.overlayAdd {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.addInterventionForm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.addInterventionForm h1 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.addInterventionForm label {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.addInterventionForm input[type="text"],
+.addInterventionForm input[type="date"],
+.addInterventionForm select,
+.addInterventionForm textarea {
+  width: 100%;
+  padding: 6px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.addInterventionForm button {
+  background-color: #2196f3;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 8px;
+}
+
+.addInterventionForm button:hover {
+  background-color: #1e88e5;
+}
+
+.addInterventionForm option {
+  font-size: 0.9rem;
+}
+
+.addInterventionForm select:disabled {
+  background-color: #f0f0f0;
+}
+
+.addInterventionForm textarea {
+  overflow-y: auto;
+  min-height: 60px;
+  max-height: 100px;
+}

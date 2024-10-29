@@ -6,6 +6,7 @@ function AddUserBtn({ getUsers }) {
   const userIdRef = useRef();
   const firstNameRef = useRef();
   const lastNameRef = useRef();
+  const cityRef = useRef();
   const phoneRef = useRef();
   const jobRef = useRef();
   const emailRef = useRef();
@@ -18,11 +19,12 @@ function AddUserBtn({ getUsers }) {
       first_name: firstNameRef.current.value,
       last_name: lastNameRef.current.value,
       job_title: jobRef.current.value,
+      city: cityRef.current.value,
       phone: phoneRef.current.value,
       email: emailRef.current.value,
       access_permissions: {
         actions: {
-          delete_treatments: false,
+          delete_interventions: false,
           delete_student: false,
           add_student: false,
           show_docs: false,
@@ -75,11 +77,11 @@ function AddUserBtn({ getUsers }) {
                 placeholder="שם משפחה"
                 required
               />
-              <input
+               <input
                 className={classes.input}
-                ref={emailRef}
-                type="email"
-                placeholder={`דוא"ל`}
+                ref={cityRef}
+                type="text"
+                placeholder="עיר"
                 required
               />
               <input
@@ -91,13 +93,20 @@ function AddUserBtn({ getUsers }) {
               />
               <input
                 className={classes.input}
+                ref={emailRef}
+                type="email"
+                placeholder={`דוא"ל`}
+                required
+              />
+              <input
+                className={classes.input}
                 ref={jobRef}
                 type="text"
                 placeholder="תפקיד"
                 required
               />
               <div className={classes.btns}>
-                <button className={classes.saveBtn}>שמירה</button>
+                <button className={classes.saveBtn}>הוסף</button>
                 <button
                   onClick={() => setShowAddForm(false)}
                   className={classes.cancelBtn}

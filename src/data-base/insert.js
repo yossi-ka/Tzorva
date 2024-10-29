@@ -19,5 +19,9 @@ const addFinance = async (finance) => {
   await addDoc(collection(db, "finance"), finance);
 };
 
+const addIntervention = async (intervention) => {
+  await addDoc(collection(db, "interventions"), intervention);
+};
 
-export { addStudent, addUser, addArchive, addFinance };
+
+export { addStudent, addUser, addArchive, addFinance, addIntervention };

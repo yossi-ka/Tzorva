@@ -32,7 +32,9 @@ function SortStudents({ allStudents, setStudentsToShow }) {
         sortedStudents = allStudents; // ברירת מחדל: ללא מיון
         break;
       case "city":
-        sortedStudents.sort((a, b) => a.city_of_school.localeCompare(b.city_of_school));
+        sortedStudents.sort((a, b) =>
+          a.city_of_school.localeCompare(b.city_of_school)
+        );
         break;
       default:
         break;
@@ -43,13 +45,28 @@ function SortStudents({ allStudents, setStudentsToShow }) {
 
   return (
     <div>
-      <label htmlFor="sortOptions">מיין לפי: </label>
-      <select className={classes.select} name="sortOptions" id="sortOptions" value={sortOption} onChange={handleSort}>
-        <option className={classes.option} value="no">-- בחר אפשרות --</option>
-        <option className={classes.option} value="first_name">שם פרטי</option>
-        <option className={classes.option} value="last_name">שם משפחה</option>
-        <option className={classes.option} value="city">עיר</option>
-        <option className={classes.option} value="urgency_level">רמת דחיפות</option>
+      <select
+        className={classes.select}
+        name="sortOptions"
+        id="sortOptions"
+        value={sortOption}
+        onChange={handleSort}
+      >
+        <option className={classes.option} value="no">
+          -- רשימה לא ממויינת --
+        </option>
+        <option className={classes.option} value="first_name">
+          שם פרטי
+        </option>
+        <option className={classes.option} value="last_name">
+          שם משפחה
+        </option>
+        <option className={classes.option} value="city">
+          עיר
+        </option>
+        <option className={classes.option} value="urgency_level">
+          רמת דחיפות
+        </option>
       </select>
     </div>
   );

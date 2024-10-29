@@ -89,4 +89,24 @@ const deleteArchive = async (archive) => {
   }
 };
 
-export { deleteStudent, deleteUser, deleteFinance, deleteArchive };
+const deleteIntervention = async (intervention) => {
+  try {
+    const q = query(
+      collection(db, "interventions"),
+      where("time", "==", intervention.time)
+    );
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (docSnap) => {
+      await deleteDoc(docSnap.ref);
+    });
+  } catch (error) {
+    if (error.code === "permission-denied") {
+      console.error("אין לך הרשאה למחוק את הטיפול.");
+    } else {    
+      console.error("שגיאה במחיקת הטיפול:", error);
+    }
+  }
+};
+
+export { deleteStudent, deleteUser, deleteFinance, deleteArchive, deleteIntervention };

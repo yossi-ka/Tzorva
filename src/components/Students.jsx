@@ -41,12 +41,10 @@ function Students() {
           setItemsToShow={setStudentsToShow}
           placeholder="חיפוש תלמיד"
         />
-        <div className={classes.sortStudentsContainer}>
-          <SortStudents
-            allStudents={students}
-            setStudentsToShow={setStudentsToShow}
-          />
-        </div>
+        <SortStudents
+          allStudents={students}
+          setStudentsToShow={setStudentsToShow}
+        />
         {addStudent && <AddStudentBtn getstud={getstud} />}
       </div>
 

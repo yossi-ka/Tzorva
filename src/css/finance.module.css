@@ -37,7 +37,7 @@
 }
 
 .financeTitle {
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 /*  add  */
@@ -50,6 +50,7 @@
   border-radius: 5px; /* פינות מעוגלות */
   cursor: pointer; /* מחוון עכבר */
   font-size: 16px; /* גודל טקסט */
+  transition: background-color 0.3s; /* עדכון צבע רקע */
 }
 
 .addFinanceBtn:hover {
@@ -111,11 +112,6 @@
 
 /*  edit  */
 
-/* finance.module.css */
-
-/* finance.module.css */
-
-/* כפתור עריכה */
 .editBtn {
   background-color: #007bff; /* צבע רקע כחול */
   color: white; /* צבע טקסט לבן */
@@ -124,6 +120,7 @@
   border-radius: 4px; /* פינות מעוגלות */
   cursor: pointer; /* מחוון עכבר */
   font-size: 14px; /* גודל טקסט */
+  transition: background-color 0.3s;
 }
 
 .editBtn:hover {
@@ -171,10 +168,10 @@
 /* שדות קלט */
 .editForm input[type="text"],
 .editForm input[type="number"],
-select {
+.editForm select {
   width: 100%; /* רוחב מלא */
   padding: 10px; /* רווח פנימי */
-  margin-bottom: 15px; /* רווח מתחת לכל שדה */
+  margin-bottom: 15px;
   border: 1px solid #ccc; /* גבול אפור */
   border-radius: 4px; /* פינות מעוגלות */
   font-size: 16px; /* גודל טקסט */
@@ -266,6 +263,11 @@ select {
   border-radius: 0.25rem;
   cursor: pointer;
   margin-right: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.deleteBtn:hover {
+  background-color: #c0392b;
 }
 
 .warningForm .cancelBtn {
