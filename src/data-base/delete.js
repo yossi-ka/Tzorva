@@ -48,8 +48,8 @@ const deleteUser = async (user) => {
 };
 
 const deleteFinance = async (finance) => {
-    console.log("deleteFinance", finance);
-    
+  console.log("deleteFinance", finance);
+
   try {
     const q = query(
       collection(db, "finance"),
@@ -69,4 +69,24 @@ const deleteFinance = async (finance) => {
   }
 };
 
-export { deleteStudent, deleteUser, deleteFinance };
+const deleteArchive = async (archive) => {
+  try {
+    const q = query(
+      collection(db, "archive"),
+      where("time", "==", archive.time)
+    );
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (docSnap) => {
+      await deleteDoc(docSnap.ref);
+    });
+  } catch (error) {
+    if (error.code === "permission-denied") {
+      console.error("אין לך הרשאה למחוק את התיעוד.");
+    } else {
+      console.error("שגיאה במחיקת התיעוד:", error);
+    }
+  }
+};
+
+export { deleteStudent, deleteUser, deleteFinance, deleteArchive };

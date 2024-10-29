@@ -55,7 +55,6 @@ function Finance() {
       navigate(-1);
       return;
     }
-    // אם למשתמש יש גישה, טען את נתוני הפיננסים
     document.title = "פיננסים";
     fetchData();
   }, [navigate, user]);
@@ -89,6 +88,7 @@ function Finance() {
       title: "סכום",
       dataIndex: "amount",
       key: "amount",
+      render: (amount) => `${amount} ₪`,
       sorter: { compare: (a, b) => a.amount - b.amount, multiple: 3 },
     },
     {

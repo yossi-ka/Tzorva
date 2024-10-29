@@ -1,22 +1,26 @@
 import classes from "../css/different.module.css";
 import React, { useState } from "react";
 
-function SearchField({ allItems, setItemsToShow, placeholder }) {
+function SearchField({ allItems, setItemsToShow, placeholder, searchBy }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchNotFound, setSearchNotFound] = useState(false);
   const handleSearch = (e) => {
     setSearchNotFound(false);
 
     const query = e.target.value;
-    setSearchQuery(query); // עדכון ה-state לפני החיפוש
+    setSearchQuery(query);
     if (!query) {
-      setItemsToShow(allItems); // אם אין ערך, הצג את כל הפריטים
+      setItemsToShow(allItems);
       return;
     }
 
     const filteredItems = allItems.filter((item) => {
-      return !item.details
+      return item.first_name
         ? item.first_name.includes(query) || item.last_name.includes(query)
+        : item.full_name && searchBy === "name"
+        ? item.full_name.includes(query)
+        : item.full_name && searchBy === "body"
+        ? item.body.includes(query)
         : item.details.includes(query);
     });
     setItemsToShow(filteredItems);
