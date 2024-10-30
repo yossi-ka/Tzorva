@@ -1,7 +1,7 @@
 import classes from "../../css/finance.module.css";
 import React, { useRef, useState } from "react";
 import { expensesArr, revenuesArr } from "./AddFinance";
-import { formatDateToHebrew } from "../Finance";
+import {  formatDateToHebrew } from "../../services/date";
 import { updateFinance } from "../../data-base/update";
 
 function EditFinance({ finance, fetchData }) {

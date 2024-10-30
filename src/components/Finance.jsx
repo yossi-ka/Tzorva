@@ -10,30 +10,12 @@ import AddFinance, {
 } from "./finance-comp/AddFinance";
 import DeleteFinance from "./finance-comp/DeleteFinance";
 import EditFinance from "./finance-comp/EditFinance";
-import Hebcal from "hebcal";
-import SearchField from "./SearchField";
 import he_IL from "antd/lib/locale/he_IL";
+import { formatDate, formatDateToHebrew } from "../services/date";
+import searchProps from "../services/SearchANT";
 
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp.seconds * 1000);
-  return date.toLocaleDateString("he-IL", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-};
-
-export const formatDateToHebrew = (timestamp) => {
-  const date = new Date(timestamp.seconds * 1000);
-  const hebrewDate = new Hebcal.HDate(date);
-  return hebrewDate.toString("h"); // "h" מציין את הפורמט העברי
-};
 
 function Finance() {
-  const [finance, setFinance] = useState([]);
   const [financeToShow, setFinanceToShow] = useState([]);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
@@ -42,7 +24,6 @@ function Finance() {
     try {
       const data = await getFinance();
       const sortData = data.sort((a, b) => b.time - a.time);
-      setFinance(sortData);
       setFinanceToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -104,7 +85,7 @@ function Finance() {
       filterSearch: true,
       onFilter: (value, record) => record.category.startsWith(value),
     },
-    { title: "פרטים", dataIndex: "details", key: "details" },
+    { title: "פרטים", dataIndex: "details", key: "details",...searchProps("details", "פרטים") },
     {
       title: "פעולות",
       dataIndex: "actions",
@@ -122,11 +103,6 @@ function Finance() {
     <>
       <header className={classes.financeHeader}>
         <h1 className={classes.financeTitle}>ניהול פיננסים</h1>
-        <SearchField
-          allItems={finance}
-          setItemsToShow={setFinanceToShow}
-          placeholder={`חיפוש עפ"י פרטים`}
-        />
         <AddFinance fetchData={fetchData} />
       </header>
       <div className={classes.financeContainer}>

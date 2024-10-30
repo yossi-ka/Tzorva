@@ -5,32 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { getArchive } from "../data-base/select";
 import { ConfigProvider, Table } from "antd";
 import AddArchive, { statusArr } from "./archive-comp/AddArchive";
-import Hebcal from "hebcal";
-import SearchField from "./SearchField";
 import he_IL from "antd/lib/locale/he_IL";
 import EditArchive from "./archive-comp/EditArchive";
 import DeleteArchive from "./archive-comp/DeleteArchive";
-
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp.seconds * 1000);
-  return date.toLocaleDateString("he-IL", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-};
-
-export const formatDateToHebrew = (timestamp) => {
-  const date = new Date(timestamp.seconds * 1000);
-  const hebrewDate = new Hebcal.HDate(date);
-  return hebrewDate.toString("h"); // "h" מציין את הפורמט העברי
-};
+import { formatDate, formatDateToHebrew } from "../services/date";
+import searchProps from "../services/SearchANT";
 
 function Archive() {
-  const [archive, setArchive] = useState([]);
   const [archiveToShow, setArchiveToShow] = useState([]);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
@@ -39,7 +20,6 @@ function Archive() {
     try {
       const data = await getArchive();
       const sortData = data.sort((a, b) => b.time - a.time);
-      setArchive(sortData);
       setArchiveToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -77,9 +57,10 @@ function Archive() {
       key: "student_id,",
     },
     {
-      title: "שם מלא",
+      title: "שם התלמיד",
       dataIndex: "full_name",
       key: "full_name",
+      ...searchProps("full_name", "שם התלמיד"),
     },
     {
       title: "שם האב",
@@ -87,7 +68,7 @@ function Archive() {
       key: "fathers_name",
     },
     {
-      title: "סך הוצאות עבורו",
+      title: "סך הוצאות",
       dataIndex: "invested_amount",
       key: "invested_amount",
       render: (amount) => `${amount} ₪`,
@@ -99,12 +80,12 @@ function Archive() {
       key: "title",
       filters: statusArr.map((item) => ({ text: item, value: item })),
       onFilter: (value, record) => record.title === value,
-      // onFilter: (value, record) => record.title.indexOf(value) === 0,
     },
     {
       title: "תיאור",
       dataIndex: "body",
       key: "body",
+      ...searchProps("body", "תיאור"),
     },
     {
       title: "פעולות",
@@ -123,18 +104,7 @@ function Archive() {
     <>
       <header className={classes.archiveHeader}>
         <h1 className={classes.archiveTitle}>ארכיון</h1>
-        <SearchField
-          allItems={archive}
-          setItemsToShow={setArchiveToShow}
-          placeholder={`חיפוש תלמיד`}
-          searchBy="name"
-        />
-        <SearchField
-          allItems={archive}
-          setItemsToShow={setArchiveToShow}
-          placeholder={`חיפוש עפ"י תיאור`}
-          searchBy="body"
-        />
+        
         <AddArchive fetchData={fetchData} />
       </header>
       <div className={classes.archiveContainer}>

@@ -7,30 +7,11 @@ import { ConfigProvider, Table } from "antd";
 import AddIntervention from "./intervention-comp/AddIntervention";
 import DeleteIntervention from "./intervention-comp/DeleteIntervention";
 import EditIntervention from "./intervention-comp/EditIntervention";
-import Hebcal from "hebcal";
-import SearchField from "./SearchField";
 import he_IL from "antd/lib/locale/he_IL";
-
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp.seconds * 1000);
-  return date.toLocaleDateString("he-IL", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-};
-
-export const formatDateToHebrew = (timestamp) => {
-  const date = new Date(timestamp.seconds * 1000);
-  const hebrewDate = new Hebcal.HDate(date);
-  return hebrewDate.toString("h"); // "h" מציין את הפורמט העברי
-};
+import searchProps from "../services/SearchANT";
+import { formatDate, formatDateToHebrew } from "../services/date";
 
 function Intervention() {
-  const [intervention, setIntervention] = useState([]);
   const [interventionToShow, setInterventionToShow] = useState([]);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
@@ -40,7 +21,6 @@ function Intervention() {
     try {
       const data = await getIntervention(user, rest);
       const sortData = data?.sort((a, b) => b.time - a.time);
-      setIntervention(sortData);
       setInterventionToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -73,6 +53,8 @@ function Intervention() {
             title: "מטפל",
             dataIndex: "tutor_name",
             key: "tutor_name",
+            ...searchProps("tutor_name", "מטפל"),
+            sorter: (a, b) => a.tutor_name.localeCompare(b.tutor_name),
           },
         ]
       : []),
@@ -80,21 +62,20 @@ function Intervention() {
       title: "תלמיד",
       dataIndex: "student_name",
       key: "student_name",
+      ...searchProps("student_name", "תלמיד"),
+      sorter: (a, b) => a.student_name.localeCompare(b.student_name),
     },
     {
       title: "מקום מפגש",
       dataIndex: "place",
       key: "place",
+      ...searchProps("place", "מקום מפגש"),
     },
     {
       title: "נושא טיפול",
       dataIndex: "intervention_title",
       key: "intervention_title",
-    },
-    {
-      title: "פרטי התקדמות",
-      dataIndex: "intervention_description",
-      key: "intervention_description",
+      ...searchProps("intervention_title", "נושא טיפול"),
     },
     {
       title: "פעולות",
@@ -102,8 +83,8 @@ function Intervention() {
       key: "actions",
       render: (text, record) => (
         <div className={classes.rowActions}>
-          <EditIntervention fetchData={fetchData} intervention={record} />
-          <DeleteIntervention fetchData={fetchData} intervention={record} />
+          <EditIntervention intervention={record} fetchData={fetchData} />
+          <DeleteIntervention intervention={record} fetchData={fetchData} />
         </div>
       ),
     },
@@ -113,11 +94,6 @@ function Intervention() {
     <>
       <header className={classes.interventionHeader}>
         <h1 className={classes.interventionTitle}>טיפולים</h1>
-        <SearchField
-          allItems={intervention}
-          setItemsToShow={setInterventionToShow}
-          placeholder={"חיפוש לפי שם תלמיד"}
-        />
         <AddIntervention fetchData={fetchData} />
       </header>
       <div className={classes.interventionContainer}>
@@ -131,6 +107,19 @@ function Intervention() {
               className={classes.interventionTable}
               rowKey="time"
               locale={{ emptyText: "לא קיימים טיפולים" }}
+              expandable={{
+                expandedRowRender: (record) => (
+                  <p
+                    style={{
+                      margin: 0,
+                    }}
+                  >
+                    {record.intervention_description}
+                  </p>
+                ),
+                rowExpandable: (record) =>
+                  record.intervention_description !== "***  לא קיים תיעוד  ***",
+              }}
             />
           </ConfigProvider>
         </div>

@@ -45,14 +45,14 @@
 /*  add  */
 
 .addInterventionBtn {
-    background-color: #4caf50; /* צבע רקע ירוק */
-    color: white; /* צבע טקסט לבן */
-    padding: 10px 20px; /* ריפוד */
-    border: none; /* ללא גבול */
-    border-radius: 5px; /* פינות מעוגלות */
-    cursor: pointer; /* מחוון עכבר */
-    font-size: 16px; /* גודל טקסט */
-    transition: background-color 0.3s; /* תנועת צבע */
+  background-color: #4caf50; /* צבע רקע ירוק */
+  color: white; /* צבע טקסט לבן */
+  padding: 10px 20px; /* ריפוד */
+  border: none; /* ללא גבול */
+  border-radius: 5px; /* פינות מעוגלות */
+  cursor: pointer; /* מחוון עכבר */
+  font-size: 16px; /* גודל טקסט */
+  transition: background-color 0.3s; /* תנועת צבע */
 }
 
 .addInterventionBtn:hover {
@@ -139,4 +139,185 @@
   overflow-y: auto;
   min-height: 60px;
   max-height: 100px;
+}
+
+/*  edit  */
+
+.editBtn {
+  background-color: #007bff; /* צבע רקע כחול */
+  color: white; /* צבע טקסט לבן */
+  padding: 8px 16px; /* ריפוד */
+  border: none; /* ללא גבול */
+  border-radius: 4px; /* פינות מעוגלות */
+  cursor: pointer; /* מחוון עכבר */
+  font-size: 14px; /* גודל טקסט */
+  transition: background-color 0.3s;
+}
+
+.editBtn:hover {
+  background-color: #0056b3; /* צבע כהה יותר כשמעל העכבר */
+}
+
+/* שכבת חפיפה */
+.overlay {
+  position: fixed; /* שימו לב שזו שכבת חפיפה */
+  top: 0; /* מהחלק העליון */
+  left: 0; /* מהצד השמאלי */
+  right: 0; /* מהצד הימני */
+  bottom: 0; /* מהחלק התחתון */
+  background-color: rgba(0, 0, 0, 0.5); /* רקע כהה עם שקיפות */
+  z-index: 1000; /* מעל תוכן אחר */
+}
+
+/* טופס עריכה */
+.editForm {
+  position: fixed; /* טופס קבוע */
+  top: 50%; /* מרכז את הטופס */
+  left: 50%; /* מרכז את הטופס */
+  transform: translate(-50%, -50%); /* מהלך חזרה למרכז */
+  background-color: white; /* צבע רקע לבן */
+  padding: 20px; /* ריפוד פנימי */
+  border-radius: 8px; /* פינות מעוגלות */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* צל */
+  z-index: 1001; /* מעל שכבת החפיפה */
+}
+
+.editForm h1 {
+  text-align: center; /* מרכז את הכותרת */
+  font-size: 24px; /* גודל טקסט לכותרת */
+  color: #333; /* צבע כהה לכותרת */
+  margin-bottom: 20px; /* רווח מתחת לכותרת */
+}
+
+/* תוויות */
+.editForm label {
+  display: block; /* מציג את התוויות כל אחת בשורה חדשה */
+  margin-bottom: 5px; /* רווח מתחת לתוויות */
+  font-weight: bold; /* טקסט מודגש */
+}
+
+/* שדות קלט */
+.editForm input[type="text"],
+.editForm input[type="number"],
+.editForm select {
+  width: 100%; /* רוחב מלא */
+  padding: 10px; /* רווח פנימי */
+  margin-bottom: 15px;
+  border: 1px solid #ccc; /* גבול אפור */
+  border-radius: 4px; /* פינות מעוגלות */
+  font-size: 16px; /* גודל טקסט */
+}
+
+.editForm input[type="text"]:disabled,
+.editForm input[type="number"]:disabled {
+  background-color: #f9f9f9; /* צבע רקע לשדות לא פעילים */
+  cursor: not-allowed; /* מצביע על כך שהשדה לא ניתן ללחיצה */
+}
+
+.editForm .lastBtns {
+  display: flex;
+  justify-content: space-between; /* מסדר את הכפתורים בצדדים */
+  margin-top: 10px; /* רווח מעל הכפתורים */
+}
+
+.editForm .saveBtn,
+.editForm .cancelBtn {
+  padding: 10px 15px; /* רווח פנימי בכפתורים */
+  border: none; /* בלי גבול */
+  border-radius: 5px; /* פינות מעוגלות */
+  font-size: 16px; /* גודל טקסט */
+  cursor: pointer; /* מצביע על כך שהכפתור ניתן ללחיצה */
+  transition: background-color 0.3s; /* אנימציה בזמן מעבר צבע */
+}
+
+.editForm .saveBtn {
+  background-color: #4caf50; /* צבע ירוק לשמירה */
+  color: white; /* צבע טקסט לבן */
+}
+
+.editForm .saveBtn:hover {
+  background-color: #45a049; /* צבע כהה יותר בזמן ריחוף */
+}
+
+.editForm .cancelBtn {
+  background-color: #f44336; /* צבע אדום לביטול */
+  color: white; /* צבע טקסט לבן */
+}
+
+.editForm .cancelBtn:hover {
+  background-color: #e53935; /* צבע כהה יותר בזמן ריחוף */
+}
+
+.editForm textarea {
+  width: 100%;
+  padding: 6px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+/*  delete  */
+.warningForm {
+  position: relative;
+}
+
+.warningForm .underlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.warningForm .warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  text-align: center;
+}
+
+.warningForm .warning h1 {
+  margin-top: 0;
+}
+
+.warningForm .deleteBtns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.warningForm .deleteBtn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.deleteBtn:hover {
+  background-color: #c0392b;
+}
+
+.warningForm .cancelBtn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
 }

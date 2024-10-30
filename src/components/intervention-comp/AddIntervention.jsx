@@ -3,7 +3,7 @@ import React, { useRef, useState, useContext } from "react";
 import { UserContext } from "../../App";
 import { addIntervention } from "../../data-base/insert";
 
-const tutorsArr = ["משה פינקלשטיין", "111111111", "יוסף ברגר", "123123123"];
+const tutorsArr = ["משה פינקלשטיין", "111111111", "יוסף ברגר", "222222222"];
 const studentsArr = [
   "מאיר דוד טובאק",
   "121212121",
@@ -24,6 +24,7 @@ function AddIntervention({ fetchData }) {
   const titleRef = useRef(null);
   const descriptionRef = useRef(null);
   const [openForm, setOpenForm] = useState(false);
+
   const handleAddIntervention = async (e) => {
     e.preventDefault();
     const time = new Date();
@@ -35,13 +36,14 @@ function AddIntervention({ fetchData }) {
         ? tutorRef.current.value
         : user.first_name + " " + user.last_name,
       tutor_id: manager
-        ? Array.from(tutorsArr).indexOf(tutorRef.current.value)
+        ? tutorsArr[Array.from(tutorsArr).indexOf(tutorRef.current.value) + 1]
         : user.user_id,
-        intervention_title: titleRef.current.value,
+      intervention_title: titleRef.current.value,
       intervention_description: descriptionRef.current.value,
       time: time,
       date: date,
       place: placeRef.current.value,
+      student_id: Array.from(studentsArr).indexOf(studentRef.current.value),
     };
 
     await addIntervention(newIntervention);
@@ -55,7 +57,7 @@ function AddIntervention({ fetchData }) {
         className={classes.addInterventionBtn}
         onClick={() => setOpenForm(true)}
       >
-        + הוספת שורה
+        + הוספת טיפול
       </button>
       {openForm && (
         <>
@@ -70,7 +72,6 @@ function AddIntervention({ fetchData }) {
             <h1 className={classes.title}>הוספת טיפול</h1>
             <label htmlFor="date">תאריך טיפול:</label>
             <input type="date" id="date" name="date" ref={dateRef} required />
-
             {manager && (
               <>
                 <label htmlFor="tutor">מטפל</label>
