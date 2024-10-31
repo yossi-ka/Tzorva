@@ -4,7 +4,7 @@ import DeleteStudent from "./DeleteStudent";
 import EditStudent from "./EditStudent";
 import { useNavigate } from "react-router-dom";
 
-function StudentCard({ student, deleteStudent, showDocs, getstud }) {
+function StudentCard({ student,addStudent, deleteStudent, showDocs, getstud }) {
   const navigate = useNavigate();
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [showEditStudent, setShowEditStudent] = useState(false);
@@ -37,7 +37,7 @@ function StudentCard({ student, deleteStudent, showDocs, getstud }) {
         <p className={classes.class}>{textClass()}</p>
       </div>
       <div className={classes.btns}>
-        {deleteStudent && (
+        {addStudent && (
           <button
             onClick={() => setShowEditStudent(!showEditStudent)}
             className={classes.editBtn}

@@ -28,8 +28,8 @@ function Archive() {
 
   useEffect(() => {
     const access_permissions = user?.access_permissions;
-    if (access_permissions?.archive === false) {
-      navigate(-1);
+    if (!access_permissions?.archive) {
+      navigate("/home");
       return;
     }
     // אם למשתמש יש גישה, טען את נתוני הארכיון
@@ -104,7 +104,7 @@ function Archive() {
     <>
       <header className={classes.archiveHeader}>
         <h1 className={classes.archiveTitle}>ארכיון</h1>
-        
+
         <AddArchive fetchData={fetchData} />
       </header>
       <div className={classes.archiveContainer}>

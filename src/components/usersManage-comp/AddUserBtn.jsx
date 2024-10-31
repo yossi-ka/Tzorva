@@ -61,6 +61,8 @@ function AddUserBtn({ getUsers }) {
                 ref={userIdRef}
                 type="text"
                 placeholder="תעודת זהות"
+                maxLength={9}
+                minLength={9}
                 required
               />
               <input

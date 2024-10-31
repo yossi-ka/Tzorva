@@ -14,7 +14,6 @@ import he_IL from "antd/lib/locale/he_IL";
 import { formatDate, formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 
-
 function Finance() {
   const [financeToShow, setFinanceToShow] = useState([]);
   const { user } = useContext(UserContext);
@@ -32,7 +31,7 @@ function Finance() {
 
   useEffect(() => {
     const access_permissions = user?.access_permissions;
-    if (access_permissions?.finance === false) {
+    if (!access_permissions?.finance) {
       navigate(-1);
       return;
     }
@@ -85,7 +84,12 @@ function Finance() {
       filterSearch: true,
       onFilter: (value, record) => record.category.startsWith(value),
     },
-    { title: "פרטים", dataIndex: "details", key: "details",...searchProps("details", "פרטים") },
+    {
+      title: "פרטים",
+      dataIndex: "details",
+      key: "details",
+      ...searchProps("details", "פרטים"),
+    },
     {
       title: "פעולות",
       dataIndex: "actions",

@@ -289,6 +289,171 @@
   border-radius: 8px;
 }
 
+/*  permissions  */
+
+.managePermissions {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background-color: white;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+  min-height: 200px;
+  z-index: 1001;
+  border-radius: 8px;
+}
+
+/*  permissions management  */
+
+/* .managePermissions {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  direction: rtl;
+} */
+
+.updatePermissinsForm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  min-width: 300px;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.updatePermissinsForm h1 {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #eee;
+}
+
+.updatePermissinsForm .permissionSection {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.updatePermissinsForm .sectionTitle {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.updatePermissinsForm .checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.updatePermissinsForm .studentList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+}
+
+.updatePermissinsForm .studentList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.updatePermissinsForm .studentList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.updatePermissinsForm .studentList::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.updatePermissinsForm .studentList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.updatePermissinsForm .btns {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.updatePermissinsForm .updateBtn,
+.updatePermissinsForm .cancelBtn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  border: none;
+}
+
+.updatePermissinsForm .updateBtn {
+  background-color: #4caf50;
+}
+
+.updatePermissinsForm .updateBtn:hover {
+  background-color: #45a049;
+}
+
+.updatePermissinsForm .cancelBtn {
+  background-color: #f44336;
+}
+
+.updatePermissinsForm .cancelBtn:hover {
+  background-color: #da190b;
+}
+
+/* Checkbox styling */
+.updatePermissinsForm .checkboxGroup input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #4caf50;
+}
+
+.updatePermissinsForm .checkboxGroup label {
+  cursor: pointer;
+  user-select: none;
+  color: #444;
+}
+
+/*  media queries  */
+
 @media (max-height: 670px) {
   .editUserForm {
     transform: translate(-50%, -50%) scale(0.9); /* שומר על מרכזיות תוך הקטנה */

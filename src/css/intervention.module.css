@@ -44,19 +44,28 @@
 
 /*  add  */
 
+.ahowAllStudentsBtn,
 .addInterventionBtn {
-  background-color: #4caf50; /* צבע רקע ירוק */
   color: white; /* צבע טקסט לבן */
   padding: 10px 20px; /* ריפוד */
   border: none; /* ללא גבול */
   border-radius: 5px; /* פינות מעוגלות */
   cursor: pointer; /* מחוון עכבר */
   font-size: 16px; /* גודל טקסט */
-  transition: background-color 0.3s; /* תנועת צבע */
+  transition: all 0.3s; /* תנועת צבע */
 }
 
-.addInterventionBtn:hover {
-  background-color: #45a049;
+.addInterventionBtn {
+  background-color: #4caf50; /* צבע רקע ירוק */
+}
+
+.ahowAllStudentsBtn {
+  background-color: #1c647e; /* צבע רקע כחול כהה */
+}
+
+.addInterventionBtn:hover,
+.ahowAllStudentsBtn:hover {
+  opacity: 0.8;
 }
 
 .overlayAdd {

@@ -7,6 +7,7 @@ import { UserContext } from "../App";
 function Home() {
   const { user } = useContext(UserContext);
   const [accessFinance, setAccessFinance] = useState(false);
+  const accessArchive = user?.access_permissions?.archive;
   const [usersManage, setUsersManage] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
@@ -19,6 +20,7 @@ function Home() {
     <div className={classes.container}>
       <h1 className={classes.title}>ברוך הבא למערכת ניהול צורבא</h1>
       <div className={classes.homeOptions}>
+        
         <div className={`${classes.option} ${classes.studArea}`}>
           <div className={`${classes.studAreaTitle} ${classes.areaTitle}`}>
             <h1 className={classes.h1}>ניהול תלמידים</h1>
@@ -66,6 +68,7 @@ function Home() {
             </div>
           </div>
         )}
+
         {usersManage && (
           <div className={`${classes.option} ${classes.userMngArea}`}>
             <div className={`${classes.userMngAreaTitle} ${classes.areaTitle}`}>
@@ -116,28 +119,31 @@ function Home() {
           </div>
         </div>
 
-        <div className={`${classes.option} ${classes.archiveArea}`}>
-          <div className={`${classes.archiveAreaTitle} ${classes.areaTitle}`}>
-            <h1 className={classes.h1}>ארכיון</h1>
-            <span
-              style={{ fontSize: "40px" }}
-              className="material-symbols-outlined"
-            >
-              archive
-            </span>
+        {accessArchive && (
+          <div className={`${classes.option} ${classes.archiveArea}`}>
+            <div className={`${classes.archiveAreaTitle} ${classes.areaTitle}`}>
+              <h1 className={classes.h1}>ארכיון</h1>
+              <span
+                style={{ fontSize: "40px" }}
+                className="material-symbols-outlined"
+              >
+                archive
+              </span>
+            </div>
+            <div className={classes.areaBot}>
+              <p className={classes.p}>
+                צפייה בארכיון התלמידים שטופלו ע"י הארגון, עדכון ומחיקת תיעודים.
+              </p>
+              <button
+                className={`${classes.archiveBtn} ${classes.btn}`}
+                onClick={() => navigate("/archive")}
+              >
+                כניסה לארכיון
+              </button>
+            </div>
           </div>
-          <div className={classes.areaBot}>
-            <p className={classes.p}>
-              צפייה בארכיון התלמידים שטופלו ע"י הארגון, עדכון ומחיקת תיעודים.
-            </p>
-            <button
-              className={`${classes.archiveBtn} ${classes.btn}`}
-              onClick={() => navigate("/archive")}
-            >
-              כניסה לארכיון
-            </button>
-          </div>
-        </div>
+        )}
+
       </div>
     </div>
   );

@@ -5,11 +5,10 @@ import { getStudents } from "../data-base/select";
 
 import { UserContext } from "../App";
 import AddStudentBtn from "./students-comp/AddStudentBtn";
-import SearchField from "./SearchField";
+import SearchField from "../services/SearchField";
 import SortStudents from "./students-comp/SortStudents";
 
 function Students() {
-  //   const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
   const [addStudent, setAddStudent] = useState(false);
@@ -45,7 +44,7 @@ function Students() {
           allStudents={students}
           setStudentsToShow={setStudentsToShow}
         />
-        {addStudent && <AddStudentBtn getstud={getstud} />}
+        <div>{addStudent && <AddStudentBtn getstud={getstud} />}</div>
       </div>
 
       <div className={classes.studentsContainer}>
@@ -56,6 +55,7 @@ function Students() {
                 <StudentsCard
                   getstud={getstud}
                   student={student}
+                  addStudent={addStudent}
                   deleteStudent={deleteStudent}
                   showDocs={showDocs}
                 />

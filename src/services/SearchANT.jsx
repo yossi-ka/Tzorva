@@ -84,6 +84,5 @@ const SearchDropdown = ({
   );
 };
 
-const searchProps = (dataIndex, title) => getSearchColumn(dataIndex, title);
 
-export default searchProps;
+export default getSearchColumn;

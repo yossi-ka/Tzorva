@@ -16,7 +16,8 @@ function UserCard({ user, getuse }) {
     <div className={classes.userCard}>
       <div className={classes.basicDetails}>
         <h1 className={classes.h1}>{`${user.first_name} ${user.last_name}`}</h1>
-        <p className={classes.p}>{`תפקיד: ${user.job_title}`}</p>
+        <p className={classes.p}>{user.city}</p>
+        <p>{`תפקיד: ${user.job_title}`}</p>
         <button
           className={`${classes.moreBtn} ${
             showMoreDetails ? classes.rotated : ""
@@ -88,7 +89,11 @@ function UserCard({ user, getuse }) {
             onClick={() => setShowUpdatePermissions(false)}
           ></div>
           <div className={classes.updatePermissionsArea}>
-            <UpdatePermissions />
+            <UpdatePermissions
+              setShowUpdatePermissions={setShowUpdatePermissions}
+              user={user}
+              getuse={getuse}
+            />
           </div>
         </>
       )}

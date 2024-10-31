@@ -27,53 +27,58 @@ function ChangePassword({ setChangePassword }) {
     if (isCurrentPasswordValid) {
       await updateUserPassword(newPasswordRef.current.value);
       setChangePassword(false);
-    } else{
+    } else {
       setShowError(true);
     }
   };
   return (
-    <form onSubmit={handleSubmit} className={classes.formUpdatePassword}>
-      <h1 className={classes.title}>שינוי סיסמא</h1>
-      <label htmlFor="oldPassword">הזן סיסמא ישנה:</label>
-      <input
-        ref={oldPasswordRef}
-        required
-        type="password"
-        id="oldPassword"
-        name="oldPassword"
-      />
-      {showError && <p className={classes.error}>סיסמא אינה תקינה</p>}
-      <label htmlFor="newPassword">הזן סיסמא חדשה: (מינימום 6 תווים)</label>
-      <input
-        minLength={6}
-        ref={newPasswordRef}
-        required
-        type="password"
-        id="newPassword"
-        name="newPassword"
-      />
-      <label htmlFor="confirmPassword">אימות סיסמא חדשה: (מינימום 6 תווים)</label>
-      <input
-        minLength={6}
-        ref={confirmPasswordRef}
-        required
-        type="password"
-        id="confirmPassword"
-        name="confirmPassword"
-      />
-      {showDifferentPasswords && (
-        <p className={classes.error}>הסיסמאות אינן תואמות, נסה שוב</p>
-      )}
-      <div className={classes.divBtns}>
-        <button className={classes.button}>שמור סיסמה</button>
-        <button
-          className={classes.button}
-          onClick={() => setChangePassword(false)}
-        >
-          ביטול
-        </button>
-      </div>
-    </form>
+    <div className={classes.fixed}>
+      <div onClick={() => setChangePassword(false)} className={classes.underlay}></div>
+      <form onSubmit={handleSubmit} className={classes.formUpdatePassword}>
+        <h1 className={classes.title}>שינוי סיסמה</h1>
+        <label htmlFor="oldPassword">הזן סיסמה ישנה:</label>
+        <input
+          ref={oldPasswordRef}
+          required
+          type="password"
+          id="oldPassword"
+          name="oldPassword"
+        />
+        {showError && <p className={classes.error}>הסיסמה אינה תקינה</p>}
+        <label htmlFor="newPassword">הזן סיסמה חדשה: (מינימום 6 תווים)</label>
+        <input
+          minLength={6}
+          ref={newPasswordRef}
+          required
+          type="password"
+          id="newPassword"
+          name="newPassword"
+        />
+        <label htmlFor="confirmPassword">
+          אימות סיסמה חדשה: (מינימום 6 תווים)
+        </label>
+        <input
+          minLength={6}
+          ref={confirmPasswordRef}
+          required
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+        />
+        {showDifferentPasswords && (
+          <p className={classes.error}>הסיסמאות אינן תואמות, נסה שוב</p>
+        )}
+        <div className={classes.divBtns}>
+          <button className={classes.button}>שמור סיסמה</button>
+          <button
+            className={classes.button}
+            onClick={() => setChangePassword(false)}
+          >
+            ביטול
+          </button>
+        </div>
+      </form>
+    </ div>
   );
 }
 

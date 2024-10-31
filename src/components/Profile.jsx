@@ -57,23 +57,17 @@ function Profile() {
             onClick={() => setChangePassword(true)}
             className={classes.button}
           >
-            🔑 שנה סיסמא
+            🔑 שנה סיסמה
           </button>
           <button className={classes.button} onClick={() => navigate(-1)}>
             חזרה ⬅️
           </button>
         </div>
       </div>
-      {updateProfile && (
-        <div className={`${classes.updateProfile} ${classes.optionsProfile}`}>
-          <EditProfile setUpdateProfile={setUpdateProfile} />
-        </div>
-      )}
+      {updateProfile && <EditProfile setUpdateProfile={setUpdateProfile} />}
 
       {changePassword && (
-        <div className={`${classes.changePassword} ${classes.optionsProfile}`}>
-          <ChangePassword setChangePassword={setChangePassword} />
-        </div>
+        <ChangePassword setChangePassword={setChangePassword} />
       )}
     </>
   );

@@ -49,7 +49,7 @@ function Login() {
             id="username"
           />
           <label className={classes.label} htmlFor="password">
-            סיסמא:
+            סיסמה:
           </label>
           <input
             className={classes.input}
@@ -58,7 +58,7 @@ function Login() {
             id="password"
           />
           {shoeError && (
-            <p className={classes.p}>שם משתמש או סיסמא אינם תקינים</p>
+            <p className={classes.p}>שם משתמש או סיסמה אינם תקינים</p>
           )}
           <button className={classes.button}>כניסה</button>
         </form>

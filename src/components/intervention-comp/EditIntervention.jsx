@@ -21,7 +21,7 @@ function EditIntervention({ intervention, fetchData }) {
   const handleEdit = (e) => {
     e.preventDefault();
     const formData = {};
-    if (tutorRef.current.value !== intervention.tutor_name) {
+    if (manager && tutorRef.current.value !== intervention.tutor_name) {
       formData.tutor_name = tutorRef.current.value;
     }
 

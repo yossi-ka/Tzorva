@@ -8,12 +8,18 @@ import AddIntervention from "./intervention-comp/AddIntervention";
 import DeleteIntervention from "./intervention-comp/DeleteIntervention";
 import EditIntervention from "./intervention-comp/EditIntervention";
 import he_IL from "antd/lib/locale/he_IL";
-import searchProps from "../services/SearchANT";
+import getSearchColumn from "../services/SearchANT";
 import { formatDate, formatDateToHebrew } from "../services/date";
 
 function Intervention() {
   const [interventionToShow, setInterventionToShow] = useState([]);
+  const [delete_interventions, setDelete_interventions] = useState(false);
   const { user } = useContext(UserContext);
+  const manager =
+    user.job_title === "יועץ" ||
+    user.job_title === "מנהל ארגון" ||
+    user.job_title === `מנהל ת"ת`;
+
   const navigate = useNavigate();
   const { "*": rest } = useParams();
 
@@ -22,6 +28,9 @@ function Intervention() {
       const data = await getIntervention(user, rest);
       const sortData = data?.sort((a, b) => b.time - a.time);
       setInterventionToShow(sortData);
+      setDelete_interventions(
+        user?.access_permissions?.actions?.delete_interventions
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -45,15 +54,13 @@ function Intervention() {
       key: "hebrewDate",
       render: (date) => formatDateToHebrew(date),
     },
-    ...(user.job_title === "יועץ" ||
-    user.job_title === "מנהל ארגון" ||
-    user.job_title === `מנהל ת"ת`
+    ...(manager
       ? [
           {
             title: "מטפל",
             dataIndex: "tutor_name",
             key: "tutor_name",
-            ...searchProps("tutor_name", "מטפל"),
+            ...getSearchColumn("tutor_name", "מטפל"),
             sorter: (a, b) => a.tutor_name.localeCompare(b.tutor_name),
           },
         ]
@@ -62,20 +69,20 @@ function Intervention() {
       title: "תלמיד",
       dataIndex: "student_name",
       key: "student_name",
-      ...searchProps("student_name", "תלמיד"),
+      ...getSearchColumn("student_name", "תלמיד"),
       sorter: (a, b) => a.student_name.localeCompare(b.student_name),
     },
     {
       title: "מקום מפגש",
       dataIndex: "place",
       key: "place",
-      ...searchProps("place", "מקום מפגש"),
+      ...getSearchColumn("place", "מקום מפגש"),
     },
     {
       title: "נושא טיפול",
       dataIndex: "intervention_title",
       key: "intervention_title",
-      ...searchProps("intervention_title", "נושא טיפול"),
+      ...getSearchColumn("intervention_title", "נושא טיפול"),
     },
     {
       title: "פעולות",
@@ -84,7 +91,9 @@ function Intervention() {
       render: (text, record) => (
         <div className={classes.rowActions}>
           <EditIntervention intervention={record} fetchData={fetchData} />
-          <DeleteIntervention intervention={record} fetchData={fetchData} />
+          {delete_interventions && (
+            <DeleteIntervention intervention={record} fetchData={fetchData} />
+          )}
         </div>
       ),
     },
@@ -94,6 +103,12 @@ function Intervention() {
     <>
       <header className={classes.interventionHeader}>
         <h1 className={classes.interventionTitle}>טיפולים</h1>
+        <button
+          className={classes.ahowAllStudentsBtn}
+          onClick={() => navigate("/intervention")}
+        >
+          הצג את כל התלמידים
+        </button>
         <AddIntervention fetchData={fetchData} />
       </header>
       <div className={classes.interventionContainer}>

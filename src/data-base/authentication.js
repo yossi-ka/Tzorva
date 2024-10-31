@@ -76,7 +76,7 @@ const updateUserPassword = async (newPassword) => {
   try {
     await updatePassword(auth.currentUser, newPassword);
   } catch (error) {
-    console.error("שגיאה במהלך עדכון הסיסמא:", error);
+    console.error("שגיאה במהלך עדכון הסיסמה:", error);
   }
 };
 
