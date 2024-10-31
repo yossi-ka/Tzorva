@@ -22,6 +22,9 @@ function Intervention() {
 
   const navigate = useNavigate();
   const { "*": rest } = useParams();
+  if (rest && !user?.access_permissions?.students.includes(rest)) {
+    navigate("/home");
+  }
 
   const fetchData = useCallback(async () => {
     try {
@@ -103,12 +106,14 @@ function Intervention() {
     <>
       <header className={classes.interventionHeader}>
         <h1 className={classes.interventionTitle}>טיפולים</h1>
-        <button
-          className={classes.ahowAllStudentsBtn}
-          onClick={() => navigate("/intervention")}
-        >
-          הצג את כל התלמידים
-        </button>
+        {rest && (
+          <button
+            className={classes.ahowAllStudentsBtn}
+            onClick={() => navigate("/intervention")}
+          >
+            הצג את כל התלמידים
+          </button>
+        )}
         <AddIntervention fetchData={fetchData} />
       </header>
       <div className={classes.interventionContainer}>

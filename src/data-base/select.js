@@ -39,8 +39,13 @@ const getStudents = async (uid) => {
   const allStudents = await getAllStudents();
   try {
     const user = await findUserByUID(uid);
-    if (user.job_title === "מנהל ארגון") {
+    if (user.job_title === "מנהל ארגון" || user.job_title === "יועץ") {
       return allStudents;
+    } else if (user.job_title === `מנהל ת"ת`) {
+      const students = allStudents.filter(
+        (student) => student.city_of_school === user.city
+      );
+      return students;
     } else {
       const students = [];
       const studArr = user["access_permissions"]?.students || [];

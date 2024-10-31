@@ -1,17 +1,12 @@
 import classes from "../../css/intervention.module.css";
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import { UserContext } from "../../App";
 import { addIntervention } from "../../data-base/insert";
-
-const tutorsArr = ["משה פינקלשטיין", "111111111", "יוסף ברגר", "222222222"];
-const studentsArr = [
-  "מאיר דוד טובאק",
-  "121212121",
-  "אברהם ניסן ניימן",
-  "456456456",
-];
+import { getAllUsers, getStudents } from "../../data-base/select";
 
 function AddIntervention({ fetchData }) {
+  const [studentsArr, setStudentsArr] = useState([]);
+  const [tutorsArr, setTutorsArr] = useState([]);
   const { user } = useContext(UserContext);
   const manager =
     user.job_title === "מנהל ארגון" ||
@@ -25,6 +20,27 @@ function AddIntervention({ fetchData }) {
   const descriptionRef = useRef(null);
   const [openForm, setOpenForm] = useState(false);
 
+  useEffect(() => {
+    getStudents(user.UID).then((res) => {
+      const students = res.map((student) => ({
+        name: `${student.first_name} ${student.last_name}`,
+        id: student.student_id,
+      }));
+
+      setStudentsArr(students);
+    });
+    getAllUsers().then((res) => {
+      const tutors = res
+        .filter((user) => user.job_title === "מטפל")
+        .map((user) => ({
+          name: `${user.first_name} ${user.last_name}`,
+          id: user.user_id,
+        }));
+
+      setTutorsArr(tutors);
+    });
+  }, [user.UID]);
+
   const handleAddIntervention = async (e) => {
     e.preventDefault();
     const time = new Date();
@@ -36,14 +52,16 @@ function AddIntervention({ fetchData }) {
         ? tutorRef.current.value
         : user.first_name + " " + user.last_name,
       tutor_id: manager
-        ? tutorsArr[Array.from(tutorsArr).indexOf(tutorRef.current.value) + 1]
+        ? tutorsArr.find((tutor) => tutor.name === tutorRef.current.value).id
         : user.user_id,
       intervention_title: titleRef.current.value,
       intervention_description: descriptionRef.current.value,
       time: time,
       date: date,
       place: placeRef.current.value,
-      student_id: Array.from(studentsArr).indexOf(studentRef.current.value),
+      student_id: studentsArr.find(
+        (student) => student.name === studentRef.current.value
+      ).id,
     };
 
     await addIntervention(newIntervention);
@@ -82,17 +100,12 @@ function AddIntervention({ fetchData }) {
                   id="tutor"
                   ref={tutorRef}
                 >
-                  <option value="" disabled>
-                    -- בחר מטפל --
-                  </option>
-                  {tutorsArr.map(
-                    (tutor, index) =>
-                      index % 2 === 0 && (
-                        <option key={tutor} value={tutor}>
-                          {tutor}
-                        </option>
-                      )
-                  )}
+                  <option>-- בחר מטפל --</option>
+                  {tutorsArr.map((tutor) => (
+                    <option key={tutor.id} value={tutor.name}>
+                      {tutor.name}
+                    </option>
+                  ))}
                 </select>
               </>
             )}
@@ -107,14 +120,11 @@ function AddIntervention({ fetchData }) {
               <option value="" disabled>
                 -- בחר תלמיד --
               </option>
-              {studentsArr.map(
-                (student, index) =>
-                  index % 2 === 0 && (
-                    <option key={student} value={student}>
-                      {student}
-                    </option>
-                  )
-              )}
+              {studentsArr.map((student) => (
+                <option key={student.id} value={student.name}>
+                  {student.name}
+                </option>
+              ))}
             </select>
             <label htmlFor="place">מקום מפגש:</label>
             <input
