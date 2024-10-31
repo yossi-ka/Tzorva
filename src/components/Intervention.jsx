@@ -22,7 +22,11 @@ function Intervention() {
 
   const navigate = useNavigate();
   const { "*": rest } = useParams();
-  if (rest && !user?.access_permissions?.students.includes(rest)) {
+  if (
+    rest &&
+    user?.access_permissions?.students.includes(rest) === false &&
+    !manager
+  ) {
     navigate("/home");
   }
 

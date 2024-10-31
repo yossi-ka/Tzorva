@@ -31,7 +31,7 @@ function Finance() {
 
   useEffect(() => {
     const access_permissions = user?.access_permissions;
-    if (!access_permissions?.finance) {
+    if (access_permissions?.finance === false) {
       navigate(-1);
       return;
     }
