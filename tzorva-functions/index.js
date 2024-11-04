@@ -12,14 +12,11 @@ const db = getFirestore();
 const corsOptions = { origin: true };
 const corsMiddleware = cors(corsOptions);
 
-// פונקציה לקבלת כל המשתמשים - הושלם
+// פונקציה לקבלת כל המשתמשים
 export const getUsers = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
-
-    console.log("****uid: ", req.headers.uid);
-    console.log("****authHeader: ", req.headers.authorization);
 
     if (!uid)
       return res.status(403).send({
@@ -42,7 +39,6 @@ export const getUsers = functions.https.onRequest((req, res) => {
     try {
       user = await admin.auth().verifyIdToken(idToken);
     } catch (error) {
-      console.error("Error verifying ID token:", error);
       return res.status(401).send({
         success: false,
         message: "שגיאה באימות ה-ID Token",
@@ -61,15 +57,10 @@ export const getUsers = functions.https.onRequest((req, res) => {
     try {
       const q = db.collection("users").where("UID", "==", uid);
       const querySnapshot = await q.get();
-      console.log("****user data: ", querySnapshot.docs[0].data());
       userData = querySnapshot.docs[0].data();
-    } catch (err) {
-      console.log("****user data not found: ", err);
-    }
+    } catch (err) {}
 
     if (userData.job_title !== "מנהל ארגון") {
-      console.log("****job_title: ", userData.job_title);
-
       return res.status(403).send({
         success: false,
         massage: "אין הרשאה לקבלת פרטי משתמשים",
@@ -96,7 +87,7 @@ export const getUsers = functions.https.onRequest((req, res) => {
   });
 });
 
-// פונקציה לקבלת התלמידים - הושלם
+// פונקציה לקבלת התלמידים
 export const getStudents = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
@@ -123,7 +114,6 @@ export const getStudents = functions.https.onRequest((req, res) => {
     try {
       user = await admin.auth().verifyIdToken(idToken);
     } catch (error) {
-      console.error("Error verifying ID token:", error);
       return res.status(401).send({
         success: false,
         message: "שגיאה באימות ה-ID Token",
@@ -142,11 +132,8 @@ export const getStudents = functions.https.onRequest((req, res) => {
     try {
       const q = db.collection("users").where("UID", "==", uid);
       const querySnapshot = await q.get();
-      console.log("****user data: ", querySnapshot.docs[0].data());
       userData = querySnapshot.docs[0].data();
-    } catch (err) {
-      console.log("****user data not found: ", err);
-    }
+    } catch (err) {}
 
     try {
       if (
@@ -159,7 +146,7 @@ export const getStudents = functions.https.onRequest((req, res) => {
           success: true,
           massage: arr,
         });
-      } else if (userData.job_title === "מנהל ת\"ת") {
+      } else if (userData.job_title === 'מנהל ת"ת') {
         const city = userData.city;
 
         const q = db.collection("students").where("city_of_school", "==", city);
@@ -187,7 +174,6 @@ export const getStudents = functions.https.onRequest((req, res) => {
         });
       }
     } catch (error) {
-      console.error("Error fetching students:", error);
       res.status(500).send({
         success: false,
         message: "שגיאה בזמן שליפת המידע",
@@ -196,7 +182,7 @@ export const getStudents = functions.https.onRequest((req, res) => {
   });
 });
 
-// פונקציה לקבלת מידע פיננסי - הושלם
+// פונקציה לקבלת מידע פיננסי
 export const getFinance = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
@@ -243,12 +229,13 @@ export const getFinance = functions.https.onRequest((req, res) => {
       const querySnapshot = await q.get();
       userData = querySnapshot.docs[0].data();
     } catch (err) {
-      console.log("משתמש לא ידוע: ", err);
+      return res.status(500).send({
+        success: false,
+        message: "משתמש לא ידוע",
+      });
     }
 
     if (userData.job_title !== "מנהל ארגון") {
-      console.log("****job_title: ", userData.job_title);
-
       return res.status(403).send({
         success: false,
         massage: "אין הרשאה לקבלת נתונים פיננסיים",
@@ -275,7 +262,7 @@ export const getFinance = functions.https.onRequest((req, res) => {
   });
 });
 
-// פונקציה לקבלת נתוני ארכיון - הושלם
+// פונקציה לקבלת נתוני ארכיון
 export const getArchive = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
@@ -322,12 +309,13 @@ export const getArchive = functions.https.onRequest((req, res) => {
       const querySnapshot = await q.get();
       userData = querySnapshot.docs[0].data();
     } catch (err) {
-      console.log("משתמש לא ידוע: ", err);
+      return res.status(500).send({
+        success: false,
+        message: "משתמש לא ידוע",
+      });
     }
 
     if (userData.job_title !== "מנהל ארגון") {
-      console.log("****job_title: ", userData.job_title);
-
       return res.status(403).send({
         success: false,
         massage: "אין הרשאה לקבלת נתוני ארכיון",
@@ -354,7 +342,7 @@ export const getArchive = functions.https.onRequest((req, res) => {
   });
 });
 
-// פונקציה לקבלת רשימת הטיפולים - הושלם
+// פונקציה לקבלת רשימת הטיפולים
 export const getInterventions = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
@@ -402,7 +390,10 @@ export const getInterventions = functions.https.onRequest((req, res) => {
       const querySnapshot = await q.get();
       userData = querySnapshot.docs[0].data();
     } catch (err) {
-      console.log("משתמש לא ידוע: ", err);
+      return res.status(500).send({
+        success: false,
+        message: "משתמש לא ידוע",
+      });
     }
 
     try {
@@ -432,7 +423,7 @@ export const getInterventions = functions.https.onRequest((req, res) => {
             success: true,
             massage: arr,
           });
-        } else if (userData.job_title === "מנהל ת\"ת") {
+        } else if (userData.job_title === 'מנהל ת"ת') {
           if (studentData.city_of_school !== userData.city) {
             res.status(200).send({
               success: true,
@@ -475,7 +466,7 @@ export const getInterventions = functions.https.onRequest((req, res) => {
             success: true,
             massage: arr,
           });
-        } else if (userData.job_title === "מנהל ת\"ת") {
+        } else if (userData.job_title === 'מנהל ת"ת') {
           const studentIdArr = [];
           const querySnapshot1 = await db
             .collection("students")
@@ -484,7 +475,6 @@ export const getInterventions = functions.https.onRequest((req, res) => {
           querySnapshot1.forEach((doc) => {
             studentIdArr.push(doc.data().student_id);
           });
-          console.log("****student id arr: ", studentIdArr);
 
           const querySnapshot2 = await db
             .collection("interventions")
@@ -524,90 +514,3 @@ export const getInterventions = functions.https.onRequest((req, res) => {
     }
   });
 });
-
-// פונקציה לקבלת התערבויות לפי תלמיד
-// export const getInterventionsByStudent = functions.https.onRequest(
-//   (req, res) => {
-//     corsMiddleware(req, res, async () => {
-//       const studentId = req.query.student_id;
-//       const arr = [];
-
-//       try {
-//         const q = db
-//           .collection("interventions")
-//           .where("student_id", "==", studentId);
-//         const querySnapshot = await q.get();
-//         querySnapshot.forEach((doc) => {
-//           arr.push(doc.data());
-//         });
-//         res.status(200).send(arr);
-//       } catch (error) {
-//         res.status(500).send("לא ניתן לספק את הבקשה");
-//       }
-//     });
-//   }
-// );
-
-// פונקציה לקבלת התערבויות לפי מדריך
-// export const getInterventionsByTutor = functions.https.onRequest((req, res) => {
-//   corsMiddleware(req, res, async () => {
-//     const tutorId = req.query.tutor_id;
-//     const arr = [];
-
-//     try {
-//       const q = db.collection("interventions").where("tutor_id", "==", tutorId);
-//       const querySnapshot = await q.get();
-//       querySnapshot.forEach((doc) => {
-//         arr.push(doc.data());
-//       });
-//       res.status(200).send(arr);
-//     } catch (error) {
-//       res.status(500).send("Error retrieving interventions for the tutor");
-//     }
-//   });
-// });
-
-// פונקציה לקבלת התערבויות לפי עיר
-// export const getInterventionsByCity = functions.https.onRequest((req, res) => {
-//   corsMiddleware(req, res, async () => {
-//     const city = req.query.city;
-//     const arr = [];
-
-//     try {
-//       const allStudents = await getAllStudents();
-//       const filteredStudents = allStudents.filter(
-//         (student) => student.city_of_school === city
-//       );
-//       const interventionsArr = await getAllInterventions();
-
-//       filteredStudents.forEach((student) => {
-//         const studentInterventions = interventionsArr.filter(
-//           (intervention) => intervention.student_id === student.student_id
-//         );
-//         arr.push(...studentInterventions);
-//       });
-
-//       res.status(200).send(arr);
-//     } catch (error) {
-//       res.status(500).send("Error retrieving interventions by city");
-//     }
-//   });
-// });
-
-// פונקציה לחיפוש משתמש לפי UID
-// export const findUserByUID = functions.https.onRequest((req, res) => {
-//   corsMiddleware(req, res, async () => {
-//     const uid = req.query.uid;
-//     const q = db.collection("users").where("UID", "==", uid);
-//     const querySnapshot = await q.get();
-//     if (querySnapshot.empty) {
-//       return res.status(404).send("No such document!");
-//     } else {
-//       let userData = null;
-//       querySnapshot.forEach((doc) => {
-//         userData = { id: doc.id, ...doc.data() };
-//       });
-//       res.status(200).send(userData);
-//     }
-//   });
-// });
