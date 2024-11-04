@@ -1,6 +1,7 @@
 import classes from "../../css/finance.module.css";
 import React, { useRef, useState } from "react";
 import { addFinance } from "../../data-base/insert";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const revenuesArr = ["מימון תלמיד", "תרומה"];
 export const expensesArr = ["עלונים והדפסות", "אבחון / טיפול"];
@@ -13,17 +14,21 @@ function AddFinance({ fetchData }) {
   const [openForm, setOpenForm] = useState(false);
   const handleAddFinance = async (e) => {
     e.preventDefault();
-    const date = new Date();
-    const newFinance = {
-      type: type,
-      category: categoryRef.current.value,
-      amount: amountRef.current.value,
-      details: detailsRef.current.value,
-      time: date,
-    };
-    await addFinance(newFinance);
-    fetchData();
-    setOpenForm(false);
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      
+      const date = new Date();
+      const newFinance = {
+        type: type,
+        category: categoryRef.current.value,
+        amount: amountRef.current.value,
+        details: detailsRef.current.value,
+        time: date,
+      };
+      await addFinance(newFinance);
+      fetchData(u);
+      setOpenForm(false);
+    })
   };
   return (
     <>

@@ -1,8 +1,9 @@
 import classes from "../../css/finance.module.css";
 import React, { useRef, useState } from "react";
 import { expensesArr, revenuesArr } from "./AddFinance";
-import {  formatDateToHebrew } from "../../services/date";
+import { formatDateToHebrew } from "../../services/date";
 import { updateFinance } from "../../data-base/update";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EditFinance({ finance, fetchData }) {
   const [showEditForm, setShowEditForm] = useState(false);
@@ -14,21 +15,24 @@ function EditFinance({ finance, fetchData }) {
   const category = finance.type === "הכנסה" ? revenuesArr : expensesArr;
   const handleEdit = (e) => {
     e.preventDefault();
-    const formData = {};
-    if (categoryRef.current.value !== finance.category) {
-      formData.category = categoryRef.current.value;
-    }
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      const formData = {};
+      if (categoryRef.current.value !== finance.category) {
+        formData.category = categoryRef.current.value;
+      }
 
-    if (amountRef.current.value !== finance.amount) {
-      formData.amount = amountRef.current.value;
-    }
+      if (amountRef.current.value !== finance.amount) {
+        formData.amount = amountRef.current.value;
+      }
 
-    if (detailsRef.current.value !== finance.details) {
-      formData.details = detailsRef.current.value;
-    }
-    updateFinance(finance, formData);
-    fetchData();
-    setShowEditForm(false);
+      if (detailsRef.current.value !== finance.details) {
+        formData.details = detailsRef.current.value;
+      }
+      updateFinance(finance, formData);
+      fetchData(u);
+      setShowEditForm(false);
+    });
   };
   return (
     <>

@@ -1,17 +1,26 @@
 import classes from "../../css/finance.module.css";
 import React, { useState } from "react";
 import { deleteFinance } from "../../data-base/delete";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function DeleteFinance({ finance, fetchData }) {
   const [showWarningForm, setShowWarningForm] = useState(false);
   const handleDeleteFinance = async (finance) => {
-    setShowWarningForm(false);
-    await deleteFinance(finance);
-    fetchData();
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      setShowWarningForm(false);
+      await deleteFinance(finance);
+      fetchData(u);
+    });
   };
   return (
     <div className={classes.warningForm}>
-      <button className={classes.deleteBtn} onClick={() => setShowWarningForm(true)}>🗑️ מחק</button>
+      <button
+        className={classes.deleteBtn}
+        onClick={() => setShowWarningForm(true)}
+      >
+        🗑️ מחק
+      </button>
       {showWarningForm && (
         <>
           <div className={classes.underlay}></div>

@@ -2,7 +2,7 @@ import classes from "../css/intervention.module.css";
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import { UserContext } from "../App";
 import { useNavigate, useParams } from "react-router-dom";
-import { getIntervention } from "../data-base/select";
+// import { getIntervention } from "../data-base/select";
 import { ConfigProvider, Table } from "antd";
 import AddIntervention from "./intervention-comp/AddIntervention";
 import DeleteIntervention from "./intervention-comp/DeleteIntervention";
@@ -10,6 +10,7 @@ import EditIntervention from "./intervention-comp/EditIntervention";
 import he_IL from "antd/lib/locale/he_IL";
 import getSearchColumn from "../services/SearchANT";
 import { formatDateToHebrew } from "../services/date";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Intervention() {
   const [interventionToShow, setInterventionToShow] = useState([]);
@@ -30,26 +31,46 @@ function Intervention() {
     navigate("/home");
   }
 
-  const fetchData = useCallback(async () => {
-    try {
-      const data = await getIntervention(user, rest);
-      const sortData = data.sort((a, b) => b.time - a.time);
-      sortData.forEach((e, i) => {
-        e.key = i;
-      });
-      setInterventionToShow(sortData);
-      setDelete_interventions(
-        user?.access_permissions?.actions?.delete_interventions
-      );
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }, [user, rest]);
+  const fetchData = useCallback(
+    async (u) => {
+      const idToken = await u.getIdToken();
+      const uid = u.uid;
+
+      try {
+        const financeData = await fetch(
+          `https://getinterventions${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+          {
+            method: "GET",
+            headers: {
+              uid: uid,
+              authorization: `Bearer ${idToken}`,
+              rest: rest,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await financeData.json();
+        const sortData = data.massage.sort((a, b) => b.time - a.time);
+        sortData.forEach((e, i) => {
+          e.key = i;
+        });
+        setInterventionToShow(sortData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
+    [rest]
+  );
 
   useEffect(() => {
+    setDelete_interventions(user?.access_permissions?.actions?.delete_interventions === true);
     document.title = "טיפולים";
-    fetchData();
-  }, [navigate, user, fetchData]);
+    const auth = getAuth();
+    onAuthStateChanged(auth, (u) => {
+      fetchData(u);
+    });
+  }, [rest, user, fetchData]);
 
   const columns = [
     {

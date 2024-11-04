@@ -3,6 +3,7 @@ import React, { useRef, useState, useContext } from "react";
 import { formatDateToHebrew } from "../../services/date";
 import { updateIntervention } from "../../data-base/update";
 import { UserContext } from "../../App";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EditIntervention({ intervention, fetchData }) {
   const { user } = useContext(UserContext);
@@ -20,31 +21,34 @@ function EditIntervention({ intervention, fetchData }) {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    const formData = {};
-    if (manager && tutorRef.current.value !== intervention.tutor_name) {
-      formData.tutor_name = tutorRef.current.value;
-    }
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      const formData = {};
+      if (manager && tutorRef.current.value !== intervention.tutor_name) {
+        formData.tutor_name = tutorRef.current.value;
+      }
 
-    if (studentRef.current.value !== intervention.student_name) {
-      formData.student_name = studentRef.current.value;
-    }
+      if (studentRef.current.value !== intervention.student_name) {
+        formData.student_name = studentRef.current.value;
+      }
 
-    if (placeRef.current.value !== intervention.place) {
-      formData.place = placeRef.current.value;
-    }
+      if (placeRef.current.value !== intervention.place) {
+        formData.place = placeRef.current.value;
+      }
 
-    if (titleRef.current.value !== intervention.intervention_title) {
-      formData.intervention_title = titleRef.current.value;
-    }
-    if (
-      descriptionRef.current.value !== intervention.intervention_description
-    ) {
-      formData.intervention_description = descriptionRef.current.value;
-    }
+      if (titleRef.current.value !== intervention.intervention_title) {
+        formData.intervention_title = titleRef.current.value;
+      }
+      if (
+        descriptionRef.current.value !== intervention.intervention_description
+      ) {
+        formData.intervention_description = descriptionRef.current.value;
+      }
 
-    updateIntervention(intervention, formData);
-    fetchData();
-    setShowEditForm(false);
+      updateIntervention(intervention, formData);
+      fetchData(u);
+      setShowEditForm(false);
+    });
   };
   return (
     <>

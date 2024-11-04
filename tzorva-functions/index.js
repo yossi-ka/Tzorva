@@ -354,11 +354,12 @@ export const getArchive = functions.https.onRequest((req, res) => {
   });
 });
 
-// פונקציה לקבלת רשימת הטיפולים
+// פונקציה לקבלת רשימת הטיפולים - הושלם
 export const getInterventions = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
+    const rest = req.headers.rest;
 
     if (!uid)
       return res.status(403).send({
@@ -406,57 +407,113 @@ export const getInterventions = functions.https.onRequest((req, res) => {
 
     try {
       const arr = [];
-      if (
-        userData.job_title === "מנהל ארגון" ||
-        userData.job_title === "יועץ"
-      ) {
-        const querySnapshot = await db.collection("interventions").get();
+      if (rest) {
+        //  שליפת טיפולים
+        const q = db
+          .collection("interventions")
+          .where("student_id", "==", rest);
+        const querySnapshot = await q.get();
         querySnapshot.forEach((doc) => {
           arr.push(doc.data());
         });
-        res.status(200).send({
-          success: true,
-          massage: arr,
-        });
-      } else if (userData.job_title === "מנהל ת\"ת") {
-        const studentIdArr = [];
+
+        // שליפת נתוני תלמיד
         const querySnapshot1 = await db
           .collection("students")
-          .where("city_of_school", "==", userData.city)
-          .get();
-        querySnapshot1.forEach((doc) => {
-          studentIdArr.push(doc.data().student_id);
-        });
-        console.log("****student id arr: ", studentIdArr);
-
-        const querySnapshot2 = await db
-          .collection("interventions")
-          .where("student_id", "in", studentIdArr)
-          .get();
-        querySnapshot2.forEach((doc) => {
-          arr.push(doc.data());
-        });
-        res.status(200).send({
-          success: true,
-          massage: arr,
-        });
-      } else if (userData.job_title === "מטפל") {
-        const querySnapshot = await db
-          .collection("interventions")
-          .where("student_id", "in", userData.access_permissions.students)
-          .get();
-        querySnapshot.forEach((doc) => {
-          arr.push(doc.data());
-        });
-        res.status(200).send({
-          success: true,
-          massage: arr,
-        });
+          .where("student_id", "==", rest);
+        const querySnapshot2 = await querySnapshot1.get();
+        const studentData = querySnapshot2.docs[0].data();
+        if (
+          userData.job_title === "יועץ" ||
+          userData.job_title === "מנהל ארגון"
+        ) {
+          res.status(200).send({
+            success: true,
+            massage: arr,
+          });
+        } else if (userData.job_title === "מנהל ת\"ת") {
+          if (studentData.city_of_school !== userData.city) {
+            res.status(200).send({
+              success: true,
+              massage: arr,
+            });
+          } else {
+            res.status(403).send({
+              success: false,
+              massage: "אין לך הרשאה לקבל טיפולים",
+            });
+          }
+        } else if (userData.job_title === "מטפל") {
+          if (userData.students.inclodes(rest)) {
+            res.status(200).send({
+              success: true,
+              massage: arr,
+            });
+          } else {
+            res.status(403).send({
+              success: false,
+              massage: "אין לך הרשאה לקבל טיפולים",
+            });
+          }
+        } else {
+          res.status(403).send({
+            success: false,
+            massage: "משתמש לא ידוע",
+          });
+        }
       } else {
-        res.status(403).send({
-          success: false,
-          massage: "לא ניתן לקבל רשימת טיפולים, נא פנה למנהל המערכת",
-        });
+        if (
+          userData.job_title === "מנהל ארגון" ||
+          userData.job_title === "יועץ"
+        ) {
+          const querySnapshot = await db.collection("interventions").get();
+          querySnapshot.forEach((doc) => {
+            arr.push(doc.data());
+          });
+          res.status(200).send({
+            success: true,
+            massage: arr,
+          });
+        } else if (userData.job_title === "מנהל ת\"ת") {
+          const studentIdArr = [];
+          const querySnapshot1 = await db
+            .collection("students")
+            .where("city_of_school", "==", userData.city)
+            .get();
+          querySnapshot1.forEach((doc) => {
+            studentIdArr.push(doc.data().student_id);
+          });
+          console.log("****student id arr: ", studentIdArr);
+
+          const querySnapshot2 = await db
+            .collection("interventions")
+            .where("student_id", "in", studentIdArr)
+            .get();
+          querySnapshot2.forEach((doc) => {
+            arr.push(doc.data());
+          });
+          res.status(200).send({
+            success: true,
+            massage: arr,
+          });
+        } else if (userData.job_title === "מטפל") {
+          const querySnapshot = await db
+            .collection("interventions")
+            .where("student_id", "in", userData.access_permissions.students)
+            .get();
+          querySnapshot.forEach((doc) => {
+            arr.push(doc.data());
+          });
+          res.status(200).send({
+            success: true,
+            massage: arr,
+          });
+        } else {
+          res.status(403).send({
+            success: false,
+            massage: "לא ניתן לקבל רשימת טיפולים, נא פנה למנהל המערכת",
+          });
+        }
       }
     } catch (error) {
       res.status(500).send({

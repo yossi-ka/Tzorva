@@ -1,15 +1,17 @@
 import classes from "../../css/intervention.module.css";
 import React, { useState } from "react";
 import { deleteIntervention } from "../../data-base/delete";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function DeleteIntervention({ intervention, fetchData }) {
-  
-  
   const [showWarningForm, setShowWarningForm] = useState(false);
   const handleDeleteIntervention = async (intervention) => {
-    setShowWarningForm(false);
-    await deleteIntervention(intervention);
-    fetchData();
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      setShowWarningForm(false);
+      await deleteIntervention(intervention);
+      fetchData(u);
+    });
   };
   return (
     <div className={classes.warningForm}>

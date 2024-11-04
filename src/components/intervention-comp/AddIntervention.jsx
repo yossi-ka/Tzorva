@@ -3,6 +3,7 @@ import React, { useRef, useState, useContext, useEffect } from "react";
 import { UserContext } from "../../App";
 import { addIntervention } from "../../data-base/insert";
 import { getusers, getStudents } from "../../data-base/select";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function AddIntervention({ fetchData }) {
   const [studentsArr, setStudentsArr] = useState([]);
@@ -43,30 +44,33 @@ function AddIntervention({ fetchData }) {
 
   const handleAddIntervention = async (e) => {
     e.preventDefault();
-    const time = new Date();
-    const date = new Date(dateRef.current.value + "T00:00:00.000Z");
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      const time = new Date();
+      const date = new Date(dateRef.current.value + "T00:00:00.000Z");
 
-    const newIntervention = {
-      student_name: studentRef.current.value,
-      tutor_name: manager
-        ? tutorRef.current.value
-        : user.first_name + " " + user.last_name,
-      tutor_id: manager
-        ? tutorsArr.find((tutor) => tutor.name === tutorRef.current.value).id
-        : user.user_id,
-      intervention_title: titleRef.current.value,
-      intervention_description: descriptionRef.current.value,
-      time: time,
-      date: date,
-      place: placeRef.current.value,
-      student_id: studentsArr.find(
-        (student) => student.name === studentRef.current.value
-      ).id,
-    };
+      const newIntervention = {
+        student_name: studentRef.current.value,
+        tutor_name: manager
+          ? tutorRef.current.value
+          : user.first_name + " " + user.last_name,
+        tutor_id: manager
+          ? tutorsArr.find((tutor) => tutor.name === tutorRef.current.value).id
+          : user.user_id,
+        intervention_title: titleRef.current.value,
+        intervention_description: descriptionRef.current.value,
+        time: time,
+        date: date,
+        place: placeRef.current.value,
+        student_id: studentsArr.find(
+          (student) => student.name === studentRef.current.value
+        ).id,
+      };
 
-    await addIntervention(newIntervention);
-    fetchData();
-    setOpenForm(false);
+      await addIntervention(newIntervention);
+      fetchData(u);
+      setOpenForm(false);
+    });
   };
 
   return (
