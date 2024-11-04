@@ -423,6 +423,7 @@ export const getInterventions = functions.https.onRequest((req, res) => {
           .where("student_id", "==", rest);
         const querySnapshot2 = await querySnapshot1.get();
         const studentData = querySnapshot2.docs[0].data();
+
         if (
           userData.job_title === "יועץ" ||
           userData.job_title === "מנהל ארגון"
@@ -444,7 +445,7 @@ export const getInterventions = functions.https.onRequest((req, res) => {
             });
           }
         } else if (userData.job_title === "מטפל") {
-          if (userData.students.inclodes(rest)) {
+          if (userData.students.includes(rest)) {
             res.status(200).send({
               success: true,
               massage: arr,

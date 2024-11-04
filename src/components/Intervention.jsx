@@ -49,7 +49,6 @@ function Intervention() {
             },
           }
         );
-
         const data = await financeData.json();
         const sortData = data.massage.sort((a, b) => b.time - a.time);
         sortData.forEach((e, i) => {
@@ -64,7 +63,9 @@ function Intervention() {
   );
 
   useEffect(() => {
-    setDelete_interventions(user?.access_permissions?.actions?.delete_interventions === true);
+    setDelete_interventions(
+      user?.access_permissions?.actions?.delete_interventions === true
+    );
     document.title = "טיפולים";
     const auth = getAuth();
     onAuthStateChanged(auth, (u) => {
