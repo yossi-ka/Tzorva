@@ -159,7 +159,7 @@ export const getStudents = functions.https.onRequest((req, res) => {
           success: true,
           massage: arr,
         });
-      } else if (userData.job_title === "מנהל ת\"ת") {
+      } else if (userData.job_title === 'מנהל ת"ת') {
         const city = userData.city;
 
         const q = db.collection("students").where("city_of_school", "==", city);
@@ -275,47 +275,29 @@ export const getFinance = functions.https.onRequest((req, res) => {
   });
 });
 
-// פונקציה לחיפוש משתמש לפי UID
-export const findUserByUID = functions.https.onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
-    const uid = req.query.uid;
-    const q = db.collection("users").where("UID", "==", uid);
-    const querySnapshot = await q.get();
-    if (querySnapshot.empty) {
-      return res.status(404).send("No such document!");
-    } else {
-      let userData = null;
-      querySnapshot.forEach((doc) => {
-        userData = { id: doc.id, ...doc.data() };
-      });
-      res.status(200).send(userData);
-    }
-  });
-});
-
 // פונקציה לקבלת נתוני ארכיון - הושלם
 export const getArchive = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
-  
+
     if (!uid)
       return res.status(403).send({
         success: false,
         message: "לא נשלח אימות uid בבקשה",
       });
-  
+
     if (!authHeader)
       return res.status(403).send({
         success: false,
         message: "לא נשלח אימות Token בבקשה",
       });
-  
+
     const idToken =
-        authHeader && authHeader.startsWith("Bearer ")
-          ? authHeader.split(" ")[1]
-          : null;
-  
+      authHeader && authHeader.startsWith("Bearer ")
+        ? authHeader.split(" ")[1]
+        : null;
+
     let user;
     try {
       user = await admin.auth().verifyIdToken(idToken);
@@ -332,7 +314,7 @@ export const getArchive = functions.https.onRequest((req, res) => {
         message: "משתמש לא מאומת",
       });
     }
-  
+
     //  שליפת נתוני משתמש מ-firestore עפ"י uid
     let userData = null;
     try {
@@ -342,16 +324,16 @@ export const getArchive = functions.https.onRequest((req, res) => {
     } catch (err) {
       console.log("משתמש לא ידוע: ", err);
     }
-  
+
     if (userData.job_title !== "מנהל ארגון") {
       console.log("****job_title: ", userData.job_title);
-  
+
       return res.status(403).send({
         success: false,
         massage: "אין הרשאה לקבלת נתוני ארכיון",
       });
     }
-  
+
     //  שליפת נתוני ארכיון
     const arr = [];
     try {
@@ -389,70 +371,88 @@ export const getAllInterventions = functions.https.onRequest((req, res) => {
 });
 
 // פונקציה לקבלת התערבויות לפי תלמיד
-export const getInterventionsByStudent = functions.https.onRequest(
-  (req, res) => {
-    corsMiddleware(req, res, async () => {
-      const studentId = req.query.student_id;
-      const arr = [];
+// export const getInterventionsByStudent = functions.https.onRequest(
+//   (req, res) => {
+//     corsMiddleware(req, res, async () => {
+//       const studentId = req.query.student_id;
+//       const arr = [];
 
-      try {
-        const q = db
-          .collection("interventions")
-          .where("student_id", "==", studentId);
-        const querySnapshot = await q.get();
-        querySnapshot.forEach((doc) => {
-          arr.push(doc.data());
-        });
-        res.status(200).send(arr);
-      } catch (error) {
-        res.status(500).send("לא ניתן לספק את הבקשה");
-      }
-    });
-  }
-);
+//       try {
+//         const q = db
+//           .collection("interventions")
+//           .where("student_id", "==", studentId);
+//         const querySnapshot = await q.get();
+//         querySnapshot.forEach((doc) => {
+//           arr.push(doc.data());
+//         });
+//         res.status(200).send(arr);
+//       } catch (error) {
+//         res.status(500).send("לא ניתן לספק את הבקשה");
+//       }
+//     });
+//   }
+// );
 
 // פונקציה לקבלת התערבויות לפי מדריך
-export const getInterventionsByTutor = functions.https.onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
-    const tutorId = req.query.tutor_id;
-    const arr = [];
+// export const getInterventionsByTutor = functions.https.onRequest((req, res) => {
+//   corsMiddleware(req, res, async () => {
+//     const tutorId = req.query.tutor_id;
+//     const arr = [];
 
-    try {
-      const q = db.collection("interventions").where("tutor_id", "==", tutorId);
-      const querySnapshot = await q.get();
-      querySnapshot.forEach((doc) => {
-        arr.push(doc.data());
-      });
-      res.status(200).send(arr);
-    } catch (error) {
-      res.status(500).send("Error retrieving interventions for the tutor");
-    }
-  });
-});
+//     try {
+//       const q = db.collection("interventions").where("tutor_id", "==", tutorId);
+//       const querySnapshot = await q.get();
+//       querySnapshot.forEach((doc) => {
+//         arr.push(doc.data());
+//       });
+//       res.status(200).send(arr);
+//     } catch (error) {
+//       res.status(500).send("Error retrieving interventions for the tutor");
+//     }
+//   });
+// });
 
 // פונקציה לקבלת התערבויות לפי עיר
-export const getInterventionsByCity = functions.https.onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
-    const city = req.query.city;
-    const arr = [];
+// export const getInterventionsByCity = functions.https.onRequest((req, res) => {
+//   corsMiddleware(req, res, async () => {
+//     const city = req.query.city;
+//     const arr = [];
 
-    try {
-      const allStudents = await getAllStudents();
-      const filteredStudents = allStudents.filter(
-        (student) => student.city_of_school === city
-      );
-      const interventionsArr = await getAllInterventions();
+//     try {
+//       const allStudents = await getAllStudents();
+//       const filteredStudents = allStudents.filter(
+//         (student) => student.city_of_school === city
+//       );
+//       const interventionsArr = await getAllInterventions();
 
-      filteredStudents.forEach((student) => {
-        const studentInterventions = interventionsArr.filter(
-          (intervention) => intervention.student_id === student.student_id
-        );
-        arr.push(...studentInterventions);
-      });
+//       filteredStudents.forEach((student) => {
+//         const studentInterventions = interventionsArr.filter(
+//           (intervention) => intervention.student_id === student.student_id
+//         );
+//         arr.push(...studentInterventions);
+//       });
 
-      res.status(200).send(arr);
-    } catch (error) {
-      res.status(500).send("Error retrieving interventions by city");
-    }
-  });
-});
+//       res.status(200).send(arr);
+//     } catch (error) {
+//       res.status(500).send("Error retrieving interventions by city");
+//     }
+//   });
+// });
+
+// פונקציה לחיפוש משתמש לפי UID
+// export const findUserByUID = functions.https.onRequest((req, res) => {
+//   corsMiddleware(req, res, async () => {
+//     const uid = req.query.uid;
+//     const q = db.collection("users").where("UID", "==", uid);
+//     const querySnapshot = await q.get();
+//     if (querySnapshot.empty) {
+//       return res.status(404).send("No such document!");
+//     } else {
+//       let userData = null;
+//       querySnapshot.forEach((doc) => {
+//         userData = { id: doc.id, ...doc.data() };
+//       });
+//       res.status(200).send(userData);
+//     }
+//   });
+// });
