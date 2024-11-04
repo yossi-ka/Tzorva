@@ -55,8 +55,8 @@ function Students() {
   useEffect(() => {
     document.title = "תלמידים";
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      getstud(user); // קריאה לפונקציה עם המשתמש הנוכחי
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      getstud(u);
     });
     setAddStudent(user.access_permissions?.actions?.add_student);
     setDeleteStudent(user.access_permissions?.actions?.delete_student);

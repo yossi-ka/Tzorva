@@ -57,7 +57,7 @@ function UsersManage() {
       if (u) getuse(u);
     });
     document.title = "ניהול משתמשים";
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <div>

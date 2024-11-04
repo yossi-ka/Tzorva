@@ -13,16 +13,35 @@ import EditFinance from "./finance-comp/EditFinance";
 import he_IL from "antd/lib/locale/he_IL";
 import { formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Finance() {
   const [financeToShow, setFinanceToShow] = useState([]);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const fetchData = async () => {
+  const fetchData = async (u) => {
+    const idToken = await u.getIdToken();
+    const uid = u.uid;
+
     try {
-      const data = await getFinance();
-      const sortData = data.sort((a, b) => b.time - a.time);
+      const financeData = await fetch(
+        `https://getfinance${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "GET",
+          headers: {
+            uid: uid,
+            authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await financeData.json();
+
+      console.log("****data: ", data);
+
+      const sortData = data.massage.sort((a, b) => b.time - a.time);
       setFinanceToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -35,8 +54,13 @@ function Finance() {
       navigate(-1);
       return;
     }
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (u) => {
+      fetchData(u);
+    });
+
     document.title = "פיננסים";
-    fetchData();
   }, [navigate, user]);
 
   const columns = [
