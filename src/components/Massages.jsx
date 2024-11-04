@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function Massages() {
-  return (
-    <div>Massages</div>
-  )
+  return <div>Massages</div>;
 }
 
-export default Massages
+export default Massages;

@@ -56,8 +56,8 @@ function EditArchive({ archive, fetchData }) {
                 name="title"
                 defaultValue={archive.title}
               >
-                {statusArr.map((item) => (
-                  <option key={item} value={item}>
+                {statusArr.map((item, index) => (
+                  <option key={index} value={item}>
                     {item}
                   </option>
                 ))}

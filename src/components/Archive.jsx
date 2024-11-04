@@ -33,10 +33,10 @@ function Archive() {
         }
       );
       const data = await archiveData.json();
-
-      console.log("****data: ", data);
-
       const sortData = data.massage.sort((a, b) => b.time - a.time);
+      sortData.forEach((e, i) => {
+        e.key = i;
+      });
       setArchiveToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -45,7 +45,7 @@ function Archive() {
 
   useEffect(() => {
     const access_permissions = user?.access_permissions;
-    if (!access_permissions?.archive) {
+    if (access_permissions?.archive === false) {
       navigate("/home");
       return;
     }
@@ -63,14 +63,14 @@ function Archive() {
     {
       title: "תאריך",
       dataIndex: "time",
-      key: "hebrewDate",
+      key: "time",
       render: (time) => formatDateToHebrew(time),
       sorter: { compare: (a, b) => a.time - b.time, multiple: 4 },
     },
     {
       title: "מספר זהות",
       dataIndex: "student_id",
-      key: "student_id,",
+      key: "student_id",
     },
     {
       title: "שם התלמיד",

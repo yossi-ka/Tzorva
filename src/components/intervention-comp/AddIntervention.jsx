@@ -2,7 +2,7 @@ import classes from "../../css/intervention.module.css";
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { UserContext } from "../../App";
 import { addIntervention } from "../../data-base/insert";
-import { getAllUsers, getStudents } from "../../data-base/select";
+import { getusers, getStudents } from "../../data-base/select";
 
 function AddIntervention({ fetchData }) {
   const [studentsArr, setStudentsArr] = useState([]);
@@ -29,7 +29,7 @@ function AddIntervention({ fetchData }) {
 
       setStudentsArr(students);
     });
-    getAllUsers().then((res) => {
+    getusers().then((res) => {
       const tutors = res
         .filter((user) => user.job_title === "מטפל")
         .map((user) => ({
@@ -101,8 +101,8 @@ function AddIntervention({ fetchData }) {
                   ref={tutorRef}
                 >
                   <option>-- בחר מטפל --</option>
-                  {tutorsArr.map((tutor) => (
-                    <option key={tutor.id} value={tutor.name}>
+                  {tutorsArr.map((tutor, index) => (
+                    <option key={index} value={tutor.name}>
                       {tutor.name}
                     </option>
                   ))}
@@ -120,8 +120,8 @@ function AddIntervention({ fetchData }) {
               <option value="" disabled>
                 -- בחר תלמיד --
               </option>
-              {studentsArr.map((student) => (
-                <option key={student.id} value={student.name}>
+              {studentsArr.map((student, index) => (
+                <option key={index} value={student.name}>
                   {student.name}
                 </option>
               ))}

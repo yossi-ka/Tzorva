@@ -33,7 +33,10 @@ function Intervention() {
   const fetchData = useCallback(async () => {
     try {
       const data = await getIntervention(user, rest);
-      const sortData = data?.sort((a, b) => b.time - a.time);
+      const sortData = data.sort((a, b) => b.time - a.time);
+      sortData.forEach((e, i) => {
+        e.key = i;
+      });
       setInterventionToShow(sortData);
       setDelete_interventions(
         user?.access_permissions?.actions?.delete_interventions

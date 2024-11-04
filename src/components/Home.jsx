@@ -20,7 +20,6 @@ function Home() {
     <div className={classes.container}>
       <h1 className={classes.title}>ברוך הבא למערכת ניהול צורבא</h1>
       <div className={classes.homeOptions}>
-        
         <div className={`${classes.option} ${classes.studArea}`}>
           <div className={`${classes.studAreaTitle} ${classes.areaTitle}`}>
             <h1 className={classes.h1}>ניהול תלמידים</h1>
@@ -143,7 +142,6 @@ function Home() {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

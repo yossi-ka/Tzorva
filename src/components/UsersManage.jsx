@@ -25,7 +25,7 @@ function UsersManage() {
       let uid = u.uid;
 
       const response = await fetch(
-        `https://getallusers${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        `https://getusers${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
           method: "GET",
           headers: {
@@ -48,7 +48,7 @@ function UsersManage() {
   };
 
   useEffect(() => {
-    if (user.job_title !== "מנהל ארגון") {
+    if ((user.job_title = "מנהל ארגון" === false)) {
       navigate(-1);
       return;
     }

@@ -96,8 +96,8 @@ function RevenuesOptions({ categoryRef }) {
         -- בחר אפשרות --
       </option>
 
-      {revenuesArr.map((item) => (
-        <option key={item} value={item}>
+      {revenuesArr.map((item, index) => (
+        <option key={ index} value={item}>
           {item}
         </option>
       ))}
@@ -117,8 +117,8 @@ function ExpensesOptions({ categoryRef }) {
       <option value="" disabled>
         -- בחר אפשרות --
       </option>
-      {expensesArr.map((item) => (
-        <option key={item} value={item}>
+      {expensesArr.map((item, index) => (
+        <option key={index} value={item}>
           {item}
         </option>
       ))}

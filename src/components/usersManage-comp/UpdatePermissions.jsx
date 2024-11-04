@@ -131,8 +131,8 @@ function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
         <div className={classes.permissionSection}>
           <h3 className={classes.sectionTitle}>צפיה בתלמידים</h3>
           <div className={classes.studentList}>
-            {studentList?.map((student) => (
-              <div key={student.student_id} className={classes.checkboxGroup}>
+            {studentList?.map((student, index) => (
+              <div key={index} className={classes.checkboxGroup}>
                 <input
                   type="checkbox"
                   id={student.student_id}

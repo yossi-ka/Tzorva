@@ -93,8 +93,8 @@ function AddArchive({ fetchData }) {
               <option value="" disabled>
                 -- בחר אפשרות --
               </option>
-              {statusArr.map((item) => (
-                <option key={item} value={item}>
+              {statusArr.map((item, index) => (
+                <option key={index} value={item}>
                   {item}
                 </option>
               ))}

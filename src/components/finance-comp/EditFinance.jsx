@@ -65,8 +65,8 @@ function EditFinance({ finance, fetchData }) {
                 name="category"
                 defaultValue={finance.category}
               >
-                {category.map((item) => (
-                  <option key={item} value={item}>
+                {category.map((item, index) => (
+                  <option key={index} value={item}>
                     {item}
                   </option>
                 ))}

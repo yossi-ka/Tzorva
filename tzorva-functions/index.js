@@ -13,7 +13,7 @@ const corsOptions = { origin: true };
 const corsMiddleware = cors(corsOptions);
 
 // פונקציה לקבלת כל המשתמשים - הושלם
-export const getAllUsers = functions.https.onRequest((req, res) => {
+export const getUsers = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
@@ -293,7 +293,7 @@ export const findUserByUID = functions.https.onRequest((req, res) => {
   });
 });
 
-// פונקציה לקבלת מידע פיננסי - הושלם
+// פונקציה לקבלת נתוני ארכיון - הושלם
 export const getArchive = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;

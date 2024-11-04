@@ -13,7 +13,10 @@ export const formatDate = (timestamp) => {
 };
 
 export const formatDateToHebrew = (timestamp) => {
-  const date = new Date(timestamp._seconds * 1000);
+  // המרת ה-timestamp לתאריך מספרי אם יש צורך
+  const date = new Date((timestamp.seconds || timestamp._seconds) * 1000);
+
   const hebrewDate = new Hebcal.HDate(date);
+
   return hebrewDate.toString("h"); // "h" מציין את הפורמט העברי
 };

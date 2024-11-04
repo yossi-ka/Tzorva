@@ -1,7 +1,7 @@
 import { db } from "./config.js";
 import { getDocs, collection, query, where } from "firebase/firestore";
 
-const getAllUsers = async () => {
+const getusers = async () => {
   const arr = [];
   const querySnapshot = await getDocs(collection(db, "users"));
   querySnapshot.forEach((doc) => {
@@ -147,7 +147,7 @@ const getIntervention = async (user, student_id) => {
 };
 
 export {
-  getAllUsers,
+  getusers,
   findUserByUID,
   getStudents,
   getAllStudents,

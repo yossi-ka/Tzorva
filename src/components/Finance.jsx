@@ -38,10 +38,10 @@ function Finance() {
       );
 
       const data = await financeData.json();
-
-      console.log("****data: ", data);
-
       const sortData = data.massage.sort((a, b) => b.time - a.time);
+      sortData.forEach((e, i) => {
+        e.key = i;
+      });
       setFinanceToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
