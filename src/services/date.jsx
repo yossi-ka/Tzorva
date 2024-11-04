@@ -1,7 +1,7 @@
 import Hebcal from "hebcal";
 
 export const formatDate = (timestamp) => {
-  const date = new Date(timestamp.seconds * 1000);
+  const date = new Date(timestamp._seconds * 1000);
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
@@ -13,7 +13,7 @@ export const formatDate = (timestamp) => {
 };
 
 export const formatDateToHebrew = (timestamp) => {
-  const date = new Date(timestamp.seconds * 1000);
+  const date = new Date(timestamp._seconds * 1000);
   const hebrewDate = new Hebcal.HDate(date);
   return hebrewDate.toString("h"); // "h" מציין את הפורמט העברי
 };

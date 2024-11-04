@@ -2,7 +2,7 @@ import classes from "../css/archive.module.css";
 import React, { useEffect, useContext, useState } from "react";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
-import { getArchive } from "../data-base/select";
+// import { getArchive } from "../data-base/select";
 import { ConfigProvider, Table } from "antd";
 import AddArchive, { statusArr } from "./archive-comp/AddArchive";
 import he_IL from "antd/lib/locale/he_IL";
@@ -10,16 +10,33 @@ import EditArchive from "./archive-comp/EditArchive";
 import DeleteArchive from "./archive-comp/DeleteArchive";
 import { formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Archive() {
   const [archiveToShow, setArchiveToShow] = useState([]);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const fetchData = async () => {
+  const fetchData = async (u) => {
+    const idToken = await u.getIdToken();
+    const uid = u.uid;
     try {
-      const data = await getArchive();
-      const sortData = data.sort((a, b) => b.time - a.time);
+      const archiveData = await fetch(
+        `https://getarchive${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "GET",
+          headers: {
+            uid: uid,
+            authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await archiveData.json();
+
+      console.log("****data: ", data);
+
+      const sortData = data.massage.sort((a, b) => b.time - a.time);
       setArchiveToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -32,9 +49,14 @@ function Archive() {
       navigate("/home");
       return;
     }
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (u) => {
+      fetchData(u);
+    });
+
     // אם למשתמש יש גישה, טען את נתוני הארכיון
     document.title = "ארכיון";
-    fetchData();
   }, [navigate, user]);
 
   const columns = [

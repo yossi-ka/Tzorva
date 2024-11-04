@@ -2,7 +2,7 @@ import classes from "../css/finance.module.css";
 import React, { useEffect, useContext, useState } from "react";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
-import { getFinance } from "../data-base/select";
+// import { getFinance } from "../data-base/select";
 import { ConfigProvider, Table } from "antd";
 import AddFinance, {
   expensesArr,
