@@ -33,7 +33,10 @@ function ChangePassword({ setChangePassword }) {
   };
   return (
     <div className={classes.fixed}>
-      <div onClick={() => setChangePassword(false)} className={classes.underlay}></div>
+      <div
+        onClick={() => setChangePassword(false)}
+        className={classes.underlay}
+      ></div>
       <form onSubmit={handleSubmit} className={classes.formUpdatePassword}>
         <h1 className={classes.title}>שינוי סיסמה</h1>
         <label htmlFor="oldPassword">הזן סיסמה ישנה:</label>
@@ -78,7 +81,7 @@ function ChangePassword({ setChangePassword }) {
           </button>
         </div>
       </form>
-    </ div>
+    </div>
   );
 }
 

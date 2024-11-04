@@ -9,7 +9,10 @@ function EditProfile({ setUpdateProfile }) {
   };
   return (
     <div className={classes.fixed}>
-      <div onClick={() => setUpdateProfile(false)} className={classes.underlay}></div>
+      <div
+        onClick={() => setUpdateProfile(false)}
+        className={classes.underlay}
+      ></div>
 
       <form onSubmit={handleSubmit} className={classes.formUpdatePassword}>
         <h1 className={classes.title}>עריכת פרטים אישיים</h1>

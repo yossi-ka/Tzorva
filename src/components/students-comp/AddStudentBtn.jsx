@@ -1,4 +1,4 @@
-import classes from "../../css/students.module.css";
+import classes from "../../css/stud2.module.css";
 import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { addStudent } from "../../data-base/insert";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function AddStudentBtn({ getstud }) {
   const [city, setCity] = useState("");
@@ -20,19 +21,23 @@ function AddStudentBtn({ getstud }) {
   const [showForm, setShowForm] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newStudent = {
-      student_id: studentIdRef.current.value,
-      first_name: firstNameRef.current.value,
-      last_name: lastNameRef.current.value,
-      fathers_name: fatherNameRef.current.value,
-      fathers_phone: fatherPhoneRef.current.value,
-      city_of_school: city,
-      class: clas,
-      urgency_level: urgency,
-    };
-    addStudent(newStudent);
-    getstud();
-    setShowForm(false);
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      const newStudent = {
+        student_id: studentIdRef.current.value,
+        first_name: firstNameRef.current.value,
+        last_name: lastNameRef.current.value,
+        fathers_name: fatherNameRef.current.value,
+        fathers_phone: fatherPhoneRef.current.value,
+        city_of_school: city,
+        class: clas,
+        urgency_level: urgency,
+      };
+      addStudent(newStudent);
+      getstud();
+      setShowForm(false);
+      getstud(user);
+    });
   };
   return (
     <div>

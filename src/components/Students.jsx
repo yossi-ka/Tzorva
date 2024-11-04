@@ -1,7 +1,8 @@
-import classes from "../css/students.module.css";
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import classes from "../css/stud2.module.css";
+import React, { useEffect, useState, useContext } from "react";
 import StudentsCard from "./students-comp/StudentsCard";
-import { getStudents } from "../data-base/select";
+// import { getStudents } from "../data-base/select";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { UserContext } from "../App";
 import AddStudentBtn from "./students-comp/AddStudentBtn";
@@ -17,19 +18,52 @@ function Students() {
   const [students, setStudents] = useState([]);
   const [studentsToShow, setStudentsToShow] = useState([]);
 
-  const getstud = useCallback(async () => {
-    const studentsData = await getStudents(user.UID);
-    setStudents(studentsData);
-    setStudentsToShow(studentsData);
-  }, [user.UID]);
+  const getstud = async (currentUser) => {
+    // בדיקה אם יש משתמש מחובר
+    if (!currentUser) {
+      console.error("אין משתמש מחובר.");
+      return;
+    }
+
+    try {
+      const idToken = await currentUser.getIdToken();
+      const uid = currentUser.uid;
+
+      const response = await fetch(
+        `https://getstudents${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "GET",
+          headers: {
+            uid: uid,
+            authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const studentsData = await response.json();
+      setStudents(studentsData.massage);
+      setStudentsToShow(studentsData.massage);
+    } catch (error) {
+      console.error("Error fetching students:", error.message || error);
+    }
+  };
 
   useEffect(() => {
     document.title = "תלמידים";
-    getstud();
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      getstud(user); // קריאה לפונקציה עם המשתמש הנוכחי
+    });
     setAddStudent(user.access_permissions?.actions?.add_student);
     setDeleteStudent(user.access_permissions?.actions?.delete_student);
     setShowDocs(user.access_permissions?.actions?.show_docs);
-  }, [user, getstud]);
+    return () => unsubscribe();
+  }, [user]);
+
   return (
     <div>
       <div className={classes.headerAddStudentBtn}>

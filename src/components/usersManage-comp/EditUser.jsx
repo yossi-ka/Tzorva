@@ -1,6 +1,7 @@
 import classes from "../../css/users.module.css";
 import React, { useRef } from "react";
 import { updateUser } from "../../data-base/update";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EditUser({ user, setShowEditUser, getuse }) {
   const phoneRef = useRef();
@@ -8,23 +9,27 @@ function EditUser({ user, setShowEditUser, getuse }) {
   const jobRef = useRef();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {};
 
-    if (phoneRef.current.value !== user.fathers_phone) {
-      formData.phone = phoneRef.current.value;
-    }
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      const formData = {};
 
-    if (emailRef.current.value !== user.email) {
-      formData.email = emailRef.current.value;
-    }
+      if (phoneRef.current.value !== user.fathers_phone) {
+        formData.phone = phoneRef.current.value;
+      }
 
-    if (jobRef.current.value !== user.job_title) {
-      formData.job_title = jobRef.current.value;
-    }
+      if (emailRef.current.value !== user.email) {
+        formData.email = emailRef.current.value;
+      }
 
-    await updateUser(user, formData);
-    setShowEditUser(false);
-    getuse();
+      if (jobRef.current.value !== user.job_title) {
+        formData.job_title = jobRef.current.value;
+      }
+
+      await updateUser(user, formData);
+      setShowEditUser(false);
+      getuse(u);
+    });
   };
   return (
     <div>

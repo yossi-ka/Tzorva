@@ -1,0 +1,120 @@
+/*  gpt  */
+
+.headerAddStudentBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .studentsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .studentCardContainer {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    position: relative;
+  }
+  
+  .urgencyLevel {
+    width: 10px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 10px 0 0 10px;
+  }
+  
+  .studentName {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #222;
+  }
+  
+  .studentSchoolAndClass {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  
+  .city {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .class {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .editBtn {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .deleteBtn {
+    background-color: #f44336;
+    color: #fff;
+  }
+  
+  .docsBtn {
+    background-color: #2196f3;
+    color: #fff;
+  }
+  
+  .interventionsBtn {
+    background-color: #ff9800;
+    color: #fff;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .deleteFormArea,
+  .editStudentArea {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    width: 90%;
+    max-width: 600px;
+  }
+  

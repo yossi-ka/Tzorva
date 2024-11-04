@@ -17,13 +17,13 @@ function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
   const showDocsRef = useRef();
 
   useEffect(() => {
-    const getStud = async () => {
+    const getStude = async () => {
       setStudentList(await getAllStudents());
       setCurrentPermissions(user?.access_permissions);
       setStudentIdList1(user?.access_permissions?.students || []);
       setStudentIdList2(user?.access_permissions?.students || []);
     };
-    getStud();
+    getStude();
   }, [user]);
 
   const compareArrs = (arr1, arr2) => {

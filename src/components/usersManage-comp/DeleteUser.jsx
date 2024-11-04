@@ -1,12 +1,17 @@
 import classes from "../../css/users.module.css";
 import React from "react";
 import { deleteUser } from "../../data-base/delete";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function DeleteUser({ user, getuse, setShowDeleteForm }) {
-  const handleDeleteUser = async () => {
-    setShowDeleteForm(false);
-    await deleteUser(user);
-    getuse();
+  const handleDeleteUser = async (e) => {
+    e.preventDefault();
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      setShowDeleteForm(false);
+      await deleteUser(user);
+      getuse(u);
+    });
   };
 
   return (

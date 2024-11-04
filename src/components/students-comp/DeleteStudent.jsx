@@ -2,6 +2,7 @@ import classes from "../../css/students.module.css";
 import React, { useRef, useState } from "react";
 import { addArchive } from "../../data-base/insert";
 import { deleteStudent } from "../../data-base/delete";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function DeleteStudent({ student, setShowDeleteForm, getstud }) {
   const reasonRef = useRef(null);
@@ -13,20 +14,24 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
     setShowWarning(true);
   };
 
-  const handleDeleteStudent = async () => {
-    const newArchive = {
-      full_name: student.first_name + " " + student.last_name,
-      student_id: student.student_id,
-      title: reasonRef.current.value,
-      invested_amount: amountRef.current.value,
-      body: textareaRef.current.value,
-      fathers_name: student.fathers_name,
-    };
+  const handleDeleteStudent = async (e) => {
+    e.preventDefault();
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      const newArchive = {
+        full_name: student.first_name + " " + student.last_name,
+        student_id: student.student_id,
+        title: reasonRef.current.value,
+        invested_amount: amountRef.current.value,
+        body: textareaRef.current.value,
+        fathers_name: student.fathers_name,
+      };
 
-    await addArchive(newArchive);
-    setShowDeleteForm(false);
-    await deleteStudent(student);
-    getstud();
+      await addArchive(newArchive);
+      setShowDeleteForm(false);
+      await deleteStudent(student);
+      getstud(user);
+    });
   };
 
   return (
@@ -57,7 +62,9 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
           value={student.student_id}
           disabled
         />
-        <label className={classes.label} htmlFor="reason">סטטוס:</label>
+        <label className={classes.label} htmlFor="reason">
+          סטטוס:
+        </label>
         <select
           ref={reasonRef}
           className={classes.select}

@@ -30,8 +30,7 @@ function UserCard({ user, getuse }) {
 
       {showMoreDetails && (
         <div className={classes.moreDetails}>
-          <p className={classes.p}>{`מס' זהות: ${user.user_id}`}</p>
-          <p className={classes.p}>{`מספר טלפון: ${user.phone}`}</p>
+          <p className={classes.p}>{`טלפון: ${user.phone}`}</p>
           <p className={classes.p}>{`דוא"ל: ${user.email}`}</p>
           <div className={classes.btns}>
             <button

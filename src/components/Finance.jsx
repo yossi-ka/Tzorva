@@ -11,7 +11,7 @@ import AddFinance, {
 import DeleteFinance from "./finance-comp/DeleteFinance";
 import EditFinance from "./finance-comp/EditFinance";
 import he_IL from "antd/lib/locale/he_IL";
-import { formatDate, formatDateToHebrew } from "../services/date";
+import { formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 
 function Finance() {
@@ -41,13 +41,7 @@ function Finance() {
 
   const columns = [
     {
-      title: "חותמת זמן",
-      dataIndex: "time",
-      key: "time",
-      render: (time) => formatDate(time),
-    },
-    {
-      title: "תאריך עברי",
+      title: "תאריך",
       dataIndex: "time",
       key: "hebrewDate",
       render: (time) => formatDateToHebrew(time),

@@ -44,7 +44,7 @@ function AddArchive({ fetchData }) {
             onClick={() => setOpenForm(false)}
           ></div>
           <form onSubmit={handleAddArchive} className={classes.addArchiveForm}>
-            <h1 className={classes.h1}>הוספת תיעוד</h1>
+            <h1 className={classes.h1}>הוספת תיעוד באופן ידני</h1>
             <label htmlFor="student_id">תעודת זהות</label>
             <input
               ref={idRef}

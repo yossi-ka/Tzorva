@@ -9,7 +9,7 @@ import DeleteIntervention from "./intervention-comp/DeleteIntervention";
 import EditIntervention from "./intervention-comp/EditIntervention";
 import he_IL from "antd/lib/locale/he_IL";
 import getSearchColumn from "../services/SearchANT";
-import { formatDate, formatDateToHebrew } from "../services/date";
+import { formatDateToHebrew } from "../services/date";
 
 function Intervention() {
   const [interventionToShow, setInterventionToShow] = useState([]);
@@ -49,12 +49,6 @@ function Intervention() {
   }, [navigate, user, fetchData]);
 
   const columns = [
-    {
-      title: "חותמת זמן",
-      dataIndex: "time",
-      key: "time",
-      render: (time) => formatDate(time),
-    },
     {
       title: "תאריך טיפול",
       dataIndex: "date",

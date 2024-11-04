@@ -8,7 +8,7 @@ import AddArchive, { statusArr } from "./archive-comp/AddArchive";
 import he_IL from "antd/lib/locale/he_IL";
 import EditArchive from "./archive-comp/EditArchive";
 import DeleteArchive from "./archive-comp/DeleteArchive";
-import { formatDate, formatDateToHebrew } from "../services/date";
+import { formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 
 function Archive() {
@@ -39,13 +39,7 @@ function Archive() {
 
   const columns = [
     {
-      title: "חותמת זמן",
-      dataIndex: "time",
-      key: "time",
-      render: (time) => formatDate(time),
-    },
-    {
-      title: "תאריך עברי",
+      title: "תאריך",
       dataIndex: "time",
       key: "hebrewDate",
       render: (time) => formatDateToHebrew(time),
@@ -81,12 +75,7 @@ function Archive() {
       filters: statusArr.map((item) => ({ text: item, value: item })),
       onFilter: (value, record) => record.title === value,
     },
-    {
-      title: "תיאור",
-      dataIndex: "body",
-      key: "body",
-      ...searchProps("body", "תיאור"),
-    },
+
     {
       title: "פעולות",
       dataIndex: "actions",
@@ -118,6 +107,19 @@ function Archive() {
               className={classes.archiveTable}
               rowKey="time"
               locale={{ emptyText: "לא קיימים תיעודים" }}
+              expandable={{
+                expandedRowRender: (record) => (
+                  <p
+                    style={{
+                      margin: 0,
+                    }}
+                  >
+                    {record.body}
+                  </p>
+                ),
+                rowExpandable: (record) =>
+                  record.body !== "***  לא קיים תיעוד  ***",
+              }}
             />
           </ConfigProvider>
         </div>

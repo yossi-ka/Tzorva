@@ -1,6 +1,7 @@
 import classes from "../../css/students.module.css";
 import React, { useRef } from "react";
 import { updateStudent } from "../../data-base/update";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EditStudent({ student, setShowEditStudent, getstud }) {
   const fathersPhoneRef = useRef();
@@ -9,27 +10,31 @@ function EditStudent({ student, setShowEditStudent, getstud }) {
   const urgencyRef = useRef();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {};
 
-    if (fathersPhoneRef.current.value !== student.fathers_phone) {
-      formData.fathers_phone = fathersPhoneRef.current.value;
-    }
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      const formData = {};
 
-    if (cityOfSchoolRef.current.value !== student.city_of_school) {
-      formData.city_of_school = cityOfSchoolRef.current.value;
-    }
+      if (fathersPhoneRef.current.value !== student.fathers_phone) {
+        formData.fathers_phone = fathersPhoneRef.current.value;
+      }
 
-    if (classRef.current.value !== student.class) {
-      formData.class = classRef.current.value;
-    }
+      if (cityOfSchoolRef.current.value !== student.city_of_school) {
+        formData.city_of_school = cityOfSchoolRef.current.value;
+      }
 
-    if (urgencyRef.current.value !== student.urgency) {
-      formData.urgency_level = urgencyRef.current.value;
-    }
+      if (classRef.current.value !== student.class) {
+        formData.class = classRef.current.value;
+      }
 
-    await updateStudent(student, formData);
-    setShowEditStudent(false);
-    getstud();
+      if (urgencyRef.current.value !== student.urgency) {
+        formData.urgency_level = urgencyRef.current.value;
+      }
+
+      await updateStudent(student, formData);
+      setShowEditStudent(false);
+      getstud(user); // קריאה לפונקציה עם המשתמש הנוכחי
+    });
   };
   return (
     <div>

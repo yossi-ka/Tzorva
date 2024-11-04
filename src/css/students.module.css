@@ -6,20 +6,7 @@
   font-size: 1rem;
 }
 
-.addStudentBtn {
-  background-color: #2196f3;
-  color: white;
-  border: none;
-  padding: 1rem 1.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-}
 
-.addStudentBtn:hover {
-  background-color: #1e82d3;
-}
 .studentCardContainer {
   display: flex;
   align-items: center;
@@ -125,82 +112,6 @@
   transform: translateY(-2px);
 }
 
-.addStudentForm {
-  position: fixed;
-  z-index: 1000;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 90%;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
-  font-size: 1rem;
-}
-
-.addStudentForm label {
-  margin-bottom: 10px;
-}
-
-.addStudentForm input {
-  width: 100%;
-  padding: 1rem;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 0.8rem;
-}
-
-.addStudentForm input:focus {
-  outline: none;
-  border: 2px solid #1c81d3;
-}
-
-.saveBtn {
-  flex: 1;
-  width: 100%;
-  padding: 1rem;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.cancelBtn {
-  flex: 1;
-  width: 100%;
-  padding: 1rem;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.saveBtn:hover,
-.cancelBtn:hover {
-  opacity: 0.8;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* רקע כהה עם שקיפות */
-  z-index: 500;
-}
 
 @media (max-width: 1200px) {
   .studentCardContainer {

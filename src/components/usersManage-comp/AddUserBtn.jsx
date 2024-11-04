@@ -1,6 +1,7 @@
 import classes from "../../css/users.module.css";
 import React, { useRef, useState } from "react";
 import { addUser } from "../../data-base/insert";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function AddUserBtn({ getUsers }) {
   const userIdRef = useRef();
@@ -14,30 +15,34 @@ function AddUserBtn({ getUsers }) {
   const [showAddForm, setShowAddForm] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newUser = {
-      user_id: userIdRef.current.value,
-      first_name: firstNameRef.current.value,
-      last_name: lastNameRef.current.value,
-      job_title: jobRef.current.value,
-      city: cityRef.current.value,
-      phone: phoneRef.current.value,
-      email: emailRef.current.value,
-      access_permissions: {
-        actions: {
-          delete_interventions: false,
-          delete_student: false,
-          add_student: false,
-          show_docs: false,
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      const newUser = {
+        user_id: userIdRef.current.value,
+        first_name: firstNameRef.current.value,
+        last_name: lastNameRef.current.value,
+        job_title: jobRef.current.value,
+        city: cityRef.current.value,
+        phone: phoneRef.current.value,
+        email: emailRef.current.value,
+        access_permissions: {
+          actions: {
+            delete_interventions: false,
+            delete_student: false,
+            add_student: false,
+            show_docs: false,
+          },
+          finance: false,
+          archive: false,
+          users_manage: false,
+          students: [],
         },
-        finance: false,
-        archive: false,
-        users_manage: false,
-        students: [],
-      },
-    };
-    addUser(newUser);
-    getUsers();
-    setShowAddForm(false);
+      };
+      addUser(newUser);
+      getUsers(user);
+      setShowAddForm(false);
+    });
   };
   return (
     <div>
@@ -79,7 +84,7 @@ function AddUserBtn({ getUsers }) {
                 placeholder="שם משפחה"
                 required
               />
-               <input
+              <input
                 className={classes.input}
                 ref={cityRef}
                 type="text"
