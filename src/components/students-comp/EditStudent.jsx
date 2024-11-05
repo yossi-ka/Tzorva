@@ -1,4 +1,4 @@
-import classes from "../../css/students.module.css";
+import classes from "../../css/stud2.module.css";
 import React, { useRef } from "react";
 import { updateStudent } from "../../data-base/update";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -39,7 +39,7 @@ function EditStudent({ student, setShowEditStudent, getstud }) {
   return (
     <div>
       <form className={classes.editStudentForm} onSubmit={handleSubmit}>
-        <h1>עריכת תלמיד</h1>
+        <h1>עריכת פרטי תלמיד</h1>
         <label className={classes.label} htmlFor="firstName">
           שם פרטי:
         </label>

@@ -2,6 +2,7 @@ import classes from "../../css/archive.module.css";
 import React, { useRef, useState } from "react";
 import { statusArr } from "./AddArchive";
 import { updateArchive } from "../../data-base/update";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EditArchive({ archive, fetchData }) {
   const [showEditForm, setShowEditForm] = useState(false);
@@ -12,21 +13,24 @@ function EditArchive({ archive, fetchData }) {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    const formData = {};
-    if (titleRef.current.value !== archive.title) {
-      formData.title = titleRef.current.value;
-    }
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      const formData = {};
+      if (titleRef.current.value !== archive.title) {
+        formData.title = titleRef.current.value;
+      }
 
-    if (amountRef.current.value !== archive.invested_amount) {
-      formData.invested_amount = amountRef.current.value;
-    }
+      if (amountRef.current.value !== archive.invested_amount) {
+        formData.invested_amount = amountRef.current.value;
+      }
 
-    if (bodyRef.current.value !== archive.body) {
-      formData.body = bodyRef.current.value;
-    }
-    updateArchive(archive, formData);
-    fetchData();
-    setShowEditForm(false);
+      if (bodyRef.current.value !== archive.body) {
+        formData.body = bodyRef.current.value;
+      }
+      updateArchive(archive, formData);
+      fetchData(u);
+      setShowEditForm(false);
+    });
   };
   return (
     <>

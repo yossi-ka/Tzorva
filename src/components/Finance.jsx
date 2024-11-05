@@ -11,7 +11,7 @@ import AddFinance, {
 import DeleteFinance from "./finance-comp/DeleteFinance";
 import EditFinance from "./finance-comp/EditFinance";
 import he_IL from "antd/lib/locale/he_IL";
-import { formatDateToHebrew } from "../services/date";
+import { formatDate, formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -65,11 +65,18 @@ function Finance() {
 
   const columns = [
     {
-      title: "תאריך",
+      title: "תאריך עברי",
       dataIndex: "time",
       key: "hebrewDate",
       render: (time) => formatDateToHebrew(time),
-      sorter: { compare: (a, b) => a.time - b.time, multiple: 4 },
+      sorter: (a, b) => a.time - b.time,
+    },
+    {
+      title: "תאריך לועזי",
+      dataIndex: "time",
+      key: "time",
+      render: (time) => formatDate(time),
+      sorter: (a, b) => a.time - b.time,
     },
     {
       title: "סוג הפעולה",

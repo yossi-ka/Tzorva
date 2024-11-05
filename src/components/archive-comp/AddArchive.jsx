@@ -1,6 +1,7 @@
 import classes from "../../css/archive.module.css";
 import React, { useRef, useState } from "react";
 import { addArchive } from "../../data-base/insert";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const statusArr = ["עלה לישיבה", "הסתיים טיפול", "אחר"];
 
@@ -15,19 +16,23 @@ function AddArchive({ fetchData }) {
 
   const handleAddArchive = async (e) => {
     e.preventDefault();
-    const date = new Date();
-    const newArchive = {
-      title: titleRef.current.value,
-      student_id: idRef.current.value,
-      full_name: nameRef.current.value,
-      fathers_name: fathersNameRef.current.value,
-      invested_amount: amountRef.current.value,
-      body: bodyRef.current.value,
-      time: date,
-    };
-    await addArchive(newArchive);
-    fetchData();
-    setOpenForm(false);
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      
+      const date = new Date();
+      const newArchive = {
+        title: titleRef.current.value,
+        student_id: idRef.current.value,
+        full_name: nameRef.current.value,
+        fathers_name: fathersNameRef.current.value,
+        invested_amount: amountRef.current.value,
+        body: bodyRef.current.value,
+        time: date,
+      };
+      await addArchive(newArchive);
+      fetchData(u);
+      setOpenForm(false);
+    })
   };
   return (
     <>

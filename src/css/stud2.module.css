@@ -30,22 +30,23 @@
   direction: rtl;
 }
 
-.student {
-  width: 100%;
-  transition: transform 0.2s ease;
-}
-
-.student:hover {
-  transform: translateY(-2px);
-}
-
 .studentCardContainer {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden */
+  transition: all 0.3s ease;
+}
+
+.studentCardContainer:hover {
+  transform: translateY(-2px);
+}
+
+.student {
+  width: 100%;
+  transition: transform 0.2s ease;
 }
 
 .urgencyLevel {
@@ -56,10 +57,6 @@
   height: 12px;
   border-radius: 50%;
   transition: width 0.3s ease;
-}
-
-.studentCardContainer:hover .urgencyLevel {
-  width: 12px;
 }
 
 .studentName {
@@ -91,18 +88,23 @@
 }
 
 .optionsCard {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   bottom: 10px;
   left: 10px;
-  display: flex;
   gap: 0.5rem;
-  flex-direction: column;
 }
 
 .optionsCard div {
   cursor: pointer;
   opacity: 0.2;
   transition: all 0.3s ease;
+}
+
+.optionsCard div:hover {
+  opacity: 1;
+  transform: translateX(4px);
 }
 
 .moreDetailsIcon {
@@ -120,9 +122,8 @@
   transform: translateY(2px);
 }
 
-.optionsCard div:hover {
-  opacity: 1;
-  transform: translateX(4px);
+.moreDetails {
+  margin-top: 30px;
 }
 
 .moreDetails p {
@@ -130,6 +131,26 @@
   font-size: 0.85rem;
   opacity: 0.7;
   transition: all 0.3s ease;
+}
+
+/*  different settings  */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+select:disabled,
+textarea:disabled,
+input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 /*  add student  */
@@ -201,7 +222,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 1rem;
   transition: all 0.3s ease;
   max-width: 100px;
 }
@@ -211,41 +232,192 @@
 }
 
 .addStudentForm .cancelBtn {
-  background-color: #f44336;
+  background-color: #c1c1c1;
 }
 
-.saveBtn:hover,
-.cancelBtn:hover {
+.addStudentForm .saveBtn:hover,
+.addStudentForm .cancelBtn:hover {
   opacity: 0.8;
 }
 
-.moreDetails {
-  margin-top: 20px;
+.addStudentForm .h1 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
 }
 
-.overlay {
+.addStudentForm .box {
+  min-width: 100%;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.addStudentForm .formControl {
+  flex: 1;
+}
+
+.addStudentForm .select {
+  min-width: 100%;
+  max-height: 3.5rem;
+  padding: 0.5rem;
+}
+
+/* edit student */
+
+.editStudentForm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f8f8; /* צבע רקע בהיר */
+  padding: 1.5rem;
+  border-radius: 8px;
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+  max-width: 400px;
+  z-index: 1000;
+}
+
+.editStudentForm label {
+  margin: 10px 0 5px;
+  font-weight: 600;
+}
+
+.editStudentForm input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+.editStudentForm input:focus {
+  outline: none;
+  border: 2px solid #1c81d3;
+}
+
+.editStudentForm select {
+  padding: 0.75rem;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* delete form */
+.deleteFormsArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #d9534f; /* Red border for delete action */
+  border-radius: 8px;
+  background-color: #f8d7da; /* Light red background */
+}
+
+/* Form styling */
+.deleteFormsArea .deleteForm {
+  width: 100%;
+  max-width: 400px;
+  background-color: white; /* White background for form */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styles */
+.deleteFormsArea .h1 {
+  color: #721c24; /* Dark red */
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.deleteFormsArea .h3 {
+  color: red; /* Dark yellow for warning */
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* Label styles */
+.deleteFormsArea .label {
+  font-size: 14px;
+  color: #495057; /* Dark gray */
+  margin-bottom: 5px;
+}
+
+/* Input and textarea styling */
+.deleteFormsArea .input,
+.deleteFormsArea .textarea,
+.deleteFormsArea .select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Specific styles for warning overlay */
+.deleteFormsArea .overlaySure {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 500;
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.deleteFormArea,
-.editStudentArea {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 2rem;
-  border-radius: 12px;
-  z-index: 1001;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+.deleteFormsArea .warning {
+  background: white; /* White background for warning box */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.deleteFormsArea .h1Warning {
+  color: #721c24; /* Dark red */
+  margin-bottom: 20px;
+}
+
+/* Button styles */
+.deleteFormsArea .continueBtn,
+.deleteFormsArea .deleteStudentBtn,
+.deleteFormsArea .cancelBtn {
+  background-color: #d9534f; /* Bootstrap danger color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.deleteFormsArea .continueBtn:hover,
+.deleteFormsArea .deleteStudentBtn:hover {
+  background-color: #c9302c; /* Darker red on hover */
+}
+
+.deleteFormsArea .cancelBtn {
+  background-color: #6c757d; /* Bootstrap secondary color */
+}
+
+.deleteFormsArea .cancelBtn:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+}
+
+.deleteFormsArea .lastBtns {
+  display: flex;
+  justify-content: space-around;
 }
 
 @media (max-width: 768px) {

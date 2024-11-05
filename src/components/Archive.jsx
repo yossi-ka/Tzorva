@@ -54,8 +54,6 @@ function Archive() {
     onAuthStateChanged(auth, (u) => {
       fetchData(u);
     });
-
-    // אם למשתמש יש גישה, טען את נתוני הארכיון
     document.title = "ארכיון";
   }, [navigate, user]);
 

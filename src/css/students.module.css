@@ -180,8 +180,7 @@
   max-height: 90vh;
 }
 
-.deleteForm,
-.editStudentForm {
+.deleteForm {
   transform-origin: center;
   transition: transform 0.3s ease;
   display: flex;
@@ -241,15 +240,6 @@
   color: #6c757d;
   cursor: not-allowed;
 }
-
-/* .selectSort{
-  padding: 0.75rem;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-family: Arial, Helvetica, sans-serif;
-} */
 
 .textarea {
   height: 80px;

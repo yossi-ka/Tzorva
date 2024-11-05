@@ -97,10 +97,10 @@ function AddStudentBtn({ getstud }) {
                     label="בחר עיר"
                     onChange={(event) => setCity(event.target.value)}
                   >
-                    <MenuItem value="אשדוד">אשדוד</MenuItem>
-                    <MenuItem value="אלעד">אלעד</MenuItem>
-                    <MenuItem value="בני ברק">בני ברק</MenuItem>
-                    <MenuItem value="שאר ערים">שאר ערים</MenuItem>
+                    <MenuItem className={classes.menuItem} value="אשדוד">אשדוד</MenuItem>
+                    <MenuItem className={classes.menuItem} value="אלעד">אלעד</MenuItem>
+                    <MenuItem className={classes.menuItem} value="בני ברק">בני ברק</MenuItem>
+                    <MenuItem className={classes.menuItem} value="שאר ערים">שאר ערים</MenuItem>
                   </Select>
                 </FormControl>
                 <FormControl required className={classes.formControl}>

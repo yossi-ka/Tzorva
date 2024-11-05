@@ -1,4 +1,4 @@
-import classes from "../../css/students.module.css";
+import classes from "../../css/stud2.module.css";
 import React, { useRef, useState } from "react";
 import { addArchive } from "../../data-base/insert";
 import { deleteStudent } from "../../data-base/delete";
@@ -9,6 +9,7 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
   const textareaRef = useRef(null);
   const amountRef = useRef(null);
   const [showWarning, setShowWarning] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowWarning(true);
@@ -35,7 +36,7 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
   };
 
   return (
-    <>
+    <div className={classes.deleteFormsArea}>
       <form onSubmit={handleSubmit} className={classes.deleteForm}>
         <h1 className={classes.h1}>מחיקת תלמיד</h1>
         <h3 className={classes.h3}>
@@ -106,8 +107,7 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
         <button className={classes.continueBtn}>המשך</button>
       </form>
       {showWarning && (
-        <>
-          <div className={classes.overlaySure}></div>
+        <div className={classes.overlaySure}>
           <div className={classes.warning}>
             <h1 className={classes.h1Warning}>האם אתה בטוח?</h1>
             <div className={classes.lastBtns}>
@@ -125,9 +125,9 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 }
 

@@ -1,13 +1,17 @@
 import classes from "../../css/archive.module.css";
 import React, { useState } from "react";
 import { deleteArchive } from "../../data-base/delete";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function DeleteArchive({ archive, fetchData }) {
   const [showWarningForm, setShowWarningForm] = useState(false);
   const handleDeleteArchive = async (archive) => {
-    setShowWarningForm(false);
-    await deleteArchive(archive);
-    fetchData();
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      setShowWarningForm(false);
+      await deleteArchive(archive);
+      fetchData(u);
+    });
   };
   return (
     <div className={classes.warningForm}>
