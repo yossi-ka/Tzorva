@@ -9,6 +9,7 @@ function DeleteIntervention({ intervention, fetchData }) {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       setShowWarningForm(false);
+      
       await deleteIntervention(intervention);
       fetchData(u);
     });

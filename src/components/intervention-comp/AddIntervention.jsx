@@ -4,6 +4,7 @@ import { UserContext } from "../../App";
 import { addIntervention } from "../../data-base/insert";
 import { getusers, getStudents } from "../../data-base/select";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Timestamp } from 'firebase/firestore';
 
 function AddIntervention({ fetchData }) {
   const [studentsArr, setStudentsArr] = useState([]);
@@ -46,9 +47,12 @@ function AddIntervention({ fetchData }) {
     e.preventDefault();
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
-      const time = new Date();
-      const date = new Date(dateRef.current.value + "T00:00:00.000Z");
-
+      const selectedDate = new Date(dateRef.current.value + "T00:00:00.000Z");
+      
+      // Create Firestore Timestamp objects
+      const time = Timestamp.now();
+      const date = Timestamp.fromDate(selectedDate);
+  
       const newIntervention = {
         student_name: studentRef.current.value,
         tutor_name: manager
@@ -59,14 +63,14 @@ function AddIntervention({ fetchData }) {
           : user.user_id,
         intervention_title: titleRef.current.value,
         intervention_description: descriptionRef.current.value,
-        time: time,
-        date: date,
+        time,
+        date,
         place: placeRef.current.value,
         student_id: studentsArr.find(
           (student) => student.name === studentRef.current.value
         ).id,
       };
-
+  
       await addIntervention(newIntervention);
       fetchData(u);
       setOpenForm(false);

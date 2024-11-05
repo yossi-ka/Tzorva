@@ -135,6 +135,7 @@ export const getStudents = functions.https.onRequest((req, res) => {
       userData = querySnapshot.docs[0].data();
     } catch (err) {}
 
+    //  שליפת נתוני המשתמשים
     try {
       if (
         userData.job_title === "מנהל ארגון" ||
@@ -424,7 +425,7 @@ export const getInterventions = functions.https.onRequest((req, res) => {
             massage: arr,
           });
         } else if (userData.job_title === 'מנהל ת"ת') {
-          if (studentData.city_of_school !== userData.city) {
+          if (studentData.city_of_school === userData.city) {
             res.status(200).send({
               success: true,
               massage: arr,

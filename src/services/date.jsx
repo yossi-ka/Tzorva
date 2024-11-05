@@ -13,10 +13,34 @@ export const formatDate = (timestamp) => {
 };
 
 export const formatDateToHebrew = (timestamp) => {
-  // המרת ה-timestamp לתאריך מספרי אם יש צורך
-  const date = new Date((timestamp.seconds || timestamp._seconds) * 1000);
+  if (!timestamp) {
+    return "";
+  }
 
-  const hebrewDate = new Hebcal.HDate(date);
+  try {
+    let date;
+    if (timestamp && (timestamp.seconds || timestamp._seconds)) {
+      const seconds = timestamp.seconds || timestamp._seconds;
+      date = new Date(seconds * 1000);
+    } else if (typeof timestamp === "string") {
+      try {
+        const parsed = JSON.parse(timestamp);
+        const seconds = parsed.seconds || parsed._seconds;
+        date = new Date(seconds * 1000);
+      } catch {
+        date = new Date(timestamp);
+      }
+    } else {
+      date = new Date(timestamp);
+    }
+    if (isNaN(date.getTime())) {
+      return "תאריך לא תקין";
+    }
 
-  return hebrewDate.toString("h"); // "h" מציין את הפורמט העברי
+    const hebrewDate = new Hebcal.HDate(date);
+    return hebrewDate.toString("h");
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return "תאריך לא תקין";
+  }
 };

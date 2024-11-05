@@ -90,6 +90,9 @@ const deleteArchive = async (archive) => {
 };
 
 const deleteIntervention = async (intervention) => {
+  const date = new Date();
+  console.log(JSON.stringify(date));
+  
   try {
     const q = query(
       collection(db, "interventions"),

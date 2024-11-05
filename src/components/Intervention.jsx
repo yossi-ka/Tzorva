@@ -148,7 +148,7 @@ function Intervention() {
               dataSource={interventionToShow}
               bordered
               className={classes.interventionTable}
-              rowKey="time"
+              rowKey={(record) => record.time?.timestamp || record.key}
               locale={{ emptyText: "לא קיימים טיפולים" }}
               expandable={{
                 expandedRowRender: (record) => (
