@@ -1,6 +1,5 @@
 import classes from "../../css/stud2.module.css";
 import React, { useRef, useState } from "react";
-import { addArchive } from "../../data-base/insert";
 import { deleteStudent } from "../../data-base/delete";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -18,7 +17,9 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
   const handleDeleteStudent = async (e) => {
     e.preventDefault();
     const auth = getAuth();
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
+      const time = new Date();
       const newArchive = {
         full_name: student.first_name + " " + student.last_name,
         student_id: student.student_id,
@@ -26,12 +27,27 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
         invested_amount: amountRef.current.value,
         body: textareaRef.current.value,
         fathers_name: student.fathers_name,
+        time: time,
       };
 
-      await addArchive(newArchive);
+      const data = await fetch(
+        `https://addarchive${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newArchive),
+        }
+      );
+      const { message } = await data.json();
+      console.log(message);
+
       setShowDeleteForm(false);
       await deleteStudent(student);
-      getstud(user);
+      getstud(u);
     });
   };
 

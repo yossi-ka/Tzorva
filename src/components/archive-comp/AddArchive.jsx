@@ -1,6 +1,5 @@
 import classes from "../../css/archive.module.css";
 import React, { useRef, useState } from "react";
-import { addArchive } from "../../data-base/insert";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const statusArr = ["עלה לישיבה", "הסתיים טיפול", "אחר"];
@@ -18,7 +17,8 @@ function AddArchive({ fetchData }) {
     e.preventDefault();
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
-      
+      const idToken = await u.getIdToken();
+
       const date = new Date();
       const newArchive = {
         title: titleRef.current.value,
@@ -29,11 +29,27 @@ function AddArchive({ fetchData }) {
         body: bodyRef.current.value,
         time: date,
       };
-      await addArchive(newArchive);
+
+      const data = await fetch(
+        `https://addarchive${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newArchive),
+        }
+      );
+      const { message } = await data.json();
+      console.log(message);
+
       fetchData(u);
       setOpenForm(false);
-    })
+    });
   };
+
   return (
     <>
       <button

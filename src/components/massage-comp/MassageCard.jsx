@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-function MassageCard() {
-  return (
-    <div>MassageCard</div>
-  )
+function messageCard() {
+  return <div>messageCard</div>;
 }
 
-export default MassageCard
+export default messageCard;

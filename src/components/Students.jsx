@@ -1,7 +1,6 @@
 import classes from "../css/stud2.module.css";
 import React, { useEffect, useState, useContext } from "react";
 import StudentsCard from "./students-comp/StudentsCard";
-// import { getStudents } from "../data-base/select";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { UserContext } from "../App";
@@ -40,13 +39,14 @@ function Students() {
           },
         }
       );
+   
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const studentsData = await response.json();
-      setStudents(studentsData.massage);
-      setStudentsToShow(studentsData.massage);
+      setStudents(studentsData.message);
+      setStudentsToShow(studentsData.message);
     } catch (error) {
       console.error("Error fetching students:", error.message || error);
     }

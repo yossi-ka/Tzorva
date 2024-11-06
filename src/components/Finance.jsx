@@ -2,7 +2,6 @@ import classes from "../css/finance.module.css";
 import React, { useEffect, useContext, useState } from "react";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
-// import { getFinance } from "../data-base/select";
 import { ConfigProvider, Table } from "antd";
 import AddFinance, {
   expensesArr,
@@ -38,7 +37,7 @@ function Finance() {
       );
 
       const data = await financeData.json();
-      const sortData = data.massage.sort((a, b) => b.time - a.time);
+      const sortData = data.message.sort((a, b) => b.time - a.time);
       sortData.forEach((e, i) => {
         e.key = i;
       });

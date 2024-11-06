@@ -2,7 +2,6 @@ import classes from "../css/archive.module.css";
 import React, { useEffect, useContext, useState } from "react";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
-// import { getArchive } from "../data-base/select";
 import { ConfigProvider, Table } from "antd";
 import AddArchive, { statusArr } from "./archive-comp/AddArchive";
 import he_IL from "antd/lib/locale/he_IL";
@@ -33,7 +32,7 @@ function Archive() {
         }
       );
       const data = await archiveData.json();
-      const sortData = data.massage.sort((a, b) => b.time - a.time);
+      const sortData = data.message.sort((a, b) => b.time - a.time);
       sortData.forEach((e, i) => {
         e.key = i;
       });

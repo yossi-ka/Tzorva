@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext } from "../App.js";
 import { login } from "../data-base/authentication.js";
 import { useNavigate } from "react-router-dom";
-import { findUserByUID } from "../data-base/select.js";
+// import { findUserByUID } from "../data-base/select.js";
 
 function Login() {
   const { setUser } = useContext(UserContext);
@@ -21,9 +21,23 @@ function Login() {
       usernameRef.current.value,
       passwordRef.current.value
     );
+
     if (userAuth) {
       const uid = userAuth.uid;
-      setUser(await findUserByUID(uid));
+      const idToken = await userAuth.getIdToken();
+      const data = await fetch(
+        `https://getuserbyuid${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "GET",
+          headers: {
+            uid: uid,
+            authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      const { message } = await data.json();
+      setUser(message);
       navigate("/home");
     } else {
       setShoeError(true);

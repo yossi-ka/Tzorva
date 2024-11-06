@@ -38,10 +38,10 @@ function UsersManage() {
 
       const usersData = await response.json();
       if (!response.ok) {
-        throw new Error(response.massage);
+        throw new Error(response.message);
       }
-      setUsers(usersData.massage);
-      setUsersToShow(usersData.massage);
+      setUsers(usersData.message);
+      setUsersToShow(usersData.message);
     } catch (error) {
       console.error("Error fetching users:", error);
     }

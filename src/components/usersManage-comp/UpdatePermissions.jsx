@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getAllStudents } from "../../data-base/select";
 import classes from "../../css/users.module.css";
 import { updateUser } from "../../data-base/update";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
   const [currentPermissions, setCurrentPermissions] = useState(false);
@@ -18,10 +18,25 @@ function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
 
   useEffect(() => {
     const getStude = async () => {
-      setStudentList(await getAllStudents());
-      setCurrentPermissions(user?.access_permissions);
-      setStudentIdList1(user?.access_permissions?.students || []);
-      setStudentIdList2(user?.access_permissions?.students || []);
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (u) => {
+        const data = await fetch(
+          `https://getstudents${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+          {
+            method: "GET",
+            headers: {
+              uid: u.uid,
+              authorization: `Bearer ${u.getIdToken()}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const { message } = await data.json();
+        setStudentList(message);
+        setCurrentPermissions(user?.access_permissions);
+        setStudentIdList1(user?.access_permissions?.students || []);
+        setStudentIdList2(user?.access_permissions?.students || []);
+      });
     };
     getStude();
   }, [user]);

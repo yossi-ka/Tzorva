@@ -1,7 +1,7 @@
 import React from "react";
 
-function Massages() {
-  return <div>Massages</div>;
+function messages() {
+  return <div>messages</div>;
 }
 
-export default Massages;
+export default messages;

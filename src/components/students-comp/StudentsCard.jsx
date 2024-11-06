@@ -30,10 +30,10 @@ function StudentCard({
       : "lightgreen";
 
   const textClass = () => {
-    if (student.class === "גן" || student.class === "מכינה") {
-      return `כיתה ${student.class}`;
+    if (student.class_school === "גן" || student.class_school === "מכינה") {
+      return `כיתה ${student.class_school}`;
     } else {
-      return `כיתה ${student.class}'`;
+      return `כיתה ${student.class_school}'`;
     }
   };
 

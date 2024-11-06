@@ -2,20 +2,37 @@ import classes from "../css/header.module.css";
 import { logout } from "../data-base/authentication";
 import React, { useEffect, useContext } from "react";
 import { getCurrentUser } from "../data-base/authentication";
-import { findUserByUID } from "../data-base/select";
 
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Header() {
   const { user, setUser } = useContext(UserContext);
+
   useEffect(() => {
     const unsubscribe = getCurrentUser(async (user) => {
       if (user) {
-        const userDetails = await findUserByUID(user.uid);
-        setUser(userDetails);
+        const auth = getAuth();
+        onAuthStateChanged(auth, async (u) => {
+          const data = await fetch(
+            `https://getuserbyuid${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+            {
+              method: "GET",
+              headers: {
+                uid: u.uid,
+                authorization: `Bearer ${await u.getIdToken()}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          const res = await data.json();
+
+          setUser(res.message);
+        });
       } else {
-        setUser(null);
+        console.log("not logged in");
       }
     });
     return () => {
@@ -24,6 +41,7 @@ function Header() {
       }
     };
   }, [setUser]);
+
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();

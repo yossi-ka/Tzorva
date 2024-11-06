@@ -2,7 +2,6 @@ import classes from "../css/intervention.module.css";
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import { UserContext } from "../App";
 import { useNavigate, useParams } from "react-router-dom";
-// import { getIntervention } from "../data-base/select";
 import { ConfigProvider, Table } from "antd";
 import AddIntervention from "./intervention-comp/AddIntervention";
 import DeleteIntervention from "./intervention-comp/DeleteIntervention";
@@ -50,7 +49,7 @@ function Intervention() {
           }
         );
         const data = await financeData.json();
-        const sortData = data.massage.sort((a, b) => b.time - a.time);
+        const sortData = data.message.sort((a, b) => b.time - a.time);
         sortData.forEach((e, i) => {
           e.key = i;
         });

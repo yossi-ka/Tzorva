@@ -1,16 +1,32 @@
 import classes from "../../css/intervention.module.css";
 import React, { useState } from "react";
-import { deleteIntervention } from "../../data-base/delete";
+// import { deleteIntervention } from "../../data-base/delete";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function DeleteIntervention({ intervention, fetchData }) {
   const [showWarningForm, setShowWarningForm] = useState(false);
-  const handleDeleteIntervention = async (intervention) => {
+  const handleDeleteIntervention = async (inter) => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
+
+      const data = await fetch(
+        "https://deleteintervention-cjqo4fyw5a-uc.a.run.app",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+          },
+          // credentials: "include",
+          body: JSON.stringify(inter),
+        }
+      );
+      const { message } = await data.json();
+
+      // await deleteIntervention(intervention);
       setShowWarningForm(false);
-      
-      await deleteIntervention(intervention);
       fetchData(u);
     });
   };

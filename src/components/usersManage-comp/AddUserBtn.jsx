@@ -1,6 +1,5 @@
 import classes from "../../css/users.module.css";
 import React, { useRef, useState } from "react";
-import { addUser } from "../../data-base/insert";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function AddUserBtn({ getUsers }) {
@@ -17,7 +16,8 @@ function AddUserBtn({ getUsers }) {
     event.preventDefault();
 
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
       const newUser = {
         user_id: userIdRef.current.value,
         first_name: firstNameRef.current.value,
@@ -39,8 +39,21 @@ function AddUserBtn({ getUsers }) {
           students: [],
         },
       };
-      addUser(newUser);
-      getUsers(user);
+      const data = await fetch(
+        `https://adduser${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        }
+      );
+      const { message } = await data.json();
+      console.log(message);
+      getUsers(u);
       setShowAddForm(false);
     });
   };

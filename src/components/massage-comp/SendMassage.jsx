@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-function SendMassage() {
-  return (
-    <div>SendMassage</div>
-  )
+function Sendmessage() {
+  return <div>Sendmessage</div>;
 }
 
-export default SendMassage
+export default Sendmessage;

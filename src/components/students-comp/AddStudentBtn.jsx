@@ -5,7 +5,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { addStudent } from "../../data-base/insert";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function AddStudentBtn({ getstud }) {
@@ -22,7 +21,7 @@ function AddStudentBtn({ getstud }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (u) => {
       const newStudent = {
         student_id: studentIdRef.current.value,
         first_name: firstNameRef.current.value,
@@ -30,15 +29,36 @@ function AddStudentBtn({ getstud }) {
         fathers_name: fatherNameRef.current.value,
         fathers_phone: fatherPhoneRef.current.value,
         city_of_school: city,
-        class: clas,
+        class_school: clas,
         urgency_level: urgency,
       };
-      addStudent(newStudent);
-      getstud();
+
+      const idToken = await u.getIdToken();
+      console.log("idToken", idToken);
+      console.log("uid", u.uid);
+
+      const response = await fetch(
+        `https://addstudent-cjqo4fyw5a-uc.a.run.app`,
+        {
+          method: "POST",
+          headers: {
+            uid: u.uid,
+            authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newStudent),
+        }
+      );
+      console.log("data", response);
+
+      const { error } = await response.json();
+      console.log(error);
+
       setShowForm(false);
-      getstud(user);
+      getstud(u);
     });
   };
+
   return (
     <div>
       <button
@@ -97,10 +117,18 @@ function AddStudentBtn({ getstud }) {
                     label="בחר עיר"
                     onChange={(event) => setCity(event.target.value)}
                   >
-                    <MenuItem className={classes.menuItem} value="אשדוד">אשדוד</MenuItem>
-                    <MenuItem className={classes.menuItem} value="אלעד">אלעד</MenuItem>
-                    <MenuItem className={classes.menuItem} value="בני ברק">בני ברק</MenuItem>
-                    <MenuItem className={classes.menuItem} value="שאר ערים">שאר ערים</MenuItem>
+                    <MenuItem className={classes.menuItem} value="אשדוד">
+                      אשדוד
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem} value="אלעד">
+                      אלעד
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem} value="בני ברק">
+                      בני ברק
+                    </MenuItem>
+                    <MenuItem className={classes.menuItem} value="שאר ערים">
+                      שאר ערים
+                    </MenuItem>
                   </Select>
                 </FormControl>
                 <FormControl required className={classes.formControl}>

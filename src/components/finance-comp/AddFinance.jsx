@@ -1,6 +1,6 @@
 import classes from "../../css/finance.module.css";
 import React, { useRef, useState } from "react";
-import { addFinance } from "../../data-base/insert";
+// import { addFinance } from "../../data-base/insert";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const revenuesArr = ["מימון תלמיד", "תרומה"];
@@ -16,6 +16,8 @@ function AddFinance({ fetchData }) {
     e.preventDefault();
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
+
+      const idToken = await u.getIdToken();
       
       const date = new Date();
       const newFinance = {
@@ -25,11 +27,28 @@ function AddFinance({ fetchData }) {
         details: detailsRef.current.value,
         time: date,
       };
-      await addFinance(newFinance);
+
+      const data = await fetch(
+        `https://addfinance${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newFinance),
+        }
+      );
+      const { message } = await data.json();
+      console.log(message);
+      
+      // await addFinance(newFinance);
       fetchData(u);
       setOpenForm(false);
     })
   };
+
   return (
     <>
       <button
