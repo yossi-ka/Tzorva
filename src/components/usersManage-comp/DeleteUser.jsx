@@ -1,6 +1,6 @@
 import classes from "../../css/users.module.css";
 import React from "react";
-import { deleteUser } from "../../data-base/delete";
+// import { deleteUser } from "../../data-base/delete";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function DeleteUser({ user, getuse, setShowDeleteForm }) {
@@ -8,9 +8,27 @@ function DeleteUser({ user, getuse, setShowDeleteForm }) {
     e.preventDefault();
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
+      fetch(
+        `https://deleteuser${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            uid: u.uid,
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify(user),
+        }
+      )
+        .then((res) => res.json())
+        .then((d) => {
+          console.log(d.message);
+          getuse(u);
+        });
+
       setShowDeleteForm(false);
-      await deleteUser(user);
-      getuse(u);
+      // await deleteUser(user);
     });
   };
 

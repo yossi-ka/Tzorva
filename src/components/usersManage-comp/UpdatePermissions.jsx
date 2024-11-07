@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import classes from "../../css/users.module.css";
-import { updateUser } from "../../data-base/update";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
@@ -20,7 +19,7 @@ function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
     const getStude = async () => {
       const auth = getAuth();
       onAuthStateChanged(auth, async (u) => {
-        const data = await fetch(
+        await fetch(
           `https://getstudents${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
           {
             method: "GET",
@@ -30,9 +29,12 @@ function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
               "Content-Type": "application/json",
             },
           }
-        );
-        const { message } = await data.json();
-        setStudentList(message);
+        )
+          .then((res) => res.json())
+          .then((d) => {
+            const { message } = d.message;
+            setStudentList(message);
+          });
         setCurrentPermissions(user?.access_permissions);
         setStudentIdList1(user?.access_permissions?.students || []);
         setStudentIdList2(user?.access_permissions?.students || []);
@@ -51,44 +53,67 @@ function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
     return true;
   };
 
-  const handleUpdatePermissions = (e) => {
+  const handleUpdatePermissions = async (e) => {
     e.preventDefault();
 
-    // יצירת אובייקט עם כל ההרשאות הנוכחיות כבסיס
-    const newPermissions = {
-      ...currentPermissions,
-      students: [...studentIdList1], // תמיד לשלוח את הרשימה המעודכנת
-      actions: {
-        ...currentPermissions?.actions,
-        add_student: addStudentRef.current.checked,
-        delete_interventions: deleteInterventionRef.current.checked,
-        delete_student: deleteStudentRef.current.checked,
-        show_docs: showDocsRef.current.checked,
-      },
-      finance: financeRef.current.checked,
-      archive: archiveRef.current.checked,
-    };
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
 
-    // בדיקה אם יש שינויים בכלל
-    const hasChanges =
-      !compareArrs(studentIdList1, studentIdList2) ||
-      newPermissions.finance !== currentPermissions?.finance ||
-      newPermissions.archive !== currentPermissions?.archive ||
-      newPermissions.actions.add_student !==
-        currentPermissions?.actions?.add_student ||
-      newPermissions.actions.delete_interventions !==
-        currentPermissions?.actions?.delete_interventions ||
-      newPermissions.actions.delete_student !==
-        currentPermissions?.actions?.delete_student ||
-      newPermissions.actions.show_docs !==
-        currentPermissions?.actions?.show_docs;
+      // יצירת אובייקט עם כל ההרשאות הנוכחיות כבסיס
+      const newPermissions = {
+        ...currentPermissions,
+        students: [...studentIdList1], // תמיד לשלוח את הרשימה המעודכנת
+        actions: {
+          ...currentPermissions?.actions,
+          add_student: addStudentRef.current.checked,
+          delete_interventions: deleteInterventionRef.current.checked,
+          delete_student: deleteStudentRef.current.checked,
+          show_docs: showDocsRef.current.checked,
+        },
+        finance: financeRef.current.checked,
+        archive: archiveRef.current.checked,
+      };
 
-    if (hasChanges) {
-      updateUser(user, { ...user, access_permissions: newPermissions });
-    }
+      // בדיקה אם יש שינויים בכלל
+      const hasChanges =
+        !compareArrs(studentIdList1, studentIdList2) ||
+        newPermissions.finance !== currentPermissions?.finance ||
+        newPermissions.archive !== currentPermissions?.archive ||
+        newPermissions.actions.add_student !==
+          currentPermissions?.actions?.add_student ||
+        newPermissions.actions.delete_interventions !==
+          currentPermissions?.actions?.delete_interventions ||
+        newPermissions.actions.delete_student !==
+          currentPermissions?.actions?.delete_student ||
+        newPermissions.actions.show_docs !==
+          currentPermissions?.actions?.show_docs;
 
-    setShowUpdatePermissions(false);
-    getuse();
+      setShowUpdatePermissions(false);
+
+      if (hasChanges) {
+        await fetch(
+          `https://edituser${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${idToken}`,
+              uid: u.uid,
+            },
+            body: JSON.stringify({
+              user_id: user.user_id,
+              access_permissions: newPermissions,
+            }),
+          }
+        )
+          .then((res) => res.json())
+          .then((d) => {
+            console.log(d.message);
+            getuse(u);
+          });
+      }
+    });
   };
 
   const handleCheckedStudent = (checked, student_id) => {

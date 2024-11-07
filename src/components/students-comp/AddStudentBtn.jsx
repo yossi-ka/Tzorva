@@ -1,4 +1,4 @@
-import classes from "../../css/stud2.module.css";
+import classes from "../../css/student.module.css";
 import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
@@ -20,6 +20,7 @@ function AddStudentBtn({ getstud }) {
   const [showForm, setShowForm] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const newStudent = {
@@ -32,13 +33,12 @@ function AddStudentBtn({ getstud }) {
         class_school: clas,
         urgency_level: urgency,
       };
+      setShowForm(false);
 
       const idToken = await u.getIdToken();
-      console.log("idToken", idToken);
-      console.log("uid", u.uid);
 
-      const response = await fetch(
-        `https://addstudent-cjqo4fyw5a-uc.a.run.app`,
+      await fetch(
+        `https://addstudent${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
           method: "POST",
           headers: {
@@ -48,14 +48,12 @@ function AddStudentBtn({ getstud }) {
           },
           body: JSON.stringify(newStudent),
         }
-      );
-      console.log("data", response);
-
-      const { error } = await response.json();
-      console.log(error);
-
-      setShowForm(false);
-      getstud(u);
+      )
+        .then((res) => res.json())
+        .then((d) => {
+          console.log(d.message);
+          getstud(u);
+        });
     });
   };
 
@@ -80,6 +78,7 @@ function AddStudentBtn({ getstud }) {
                 ref={studentIdRef}
                 type="text"
                 placeholder="תעודת זהות"
+                maxLength="9"
                 required
               />
               <input

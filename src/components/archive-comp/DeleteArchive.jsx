@@ -10,7 +10,7 @@ function DeleteArchive({ archive, fetchData }) {
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
 
-      const data = await fetch(
+      await fetch(
         `https://deletearchive${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
           method: "DELETE",

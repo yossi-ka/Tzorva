@@ -1,13 +1,24 @@
 import Hebcal from "hebcal";
 
 export const formatDate = (timestamp) => {
+
+  if (!timestamp) {
+    return "";
+  }
+
+  if (typeof timestamp === "string") {
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
   const date = new Date((timestamp._seconds || timestamp.seconds) * 1000);
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
-  // const hours = String(date.getHours()).padStart(2, "0");
-  // const minutes = String(date.getMinutes()).padStart(2, "0");
-  // const seconds = String(date.getSeconds()).padStart(2, "0");
 
   return `${day}/${month}/${year}`;
 };

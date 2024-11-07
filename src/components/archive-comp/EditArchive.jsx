@@ -1,7 +1,6 @@
 import classes from "../../css/archive.module.css";
 import React, { useRef, useState } from "react";
 import { statusArr } from "./AddArchive";
-import { updateArchive } from "../../data-base/update";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EditArchive({ archive, fetchData }) {
@@ -15,6 +14,7 @@ function EditArchive({ archive, fetchData }) {
     e.preventDefault();
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
       const formData = {};
       if (titleRef.current.value !== archive.title) {
         formData.title = titleRef.current.value;
@@ -27,9 +27,24 @@ function EditArchive({ archive, fetchData }) {
       if (bodyRef.current.value !== archive.body) {
         formData.body = bodyRef.current.value;
       }
-      updateArchive(archive, formData);
-      fetchData(u);
       setShowEditForm(false);
+      await fetch(
+        `https://editarchive${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+          },
+          body: JSON.stringify({ ...formData, time: archive.time }),
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          fetchData(u);
+          console.log(data);
+        });
     });
   };
   return (

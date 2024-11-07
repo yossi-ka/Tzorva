@@ -1,4 +1,4 @@
-import classes from "../css/stud2.module.css";
+import classes from "../css/student.module.css";
 import React, { useEffect, useState, useContext } from "react";
 import StudentsCard from "./students-comp/StudentsCard";
 import { getAuth, onAuthStateChanged } from "firebase/auth";

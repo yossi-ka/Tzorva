@@ -10,7 +10,7 @@
 
 import admin from "firebase-admin"; // ייבוא firebase-admin
 import { getFirestore } from "firebase-admin/firestore";
-import * as functions from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
 import cors from "cors"; // ייבוא CORS
 
 // Initialize Firebase Admin
@@ -22,7 +22,7 @@ const corsOptions = { origin: true };
 const corsMiddleware = cors(corsOptions);
 
 // פונקציה לקבלת כל המשתמשים
-export const getUsers = functions.https.onRequest((req, res) => {
+export const getUsers = onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
@@ -97,7 +97,7 @@ export const getUsers = functions.https.onRequest((req, res) => {
 });
 
 // פונקציה לקבלת התלמידים
-export const getStudents = functions.https.onRequest((req, res) => {
+export const getStudents = onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
@@ -193,7 +193,7 @@ export const getStudents = functions.https.onRequest((req, res) => {
 });
 
 // פונקציה לקבלת מידע פיננסי
-export const getFinance = functions.https.onRequest((req, res) => {
+export const getFinance = onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
@@ -273,7 +273,7 @@ export const getFinance = functions.https.onRequest((req, res) => {
 });
 
 // פונקציה לקבלת נתוני ארכיון
-export const getArchive = functions.https.onRequest((req, res) => {
+export const getArchive = onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
@@ -353,7 +353,7 @@ export const getArchive = functions.https.onRequest((req, res) => {
 });
 
 // פונקציה לקבלת רשימת הטיפולים
-export const getInterventions = functions.https.onRequest((req, res) => {
+export const getInterventions = onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
@@ -526,7 +526,7 @@ export const getInterventions = functions.https.onRequest((req, res) => {
 });
 
 // פונקציה לקבלת משתמש עפ"י uid
-export const getUserByUid = functions.https.onRequest((req, res) => {
+export const getUserByUid = onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
@@ -585,7 +585,7 @@ export const getUserByUid = functions.https.onRequest((req, res) => {
 });
 
 //  פונקציה לקבלת רשימת המטפלים
-export const getTutors = functions.https.onRequest((req, res) => {
+export const getTutors = onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;

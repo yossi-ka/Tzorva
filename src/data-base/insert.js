@@ -8,7 +8,6 @@
    אם רוצים פונקציה בודדת ניתן להזין firebase deploy --only functions:<function> עם שם הפונקציה
 */
 
-
 import admin from "firebase-admin";
 import { getFirestore } from "firebase-admin/firestore";
 import { onRequest } from "firebase-functions/v2/https";
@@ -26,7 +25,7 @@ const corsHandler = cors({
   allowedHeaders: ["Content-Type", "Authorization", "uid"],
 });
 
-// // פונקציה להוספת תלמיד
+// פונקציה להוספת תלמיד
 export const addStudent = onRequest(async (req, res) => {
   // עטיפת כל הלוגיקה ב-Promise
   return new Promise((resolve) => {
@@ -184,10 +183,10 @@ export const addUser = onRequest(async (req, res) => {
 
         const userData = querySnapshot.docs[0].data();
 
-        if (userData.job_title === "מטפל") {
+        if (userData.job_title !== "מנהל ארגון") {
           res.status(403).json({
             success: false,
-            message: "אין לך הרשאה להוסיף תלמידים",
+            message: "אין לך הרשאה להוסיף משתמשים",
           });
           return resolve();
         }
@@ -197,13 +196,13 @@ export const addUser = onRequest(async (req, res) => {
 
         res.status(200).json({
           success: true,
-          message: "התלמיד נוסף בהצלחה",
+          message: "המשתמש נוסף בהצלחה",
         });
         return resolve();
       } catch (error) {
         res.status(500).json({
           success: false,
-          message: "שגיאה בהוספת תלמיד",
+          message: "שגיאה בהוספת משתמש",
           error: error.message,
         });
         return resolve();
@@ -280,7 +279,7 @@ export const addArchive = onRequest(async (req, res) => {
         if (userData.job_title === "מטפל") {
           res.status(403).json({
             success: false,
-            message: "אין לך הרשאה להוסיף תלמידים",
+            message: "אין לך הרשאה להוסיף תיעודים",
           });
           return resolve();
         }
@@ -373,7 +372,7 @@ export const addFinance = onRequest(async (req, res) => {
         if (userData.job_title === "מטפל") {
           res.status(403).json({
             success: false,
-            message: "אין לך הרשאה להוסיף תלמידים",
+            message: "אין לך הרשאה להוסיף פעולות פיננסיות",
           });
           return resolve();
         }
@@ -463,10 +462,13 @@ export const addIntervention = onRequest(async (req, res) => {
 
         const userData = querySnapshot.docs[0].data();
 
-        if (userData.job_title === "מטפל") {
+        if (
+          userData.job_title === "מטפל" &&
+          userData.user_id !== newIntervention.tutor_id
+        ) {
           res.status(403).json({
             success: false,
-            message: "אין לך הרשאה להוסיף תלמידים",
+            message: "אין לך הרשאה להוסיף טיפולים של מטפלים אחרים",
           });
           return resolve();
         }

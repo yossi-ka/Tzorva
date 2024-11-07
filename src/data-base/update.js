@@ -1,121 +1,471 @@
-import { db } from "./config.js";
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  updateDoc,
-} from "firebase/firestore";
 
-const updateStudent = async (student, updatedData) => {
-  try {
-    const q = query(
-      collection(db, "students"),
-      where("student_id", "==", student.student_id)
-    );
-    const querySnapshot = await getDocs(q);
+/*
+פונקציות POST לעריכת נתונים ב-Firestore
+על מנת לערוך ולתקן, יש לבצע את השלבים הבאים:
+1. להעביר את הפונקציה/ות לקובץ index.js הנמצא בתיקיית tzorva-functions
+2. לנווט בטרמינל לתיקיית tzorva-functions
+3. להזין את הפקודה npx eslint . --fix
+4. להזין את הפקודה firebase deploy --only functions
+   אם רוצים פונקציה בודדת ניתן להזין firebase deploy --only functions:<function> עם שם הפונקציה
+*/
 
-    if (!querySnapshot.empty) {
-      // בדיקה אם יש מסמכים
-      await updateDoc(querySnapshot.docs[0].ref, updatedData);
-    } else {
-      console.log("לא נמצא תלמיד עם המזהה הזה.");
-      // טיפול במקרה שלא נמצא תלמיד
-    }
-  } catch (error) {
-    console.error("שגיאה בעדכון התלמיד:", error);
-    // טיפול בשגיאות
-  }
-};
 
-const updateUser = async (user, updatedData) => {
-  try {
-    const q = query(
-      collection(db, "users"),
-      where("user_id", "==", user.user_id)
-    );
-    const querySnapshot = await getDocs(q);
+import admin from "firebase-admin"; // ייבוא firebase-admin
+import { getFirestore } from "firebase-admin/firestore";
+import cors from "cors"; // ייבוא CORS
+import { onRequest } from "firebase-functions/v2/https";
 
-    if (!querySnapshot.empty) {
-      // בדיקה אם יש מסמכים
-      await updateDoc(querySnapshot.docs[0].ref, updatedData);
-    } else {
-      console.log("לא נמצא משתמש עם המזהה הזה.");
-      // טיפול במקרה שלא נמצא משתמש
-    }
-  } catch (error) {
-    console.error("שגיאה בעדכון משתמש:", error);
-    // טיפול בשגיאות
-  }
-};
+// Initialize Firebase Admin
+admin.initializeApp();
+const db = getFirestore();
 
-const updateFinance = async (finance, updatedData) => {
-  try {
-    const q = query(
-      collection(db, "finance"),
-      where("time", "==", finance.time)
-    );
-    const querySnapshot = await getDocs(q);
+const corsHandler = cors({
+  origin: true,
+  credentials: true,
+  methods: ["GET", "POST", "OPTIONS", "PUT"],
+  allowedHeaders: ["Content-Type", "Authorization", "uid"],
+});
 
-    if (!querySnapshot.empty) {
-      // בדיקה אם יש מסמכים
-      await updateDoc(querySnapshot.docs[0].ref, updatedData);
-    } else {
-      console.log("לא נמצאה פעולה עם חותמת זמן זו.");
-      // טיפול במקרה שלא נמצא מסמך
-    }
-  } catch (error) {
-    console.error("שגיאה בעדכון פעולה:", error);
-    // טיפול בשגיאות
-  }
-};
+//  פונקציה לעדכון תלמיד
+export const editStudent = onRequest(async (req, res) => {
+  // עטיפת כל הלוגיקה ב-Promise
+  return new Promise((resolve) => {
+    corsHandler(req, res, async () => {
+      try {
+        const uid = req.headers.uid;
+        const authHeader = req.headers.authorization;
+        const student = req.body;
 
-const updateArchive = async (archive, updatedData) => {
-  try {
-    const q = query(
-      collection(db, "archive"),
-      where("student_id", "==", archive.student_id)
-    );
-    const querySnapshot = await getDocs(q);
+        if (!uid) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות uid בבקשה",
+          });
+          return resolve();
+        }
 
-    if (!querySnapshot.empty) {
-      // בדיקה אם יש מסמכים
-      await updateDoc(querySnapshot.docs[0].ref, updatedData);
-    } else {
-      console.log("לא נמצא התיעוד המבוקש.");
-      // טיפול במקרה שלא נמצא מסמך
-    }
-  } catch (error) {
-    console.error("שגיאה בעדכון התיעוד:", error);
-    // טיפול בשגיאות
-  }
-};
+        if (!authHeader) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות Token בבקשה",
+          });
+          return resolve();
+        }
 
-const updateIntervention = async (intervention, updatedData) => {
-  try {
-    const q = query(
-      collection(db, "interventions"),
-      where("time", "==", intervention.time)
-    );
-    const querySnapshot = await getDocs(q);
+        const idToken = authHeader.startsWith("Bearer ")
+          ? authHeader.split(" ")[1]
+          : null;
 
-    if (!querySnapshot.empty) {
-      // בדיקה אם יש מסמכים
-      await updateDoc(querySnapshot.docs[0].ref, updatedData);
-    } else {
-      console.log("לא נמצא טיפול עם חותמת זמן זו.");
-      // טיפול במקרה שלא נמצא מסמך
-    }
-  } catch (error) {
-    console.error("שגיאה בעדכון הטיפול:", error);
-    // טיפול בשגיאות
-  }
-};
+        let user;
+        try {
+          user = await admin.auth().verifyIdToken(idToken);
+        } catch (error) {
+          res.status(401).json({
+            success: false,
+            message: "שגיאה באימות ה-ID Token",
+          });
+          return resolve();
+        }
 
-export {
-  updateStudent,
-  updateUser,
-  updateFinance,
-  updateArchive,
-  updateIntervention,
-};
+        if (uid !== user.uid) {
+          res.status(403).json({
+            success: false,
+            message: "משתמש לא מאומת",
+          });
+          return resolve();
+        }
+
+        // שליפת נתוני משתמש
+        const querySnapshot = await db
+          .collection("users")
+          .where("UID", "==", uid)
+          .get();
+
+        if (querySnapshot.empty) {
+          res.status(500).json({
+            success: false,
+            message: "משתמש לא ידוע",
+          });
+          return resolve();
+        }
+
+        const userData = querySnapshot.docs[0].data();
+
+        if (userData.job_title === "מטפל") {
+          res.status(403).json({
+            success: false,
+            message: "אין לך הרשאה לערוך תלמידים",
+          });
+          return resolve();
+        }
+
+        //  עדכון התלמיד
+
+        let querySnapshot1 = await db.collection("students").get();
+
+        if (querySnapshot1.empty) {
+          return res.status(403).json({
+            success: false,
+            message: "לא נמצאו תלמידים לעדכון",
+          });
+        }
+
+        querySnapshot1.docs.forEach((doc) => {
+          if (doc.data().student_id === student.student_id) {
+            db.collection("students").doc(doc.id).update(student);
+          }
+        });
+
+        res.status(200).json({
+          success: true,
+          message: "התלמיד עודכן בהצלחה",
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "שגיאה בעריכת התלמיד",
+          error: error.message,
+        });
+        return resolve();
+      }
+    });
+  });
+});
+
+//  פונקציה לעריכת פיננסים
+export const editFinance = onRequest(async (req, res) => {
+  // עטיפת כל הלוגיקה ב-Promise
+  return new Promise((resolve) => {
+    corsHandler(req, res, async () => {
+      try {
+        const uid = req.headers.uid;
+        const authHeader = req.headers.authorization;
+        const finDetails = req.body;
+
+        if (!uid) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות uid בבקשה",
+          });
+          return resolve();
+        }
+
+        if (!authHeader) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות Token בבקשה",
+          });
+          return resolve();
+        }
+
+        const idToken = authHeader.startsWith("Bearer ")
+          ? authHeader.split(" ")[1]
+          : null;
+
+        let user;
+        try {
+          user = await admin.auth().verifyIdToken(idToken);
+        } catch (error) {
+          res.status(401).json({
+            success: false,
+            message: "שגיאה באימות ה-ID Token",
+          });
+          return resolve();
+        }
+
+        if (uid !== user.uid) {
+          res.status(403).json({
+            success: false,
+            message: "משתמש לא מאומת",
+          });
+          return resolve();
+        }
+
+        // שליפת נתוני משתמש
+        const querySnapshot = await db
+          .collection("users")
+          .where("UID", "==", uid)
+          .get();
+
+        if (querySnapshot.empty) {
+          res.status(500).json({
+            success: false,
+            message: "משתמש לא ידוע",
+          });
+          return resolve();
+        }
+
+        const userData = querySnapshot.docs[0].data();
+
+        if (userData.job_title !== "מנהל ארגון") {
+          res.status(403).json({
+            success: false,
+            message: "אין לך הרשאה לערוך פיננסים",
+          });
+          return resolve();
+        }
+
+        //  עדכון הפעולה
+
+        await db
+          .collection("finance")
+          .get()
+          .then((qs) => {
+            qs.forEach((doc) => {
+              if (
+                (doc.data().time._seconds === finDetails.time._seconds &&
+                  doc.data().time._nanoseconds ===
+                    finDetails.time._nanoseconds) ||
+                doc.data().time === finDetails.time ||
+                (doc.data().time.seconds === finDetails.time.seconds &&
+                  doc.data().time.nanoseconds === finDetails.time.nanoseconds)
+              ) {
+                db.collection("finance").doc(doc.id).update(finDetails);
+                res.status(200).json({
+                  success: true,
+                  message: "הפעולה עודכנה בהצלחה",
+                });
+              }
+            });
+          });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "שגיאה בעריכת הפעולה",
+          error: error.message,
+        });
+        return resolve();
+      }
+    });
+  });
+});
+
+//  פונקציה לעריכת ארכיון
+export const editArchive = onRequest(async (req, res) => {
+  // עטיפת כל הלוגיקה ב-Promise
+  return new Promise((resolve) => {
+    corsHandler(req, res, async () => {
+      try {
+        const uid = req.headers.uid;
+        const authHeader = req.headers.authorization;
+        const archiveDetails = req.body;
+
+        if (!uid) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות uid בבקשה",
+          });
+          return resolve();
+        }
+
+        if (!authHeader) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות Token בבקשה",
+          });
+          return resolve();
+        }
+
+        const idToken = authHeader.startsWith("Bearer ")
+          ? authHeader.split(" ")[1]
+          : null;
+
+        let user;
+        try {
+          user = await admin.auth().verifyIdToken(idToken);
+        } catch (error) {
+          res.status(401).json({
+            success: false,
+            message: "שגיאה באימות ה-ID Token",
+          });
+          return resolve();
+        }
+
+        if (uid !== user.uid) {
+          res.status(403).json({
+            success: false,
+            message: "משתמש לא מאומת",
+          });
+          return resolve();
+        }
+
+        // שליפת נתוני משתמש
+        const querySnapshot = await db
+          .collection("users")
+          .where("UID", "==", uid)
+          .get();
+
+        if (querySnapshot.empty) {
+          res.status(500).json({
+            success: false,
+            message: "משתמש לא ידוע",
+          });
+          return resolve();
+        }
+
+        const userData = querySnapshot.docs[0].data();
+
+        if (userData.job_title !== "מנהל ארגון") {
+          res.status(403).json({
+            success: false,
+            message: "אין לך הרשאה לערוך ארכיון",
+          });
+          return resolve();
+        }
+
+        //  עדכון הפעולה
+
+        await db
+          .collection("archive")
+          .get()
+          .then((qs) => {
+            qs.forEach((doc) => {
+              if (
+                (doc.data().time._seconds === archiveDetails.time._seconds &&
+                  doc.data().time._nanoseconds ===
+                    archiveDetails.time._nanoseconds) ||
+                doc.data().time === archiveDetails.time ||
+                (doc.data().time.seconds === archiveDetails.time.seconds &&
+                  doc.data().time.nanoseconds ===
+                    archiveDetails.time.nanoseconds)
+              ) {
+                db.collection("archive").doc(doc.id).update(archiveDetails);
+                res.status(200).json({
+                  success: true,
+                  message: "הפעולה עודכנה בהצלחה",
+                });
+              }
+            });
+          });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "שגיאה בעריכת הפעולה",
+          error: error.message,
+        });
+        return resolve();
+      }
+    });
+  });
+});
+
+//  פונקציה לעריכת טיפול
+export const editIntervention = onRequest(async (req, res) => {
+  // עטיפת כל הלוגיקה ב-Promise
+  return new Promise((resolve) => {
+    corsHandler(req, res, async () => {
+      try {
+        const uid = req.headers.uid;
+        const authHeader = req.headers.authorization;
+        const interventionDetails = req.body;
+
+        if (!uid) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות uid בבקשה",
+          });
+          return resolve();
+        }
+
+        if (!authHeader) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות Token בבקשה",
+          });
+          return resolve();
+        }
+
+        const idToken = authHeader.startsWith("Bearer ")
+          ? authHeader.split(" ")[1]
+          : null;
+
+        let user;
+        try {
+          user = await admin.auth().verifyIdToken(idToken);
+        } catch (error) {
+          res.status(401).json({
+            success: false,
+            message: "שגיאה באימות ה-ID Token",
+          });
+          return resolve();
+        }
+
+        if (uid !== user.uid) {
+          res.status(403).json({
+            success: false,
+            message: "משתמש לא מאומת",
+          });
+          return resolve();
+        }
+
+        // שליפת נתוני משתמש
+        const querySnapshot = await db
+          .collection("users")
+          .where("UID", "==", uid)
+          .get();
+
+        if (querySnapshot.empty) {
+          res.status(500).json({
+            success: false,
+            message: "משתמש לא ידוע",
+          });
+          return resolve();
+        }
+
+        const userData = querySnapshot.docs[0].data();
+
+        //  בדיקת הרשאות
+        if (
+          userData.job_title !== "מנהל ארגון" &&
+          userData.job_title !== "יועץ" &&
+          userData.job_title !== 'מנהל ת"ת' &&
+          (userData.access_permissions.students.includes(
+            interventionDetails.student_id
+          ) === false ||
+            interventionDetails.tutor_id !== userData.user_id)
+        ) {
+          res.status(403).json({
+            success: false,
+            message: "אין לך הרשאה לערוך טיפול",
+          });
+          return resolve();
+        }
+
+        //  עדכון הפעולה
+
+        await db
+          .collection("interventions")
+          .get()
+          .then((qs) => {
+            qs.forEach((doc) => {
+              if (
+                (doc.data().time._seconds ===
+                  interventionDetails.time._seconds &&
+                  doc.data().time._nanoseconds ===
+                    interventionDetails.time._nanoseconds) ||
+                doc.data().time === interventionDetails.time ||
+                (doc.data().time.seconds === interventionDetails.time.seconds &&
+                  doc.data().time.nanoseconds ===
+                    interventionDetails.time.nanoseconds)
+              ) {
+                db.collection("interventions")
+                  .doc(doc.id)
+                  .update(interventionDetails);
+                res.status(200).json({
+                  success: true,
+                  message: "הפעולה עודכנה בהצלחה",
+                });
+              }
+            });
+          });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "שגיאה בעריכת הפעולה",
+          error: error.message,
+        });
+        return resolve();
+      }
+    });
+  });
+});

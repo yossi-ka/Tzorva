@@ -1,6 +1,6 @@
-import classes from "../../css/stud2.module.css";
+import classes from "../../css/student.module.css";
 import React, { useRef, useState } from "react";
-import { deleteStudent } from "../../data-base/delete";
+// import { deleteStudent } from "../../data-base/delete";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function DeleteStudent({ student, setShowDeleteForm, getstud }) {
@@ -19,35 +19,55 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
-      const time = new Date();
-      const newArchive = {
-        full_name: student.first_name + " " + student.last_name,
-        student_id: student.student_id,
-        title: reasonRef.current.value,
-        invested_amount: amountRef.current.value,
-        body: textareaRef.current.value,
-        fathers_name: student.fathers_name,
-        time: time,
-      };
 
-      const data = await fetch(
-        `https://addarchive${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+      //  delete student
+      fetch(
+        `https://deletestudent${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
-          method: "POST",
+          method: "DELETE",
           headers: {
-            Authorization: `Bearer ${idToken}`,
-            uid: u.uid,
             "Content-Type": "application/json",
+            uid: u.uid,
+            Authorization: `Bearer ${idToken}`,
           },
-          body: JSON.stringify(newArchive),
+          body: JSON.stringify(student),
         }
-      );
-      const { message } = await data.json();
-      console.log(message);
+      )
+        .then((res) => res.json())
+        .then((d) => {
+          console.log(d.message);
+          getstud(u);
+          const time = new Date();
+          const newArchive = {
+            full_name: student.first_name + " " + student.last_name,
+            student_id: student.student_id,
+            title: reasonRef.current.value,
+            invested_amount: amountRef.current.value,
+            body: textareaRef.current.value,
+            fathers_name: student.fathers_name,
+            time: time,
+          };
 
-      setShowDeleteForm(false);
-      await deleteStudent(student);
-      getstud(u);
+          setShowDeleteForm(false);
+
+          //  add to archive
+          fetch(
+            `https://addarchive${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${idToken}`,
+                uid: u.uid,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(newArchive),
+            }
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data.message);
+            });
+        });
     });
   };
 

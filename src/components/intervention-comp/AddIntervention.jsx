@@ -108,7 +108,7 @@ function AddIntervention({ fetchData }) {
           },
           body: JSON.stringify(newIntervention),
         }
-      )
+      );
 
       const { message } = await data.json();
       console.log(message);

@@ -1,6 +1,5 @@
-import classes from "../../css/stud2.module.css";
+import classes from "../../css/student.module.css";
 import React, { useRef } from "react";
-import { updateStudent } from "../../data-base/update";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EditStudent({ student, setShowEditStudent, getstud }) {
@@ -13,6 +12,10 @@ function EditStudent({ student, setShowEditStudent, getstud }) {
 
     const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
+      const idToken = await user.getIdToken();
+      console.log("token", idToken);
+      console.log("uid", user.uid);
+
       const formData = {};
 
       if (fathersPhoneRef.current.value !== student.fathers_phone) {
@@ -30,12 +33,26 @@ function EditStudent({ student, setShowEditStudent, getstud }) {
       if (urgencyRef.current.value !== student.urgency) {
         formData.urgency_level = urgencyRef.current.value;
       }
-
-      await updateStudent(student, formData);
+      formData.student_id = student.student_id;
       setShowEditStudent(false);
-      getstud(user); // קריאה לפונקציה עם המשתמש הנוכחי
+
+      await fetch(`https://editstudent-cjqo4fyw5a-uc.a.run.app`, {
+        method: "POST",
+        headers: {
+          uid: user.uid,
+          authorization: `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((res) => res.json())
+        .then((d) => {
+          console.log(d.message);
+          getstud(user);
+        });
     });
   };
+
   return (
     <div>
       <form className={classes.editStudentForm} onSubmit={handleSubmit}>

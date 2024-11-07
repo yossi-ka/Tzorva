@@ -1,6 +1,5 @@
 import classes from "../../css/users.module.css";
 import React, { useRef } from "react";
-import { updateUser } from "../../data-base/update";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function EditUser({ user, setShowEditUser, getuse }) {
@@ -12,6 +11,7 @@ function EditUser({ user, setShowEditUser, getuse }) {
 
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
       const formData = {};
 
       if (phoneRef.current.value !== user.fathers_phone) {
@@ -26,11 +26,28 @@ function EditUser({ user, setShowEditUser, getuse }) {
         formData.job_title = jobRef.current.value;
       }
 
-      await updateUser(user, formData);
       setShowEditUser(false);
-      getuse(u);
+
+      await fetch(
+        `https://edituser${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+          },
+          body: JSON.stringify({ ...formData, user_id: user.user_id }),
+        }
+      )
+        .then((res) => res.json())
+        .then((d) => {
+          console.log(d.message);
+          getuse(u);
+        });
     });
   };
+
   return (
     <div>
       <form className={classes.editUserForm} onSubmit={handleSubmit}>

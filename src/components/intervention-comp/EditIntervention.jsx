@@ -1,7 +1,6 @@
 import classes from "../../css/intervention.module.css";
 import React, { useRef, useState, useContext } from "react";
 import { formatDateToHebrew } from "../../services/date";
-import { updateIntervention } from "../../data-base/update";
 import { UserContext } from "../../App";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -23,6 +22,8 @@ function EditIntervention({ intervention, fetchData }) {
     e.preventDefault();
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
+
       const formData = {};
       if (manager && tutorRef.current.value !== intervention.tutor_name) {
         formData.tutor_name = tutorRef.current.value;
@@ -44,12 +45,28 @@ function EditIntervention({ intervention, fetchData }) {
       ) {
         formData.intervention_description = descriptionRef.current.value;
       }
-
-      updateIntervention(intervention, formData);
-      fetchData(u);
       setShowEditForm(false);
+
+      await fetch(
+        `https://editintervention${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+          },
+          body: JSON.stringify({ ...formData, time: intervention.time }),
+        }
+      )
+      .then((res)=>res.json())
+      .then((data)=>{
+        console.log(data);
+        fetchData(u);
+      });
     });
   };
+
   return (
     <>
       <button className={classes.editBtn} onClick={() => setShowEditForm(true)}>

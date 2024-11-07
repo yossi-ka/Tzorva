@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import classes from "../../css/stud2.module.css";
+import classes from "../../css/student.module.css";
 import DeleteStudent from "./DeleteStudent";
 import EditStudent from "./EditStudent";
 import { useNavigate } from "react-router-dom";
