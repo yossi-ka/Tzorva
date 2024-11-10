@@ -307,6 +307,42 @@ input:disabled {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.editStudentForm .updateBtns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.editStudentForm .updateBtns button {
+  flex: 1;
+  width: 100%;
+  padding: 0.7rem;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.7s ease;
+  max-width: 80px;
+}
+
+.editStudentForm .updateBtns .saveBtn {
+  background-color: #4caf50;
+}
+
+.editStudentForm .updateBtns .saveBtn:hover {
+  background-color: #367e3a;
+}
+
+.editStudentForm .updateBtns .cancelBtn {
+  background-color: #878787;
+}
+
+.editStudentForm .updateBtns .cancelBtn:hover {
+  background-color: #515151;
+}
+
 /* delete form */
 .deleteFormsArea {
   display: flex;

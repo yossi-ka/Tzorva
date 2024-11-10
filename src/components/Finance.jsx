@@ -1,5 +1,5 @@
 import classes from "../css/finance.module.css";
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useRef } from "react";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import { ConfigProvider, Table } from "antd";
@@ -13,11 +13,16 @@ import he_IL from "antd/lib/locale/he_IL";
 import { formatDate, formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { namedQuery } from "firebase/firestore";
 
 function Finance() {
+  const [allFinance, setAllFinance] = useState([]);
   const [financeToShow, setFinanceToShow] = useState([]);
+  const [showHebDate, setShowHebDate] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const fromDateRef = useRef();
+  const toDateRef = useRef();
 
   const fetchData = async (u) => {
     const idToken = await u.getIdToken();
@@ -37,14 +42,27 @@ function Finance() {
       );
 
       const data = await financeData.json();
-      const sortData = data.message.sort((a, b) => b.time - a.time);
-      sortData.forEach((e, i) => {
-        e.key = i;
-      });
+      const sortData = data.message.sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+      );
+      setAllFinance(sortData);
       setFinanceToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  const filterByDate = () => {
+    const fromDate = fromDateRef.current.value;
+    const toDate = toDateRef.current.value;
+    const filteredData = allFinance.filter((finance) => {
+      const financeDate = new Date(finance.time);
+      return (
+        (fromDate ? financeDate >= new Date(fromDate) : true) &&
+        (toDate ? financeDate <= new Date(toDate) : true)
+      );
+    });
+    setFinanceToShow(filteredData);
   };
 
   useEffect(() => {
@@ -63,19 +81,24 @@ function Finance() {
   }, [navigate, user]);
 
   const columns = [
-    {
-      title: "תאריך עברי",
-      dataIndex: "time",
-      key: "hebrewDate",
-      render: (time) => formatDateToHebrew(time),
-      sorter: (a, b) => a.time - b.time,
-    },
+    ...(showHebDate
+      ? [
+          {
+            title: "תאריך עברי",
+            dataIndex: "time",
+            key: "hebrewDate",
+            render: (time) => formatDateToHebrew(time),
+            sorter: (a, b) =>
+              new Date(a.time).getTime() - new Date(b.time).getTime(),
+          },
+        ]
+      : []),
     {
       title: "תאריך לועזי",
       dataIndex: "time",
       key: "time",
       render: (time) => formatDate(time),
-      sorter: (a, b) => a.time - b.time,
+      sorter: (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
     },
     {
       title: "סוג הפעולה",
@@ -131,6 +154,15 @@ function Finance() {
     <>
       <header className={classes.financeHeader}>
         <h1 className={classes.financeTitle}>ניהול פיננסים</h1>
+        <button className={classes.showHebDateBtn} onClick={() => setShowHebDate(!showHebDate)}>
+          {showHebDate ? "הסתר תאריך עברי" : "הצג תאריך עברי"}
+        </button>
+        <div className={classes.dateFilter}>
+          <p>סנן לפי תאריך:</p>
+          <input type="date" ref={fromDateRef} />
+          <input type="date" ref={toDateRef} />
+          <button onClick={filterByDate}>סנן</button>
+        </div>
         <AddFinance fetchData={fetchData} />
       </header>
       <div className={classes.financeContainer}>

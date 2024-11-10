@@ -172,8 +172,16 @@
   max-width: 400px;
 }
 
-.addUserForm input {
+.addUserForm .input {
   margin-bottom: 1rem;
+}
+
+.addUserForm select {
+  margin-bottom: 1rem;width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #6f6f6f;
 }
 
 .input {

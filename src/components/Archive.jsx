@@ -32,10 +32,10 @@ function Archive() {
         }
       );
       const data = await archiveData.json();
-      const sortData = data.message.sort((a, b) => b.time - a.time);
-      sortData.forEach((e, i) => {
-        e.key = i;
-      });
+      const sortData = data.message.sort(
+        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+      );
+
       setArchiveToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -62,7 +62,7 @@ function Archive() {
       dataIndex: "time",
       key: "time",
       render: (time) => formatDateToHebrew(time),
-      sorter: { compare: (a, b) => a.time - b.time, multiple: 4 },
+      sorter: (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
     },
     {
       title: "מספר זהות",

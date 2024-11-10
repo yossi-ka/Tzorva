@@ -118,13 +118,21 @@ function AddUserBtn({ getUsers }) {
                 placeholder={`דוא"ל`}
                 required
               />
-              <input
-                className={classes.input}
-                ref={jobRef}
-                type="text"
-                placeholder="תפקיד"
+              <select
                 required
-              />
+                defaultValue={""}
+                ref={jobRef}
+                name="role"
+                id="role"
+              >
+                <option value="" disabled>
+                  -- בחר אפשרות --
+                </option>
+                <option value="admin">מנהל ת"ת</option>
+                <option value="user">יועץ</option>
+                <option value="user">מטפל</option>
+              </select>
+
               <div className={classes.btns}>
                 <button className={classes.saveBtn}>הוסף</button>
                 <button
