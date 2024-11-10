@@ -13,7 +13,7 @@ import he_IL from "antd/lib/locale/he_IL";
 import { formatDate, formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { namedQuery } from "firebase/firestore";
+import Balance from "./finance-comp/Balance.jsx";
 
 function Finance() {
   const [allFinance, setAllFinance] = useState([]);
@@ -43,7 +43,7 @@ function Finance() {
 
       const data = await financeData.json();
       const sortData = data.message.sort(
-        (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+        (a, b) => new Date(a.time).getTime() + new Date(b.time).getTime()
       );
       setAllFinance(sortData);
       setFinanceToShow(sortData);
@@ -154,18 +154,23 @@ function Finance() {
     <>
       <header className={classes.financeHeader}>
         <h1 className={classes.financeTitle}>ניהול פיננסים</h1>
-        <button className={classes.showHebDateBtn} onClick={() => setShowHebDate(!showHebDate)}>
-          {showHebDate ? "הסתר תאריך עברי" : "הצג תאריך עברי"}
-        </button>
+
         <div className={classes.dateFilter}>
-          <p>סנן לפי תאריך:</p>
+          <p>סינון לפי תאריך:</p>
           <input type="date" ref={fromDateRef} />
           <input type="date" ref={toDateRef} />
           <button onClick={filterByDate}>סנן</button>
         </div>
+        <Balance financeToShow={financeToShow} />
         <AddFinance fetchData={fetchData} />
       </header>
       <div className={classes.financeContainer}>
+        <button
+          className={classes.showHebDateBtn}
+          onClick={() => setShowHebDate(!showHebDate)}
+        >
+          {showHebDate ? "הסתר תאריך עברי" : "הצג תאריך עברי"}
+        </button>
         <div className={classes.financeTable} dir="rtl">
           <ConfigProvider locale={he_IL} diraction="rtl">
             <Table

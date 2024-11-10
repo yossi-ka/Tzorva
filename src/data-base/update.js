@@ -1,4 +1,3 @@
-
 /*
 פונקציות POST לעריכת נתונים ב-Firestore
 על מנת לערוך ולתקן, יש לבצע את השלבים הבאים:
@@ -8,7 +7,6 @@
 4. להזין את הפקודה firebase deploy --only functions
    אם רוצים פונקציה בודדת ניתן להזין firebase deploy --only functions:<function> עם שם הפונקציה
 */
-
 
 import admin from "firebase-admin"; // ייבוא firebase-admin
 import { getFirestore } from "firebase-admin/firestore";
@@ -207,27 +205,24 @@ export const editFinance = onRequest(async (req, res) => {
 
         //  עדכון הפעולה
 
-        await db
-          .collection("finance")
-          .get()
-          .then((qs) => {
-            qs.forEach((doc) => {
-              if (
-                (doc.data().time._seconds === finDetails.time._seconds &&
-                  doc.data().time._nanoseconds ===
-                    finDetails.time._nanoseconds) ||
-                doc.data().time === finDetails.time ||
-                (doc.data().time.seconds === finDetails.time.seconds &&
-                  doc.data().time.nanoseconds === finDetails.time.nanoseconds)
-              ) {
-                db.collection("finance").doc(doc.id).update(finDetails);
-                res.status(200).json({
-                  success: true,
-                  message: "הפעולה עודכנה בהצלחה",
-                });
-              }
-            });
+        const financeId = finDetails.finance_id;
+        const docRef = db.collection("finance").doc(financeId);
+        const doc = await docRef.get();
+        if (!doc.exists) {
+          return res.status(404).json({
+            success: false,
+            message: "המסמך לא נמצא",
           });
+        }
+
+        delete finDetails.finance_id;
+        // אם המסמך נמצא, המשך לעדכון
+        await docRef.update(finDetails).then(() => {
+          res.status(200).json({
+            success: true,
+            message: "הפעולה עודכנה בהצלחה",
+          });
+        });
       } catch (error) {
         res.status(500).json({
           success: false,
@@ -320,15 +315,7 @@ export const editArchive = onRequest(async (req, res) => {
           .get()
           .then((qs) => {
             qs.forEach((doc) => {
-              if (
-                (doc.data().time._seconds === archiveDetails.time._seconds &&
-                  doc.data().time._nanoseconds ===
-                    archiveDetails.time._nanoseconds) ||
-                doc.data().time === archiveDetails.time ||
-                (doc.data().time.seconds === archiveDetails.time.seconds &&
-                  doc.data().time.nanoseconds ===
-                    archiveDetails.time.nanoseconds)
-              ) {
+              if (doc.data().student_id === archiveDetails.student_id) {
                 db.collection("archive").doc(doc.id).update(archiveDetails);
                 res.status(200).json({
                   success: true,
@@ -431,31 +418,24 @@ export const editIntervention = onRequest(async (req, res) => {
           return resolve();
         }
 
-        //  עדכון הפעולה
+          //  עדכון הפעולה
 
-        await db
-          .collection("interventions")
-          .get()
-          .then((qs) => {
-            qs.forEach((doc) => {
-              if (
-                (doc.data().time._seconds ===
-                  interventionDetails.time._seconds &&
-                  doc.data().time._nanoseconds ===
-                    interventionDetails.time._nanoseconds) ||
-                doc.data().time === interventionDetails.time ||
-                (doc.data().time.seconds === interventionDetails.time.seconds &&
-                  doc.data().time.nanoseconds ===
-                    interventionDetails.time.nanoseconds)
-              ) {
-                db.collection("interventions")
-                  .doc(doc.id)
-                  .update(interventionDetails);
-                res.status(200).json({
-                  success: true,
-                  message: "הפעולה עודכנה בהצלחה",
-                });
-              }
+          const interventionId = interventionDetails.id;
+          const docRef = db.collection("interventions").doc(interventionId);
+          const doc = await docRef.get();
+          if (!doc.exists) {
+            return res.status(404).json({
+              success: false,
+              message: "המסמך לא נמצא",
+            });
+          }
+  
+          delete interventionDetails.id;
+          // אם המסמך נמצא, המשך לעדכון
+          await docRef.update(interventionDetails).then(() => {
+            res.status(200).json({
+              success: true,
+              message: "הפעולה עודכנה בהצלחה",
             });
           });
       } catch (error) {

@@ -8,7 +8,7 @@ function DeleteFinance({ finance, fetchData }) {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
-       await fetch(
+      await fetch(
         `https://deletefinance${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
           method: "DELETE",

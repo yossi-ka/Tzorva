@@ -37,7 +37,7 @@ function EditArchive({ archive, fetchData }) {
             authorization: `Bearer ${idToken}`,
             uid: u.uid,
           },
-          body: JSON.stringify({ ...formData, time: archive.time }),
+          body: JSON.stringify({ ...formData, student_id: archive.student_id }),
         }
       )
         .then((res) => res.json())

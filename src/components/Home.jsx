@@ -22,7 +22,7 @@ function Home() {
       <div className={classes.homeOptions}>
         <div className={`${classes.option} ${classes.studArea}`}>
           <div className={`${classes.studAreaTitle} ${classes.areaTitle}`}>
-            <h1 className={classes.h1}>ניהול תלמידים</h1>
+            <h1 className={classes.h1}>תלמידים</h1>
             <span
               style={{ fontSize: "40px" }}
               className="material-symbols-outlined"
@@ -38,7 +38,7 @@ function Home() {
               className={`${classes.studBtn} ${classes.btn}`}
               onClick={() => navigate("/students")}
             >
-              כניסה לניהול תלמידים
+              כניסה לתלמידים
             </button>
           </div>
         </div>
@@ -46,7 +46,7 @@ function Home() {
         {accessFinance && (
           <div className={`${classes.option} ${classes.financeArea}`}>
             <div className={`${classes.financeAreaTitle} ${classes.areaTitle}`}>
-              <h1 className={classes.h1}>ניהול כספים</h1>{" "}
+              <h1 className={classes.h1}>כספים</h1>{" "}
               <span
                 style={{ fontSize: "40px" }}
                 className="material-symbols-outlined"
@@ -71,7 +71,7 @@ function Home() {
         {usersManage && (
           <div className={`${classes.option} ${classes.userMngArea}`}>
             <div className={`${classes.userMngAreaTitle} ${classes.areaTitle}`}>
-              <h1 className={classes.h1}> ניהול משתמשים</h1>
+              <h1 className={classes.h1}> משתמשים</h1>
               <span
                 style={{ fontSize: "40px" }}
                 className="material-symbols-outlined"
@@ -97,7 +97,7 @@ function Home() {
           <div
             className={`${classes.interventionsAreaTitle} ${classes.areaTitle}`}
           >
-            <h1 className={classes.h1}>ניהול טיפולים</h1>
+            <h1 className={classes.h1}>טיפולים</h1>
             <span
               style={{ fontSize: "40px" }}
               className="material-symbols-outlined"
@@ -113,7 +113,7 @@ function Home() {
               className={`${classes.interventionsBtn} ${classes.btn}`}
               onClick={() => navigate("/intervention")}
             >
-              כניסה לניהול טיפולים
+              כניסה לטיפולים
             </button>
           </div>
         </div>

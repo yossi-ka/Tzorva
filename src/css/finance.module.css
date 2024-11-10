@@ -6,9 +6,10 @@
   font-size: 1rem;
 }
 .financeContainer {
-  padding: 20px;
+  padding: 0 20px;
   height: 100%;
   width: 100%;
+  text-align: right;
 }
 
 .financeTable {
@@ -321,22 +322,115 @@
 }
 
 .showHebDateBtn {
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  padding: 8px 16px;
+  background-color: transparent;
+  color: black;
+  font-size: 12px;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  flex:unset;
-  transition: background-color 0.3s ease;
+  flex: unset;
+  transition: all 0.3s ease;
+  /* margin-bottom: 0.3rem; */
 }
 
 .showHebDateBtn:hover {
-  background-color: #0056b3;
+  color: blue;
 }
 
-.showHebDateBtn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+/*  balance  */
+
+.balanceArea button {
+  background-color: #ffa545; /* צבע כפתור */
+  color: white;
+  font-size: 16px;
+  padding: 7px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* ריווח בין האייקון לטקסט */
+  transition: background-color 0.3s ease;
 }
+
+.balanceArea button:hover {
+  background-color: #c37e35; /* צבע הכפתור במעבר עכבר */
+}
+
+.balanceArea .material-symbols-outlined {
+  font-size: 20px; /* גודל האייקון */
+}
+
+.balanceArea h2 {
+  color: #333;
+  font-size: 18px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.balanceArea .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1;
+}
+
+/* קביעת בסיס לגורמים חשובים בעיצוב */
+.balance {
+  position: fixed; /* למיקום קבוע במסך */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* רקע שקוף כהה */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.balanceDetails {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 100%;
+  z-index: 1000;
+}
+
+.balanceDetails h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.balanceDetails h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.balanceDetails h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.balanceDetails h3:last-of-type {
+  color: #2196f3;
+}
+
+.balanceDetails h3:first-of-type {
+  color: #4caf50;
+}
+
+.balanceDetails h3:nth-of-type(2) {
+  color: #f44336; 
+}
+

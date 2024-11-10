@@ -19,7 +19,7 @@ const db = getFirestore();
 
 // פונקציה למחיקת תלמיד
 export const deleteStudent = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
     const studentToDelete = req.body;
@@ -105,7 +105,7 @@ export const deleteStudent = onRequest((req, res) => {
 
 // פונקציה למחיקת משתמש
 export const deleteUser = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
     const userToDelete = req.body;
@@ -191,7 +191,7 @@ export const deleteUser = onRequest((req, res) => {
 
 // פונקציה למחיקת תיעוד פיננסי
 export const deleteFinance = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
     const finance = req.body;
@@ -247,28 +247,18 @@ export const deleteFinance = onRequest((req, res) => {
 
     //  מחיקת התיעוד
     try {
-      const financeRef = db.collection("finance");
+      const financeId = finance.id;
 
-      const querySnapshot = await financeRef.get();
-
-      const interArr = [];
-      querySnapshot.forEach((doc) => {
-        interArr.push(doc.data());
-      });
-
-      querySnapshot.forEach(async (doc) => {
-        if (
-          doc.data().time._seconds === finance.time._seconds &&
-          doc.data().time._nanoseconds === finance.time._nanoseconds
-        ) {
-          await doc.ref.delete().then(() => {
-            res.status(200).send({
-              success: true,
-              message: "התיעוד נמחק בהצלחה",
-            });
+      await db
+        .collection("finance")
+        .doc(financeId)
+        .delete()
+        .then(() => {
+          res.status(200).send({
+            success: true,
+            message: "התיעוד נמחק בהצלחה",
           });
-        }
-      });
+        });
     } catch (err) {
       res.status(500).send({
         success: false,
@@ -280,7 +270,7 @@ export const deleteFinance = onRequest((req, res) => {
 
 // פונקציה למחיקת טיפול
 export const deleteIntervention = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
     const intervention = req.body;
@@ -336,29 +326,18 @@ export const deleteIntervention = onRequest((req, res) => {
 
     //  מחיקת הטיפול
     try {
-      const interventionRef = db.collection("interventions");
+      const interventionId = intervention.id;
 
-      const querySnapshot = await interventionRef.get();
-
-      const interArr = [];
-      querySnapshot.forEach((doc) => {
-        interArr.push(doc.data());
-      });
-
-      querySnapshot.forEach(async (doc) => {
-        if (
-          doc.data().time._seconds === intervention.time._seconds &&
-          doc.data().time._nanoseconds === intervention.time._nanoseconds
-        ) {
-          await doc.ref.delete().then(() => {
-            res.status(200).send({
-              success: true,
-              message: "הטיפול נמחק בהצלחה",
-            });
+      await db
+        .collection("interventions")
+        .doc(interventionId)
+        .delete()
+        .then(() => {
+          res.status(200).send({
+            success: true,
+            message: "התיעוד נמחק בהצלחה",
           });
-        }
-      });
-
+        });
     } catch (err) {
       res.status(500).send({
         success: false,
@@ -370,7 +349,7 @@ export const deleteIntervention = onRequest((req, res) => {
 
 // פונקציה למחיקת תיעוד ארכיון
 export const deleteArchive = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
     const archive = req.body;
@@ -436,10 +415,7 @@ export const deleteArchive = onRequest((req, res) => {
       });
 
       querySnapshot.forEach(async (doc) => {
-        if (
-          doc.data().time._seconds === archive.time._seconds &&
-          doc.data().time._nanoseconds === archive.time._nanoseconds
-        ) {
+        if (doc.data().student_id === archive.student_id) {
           await doc.ref.delete().then(() => {
             res.status(200).send({
               success: true,
@@ -448,7 +424,6 @@ export const deleteArchive = onRequest((req, res) => {
           });
         }
       });
-
     } catch (err) {
       res.status(500).send({
         success: false,
@@ -457,4 +432,3 @@ export const deleteArchive = onRequest((req, res) => {
     }
   });
 });
-

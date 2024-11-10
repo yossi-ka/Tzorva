@@ -73,7 +73,7 @@ function AddIntervention({ fetchData }) {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
-      const selectedDate = new Date(dateRef.current.value + "T00:00:00.000Z");
+      const selectedDate = new Date(dateRef.current.value);
 
       // Create Firestore Timestamp objects
       const time = Timestamp.now();

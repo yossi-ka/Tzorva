@@ -9,15 +9,19 @@ function DeleteIntervention({ intervention, fetchData }) {
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
 
-      await fetch("https://deleteintervention-cjqo4fyw5a-uc.a.run.app", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-          uid: u.uid,
-        },
-        body: JSON.stringify(inter),
-      })
+      await fetch(
+        `https://deleteintervention${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "DELETE",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+            uid: u.uid,
+          },
+          body: JSON.stringify(inter),
+        }
+      )
         .then((res) => res.json())
         .then((d) => {
           console.log(d.message);
@@ -27,6 +31,7 @@ function DeleteIntervention({ intervention, fetchData }) {
       setShowWarningForm(false);
     });
   };
+
   return (
     <div className={classes.warningForm}>
       <button

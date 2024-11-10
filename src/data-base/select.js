@@ -19,11 +19,11 @@ const db = getFirestore();
 
 // הגדרת CORS
 const corsOptions = { origin: true };
-const corsMiddleware = cors(corsOptions);
+const corsHandler = cors(corsOptions);
 
 // פונקציה לקבלת כל המשתמשים
 export const getUsers = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
 
@@ -98,7 +98,7 @@ export const getUsers = onRequest((req, res) => {
 
 // פונקציה לקבלת התלמידים
 export const getStudents = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
 
@@ -194,7 +194,7 @@ export const getStudents = onRequest((req, res) => {
 
 // פונקציה לקבלת מידע פיננסי
 export const getFinance = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
 
@@ -257,7 +257,8 @@ export const getFinance = onRequest((req, res) => {
     try {
       const querySnapshot = await db.collection("finance").get();
       querySnapshot.forEach((doc) => {
-        arr.push(doc.data());
+        const dataWithId = { ...doc.data(), id: doc.id };
+        arr.push(dataWithId);
       });
       res.status(200).send({
         success: true,
@@ -274,7 +275,7 @@ export const getFinance = onRequest((req, res) => {
 
 // פונקציה לקבלת נתוני ארכיון
 export const getArchive = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
 
@@ -337,7 +338,8 @@ export const getArchive = onRequest((req, res) => {
     try {
       const querySnapshot = await db.collection("archive").get();
       querySnapshot.forEach((doc) => {
-        arr.push(doc.data());
+        const dataWithId = { ...doc.data(), id: doc.id };
+        arr.push(dataWithId);
       });
       res.status(200).send({
         success: true,
@@ -354,7 +356,7 @@ export const getArchive = onRequest((req, res) => {
 
 // פונקציה לקבלת רשימת הטיפולים
 export const getInterventions = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
     const rest = req.headers.rest;
@@ -406,6 +408,7 @@ export const getInterventions = onRequest((req, res) => {
       });
     }
 
+    //  שליפת טיפולים
     try {
       const arr = [];
       if (rest) {
@@ -415,11 +418,12 @@ export const getInterventions = onRequest((req, res) => {
           .where("student_id", "==", rest);
         const querySnapshot = await q.get();
         querySnapshot.forEach((doc) => {
-          arr.push(doc.data());
+          const dataWithId = { ...doc.data(), id: doc.id };
+          arr.push(dataWithId);
         });
 
         // שליפת נתוני תלמיד
-        const querySnapshot1 = await db
+        const querySnapshot1 = db
           .collection("students")
           .where("student_id", "==", rest);
         const querySnapshot2 = await querySnapshot1.get();
@@ -433,7 +437,7 @@ export const getInterventions = onRequest((req, res) => {
             success: true,
             message: arr,
           });
-        } else if (userData.job_title === 'מנהל ת"ת') {
+        } else if (userData.job_title ==="מנהל ת\"ת") {
           if (studentData.city_of_school === userData.city) {
             res.status(200).send({
               success: true,
@@ -470,20 +474,22 @@ export const getInterventions = onRequest((req, res) => {
         ) {
           const querySnapshot = await db.collection("interventions").get();
           querySnapshot.forEach((doc) => {
-            arr.push(doc.data());
+            const dataWithId = { ...doc.data(), id: doc.id };
+            arr.push(dataWithId);
           });
           res.status(200).send({
             success: true,
             message: arr,
           });
-        } else if (userData.job_title === 'מנהל ת"ת') {
+        } else if (userData.job_title === "מנהל ת\"ת") {
           const studentIdArr = [];
           const querySnapshot1 = await db
             .collection("students")
             .where("city_of_school", "==", userData.city)
             .get();
           querySnapshot1.forEach((doc) => {
-            studentIdArr.push(doc.data().student_id);
+            const dataWithId = { ...doc.data(), id: doc.id };
+            studentIdArr.push(dataWithId.student_id);
           });
 
           const querySnapshot2 = await db
@@ -491,7 +497,8 @@ export const getInterventions = onRequest((req, res) => {
             .where("student_id", "in", studentIdArr)
             .get();
           querySnapshot2.forEach((doc) => {
-            arr.push(doc.data());
+            const dataWithId = { ...doc.data(), id: doc.id };
+            arr.push(dataWithId);
           });
           res.status(200).send({
             success: true,
@@ -503,7 +510,8 @@ export const getInterventions = onRequest((req, res) => {
             .where("student_id", "in", userData.access_permissions.students)
             .get();
           querySnapshot.forEach((doc) => {
-            arr.push(doc.data());
+            const dataWithId = { ...doc.data(), id: doc.id };
+            arr.push(dataWithId);
           });
           res.status(200).send({
             success: true,
@@ -527,7 +535,7 @@ export const getInterventions = onRequest((req, res) => {
 
 // פונקציה לקבלת משתמש עפ"י uid
 export const getUserByUid = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
 
@@ -586,7 +594,7 @@ export const getUserByUid = onRequest((req, res) => {
 
 //  פונקציה לקבלת רשימת המטפלים
 export const getTutors = onRequest((req, res) => {
-  corsMiddleware(req, res, async () => {
+  corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
     const rest = req.headers.rest;

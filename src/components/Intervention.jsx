@@ -49,10 +49,10 @@ function Intervention() {
           }
         );
         const data = await financeData.json();
+        console.log(data);
+
         const sortData = data.message.sort((a, b) => b.time - a.time);
-        sortData.forEach((e, i) => {
-          e.key = i;
-        });
+
         setInterventionToShow(sortData);
       } catch (error) {
         console.error("Error fetching data:", error);

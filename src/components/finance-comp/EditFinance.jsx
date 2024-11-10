@@ -40,7 +40,7 @@ function EditFinance({ finance, fetchData }) {
             authorization: `Bearer ${idToken}`,
             uid: u.uid,
           },
-          body: JSON.stringify({ ...formData, time: finance.time }),
+          body: JSON.stringify({ ...formData, finance_id: finance.id }),
         }
       )
         .then((res) => res.json())

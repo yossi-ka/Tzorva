@@ -1,35 +1,30 @@
 /* users.module.css */
 
-/* סגנונות כלליים */
-.h1 {
+.basicDetails .h1 {
   font-size: 2rem;
   color: #333;
   margin-bottom: 1rem;
 }
 
-.p {
+.basicDetails .p {
   font-size: 1rem;
   color: #666;
   margin-bottom: 0.5rem;
 }
 
-.h1Header {
-  font-size: 2rem;
-  color: #333;
-}
-
-/* סגנונות עבור UsersManage */
 .headerAddUserBtn {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #f0f0f0;
   margin-bottom: 1rem;
-  margin-top: -2.5rem;
+  margin-top: -2rem;
 }
 
-/* users.module.css */
+.headerAddUserBtn .h1Header {
+  font-size: 2rem;
+  color: #333;
+}
 
 .userContainer {
   display: flex;
@@ -177,7 +172,8 @@
 }
 
 .addUserForm select {
-  margin-bottom: 1rem;width: 100%;
+  margin-bottom: 1rem;
+  width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;

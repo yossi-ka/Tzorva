@@ -56,7 +56,7 @@ function EditIntervention({ intervention, fetchData }) {
             authorization: `Bearer ${idToken}`,
             uid: u.uid,
           },
-          body: JSON.stringify({ ...formData, time: intervention.time }),
+          body: JSON.stringify({ ...formData, id: intervention.id }),
         }
       )
       .then((res)=>res.json())
