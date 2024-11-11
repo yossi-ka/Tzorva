@@ -1,7 +1,7 @@
 import classes from "../css/header.module.css";
 import { logout } from "../data-base/authentication";
 import React, { useEffect, useContext } from "react";
-import { useNotification } from "./massage-comp/NotificationContext";
+import { useNotification } from "./message-comp/NotificationContext";
 import { getCurrentUser } from "../data-base/authentication";
 
 import { UserContext } from "../App";

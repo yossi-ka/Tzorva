@@ -9,7 +9,7 @@ import Students from "./components/Students";
 import UsersManage from "./components/UsersManage";
 import Archive from "./components/Archive";
 import Intervention from "./components/Intervention";
-import Messages from "./components/Massages";
+import Messages from "./components/Messages";
 
 function Routing() {
   return (

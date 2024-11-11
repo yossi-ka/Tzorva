@@ -1,15 +1,10 @@
 import classes from "../css/messages.module.css";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { UserContext } from "../App";
-import { useNotification } from "./massage-comp/NotificationContext";
+import { useNotification } from "./message-comp/NotificationContext";
 import { formatTime } from "../services/date";
+import SendMessage from "./message-comp/SendMessage";
 
 function Messages() {
   const { user } = useContext(UserContext);
@@ -18,7 +13,6 @@ function Messages() {
   const [allMessages, setAllMessages] = useState([]);
   const [messages, setMessages] = useState([]); //  רשימת ההודעות להצגה
   const [currentCoworker, setCurrentCoworker] = useState(""); //  המשתמש הנוכחי איתו מקיים איטראציה
-  const messageRef = useRef();
 
   const fetchData = useCallback(() => {
     const auth = getAuth();
@@ -44,8 +38,15 @@ function Messages() {
             const unreadMessages = {}; //  מפתח = שם איש קשר, ערך = true אם הודעה לא נקראה
 
             d.message.forEach((m) => {
-              if (!coworkersArr.includes(m.iterator_name)) {
-                coworkersArr.push(m.iterator_name);
+              if (
+                !coworkersArr.some(
+                  (coworker) => coworker.name === m.iterator_name
+                )
+              ) {
+                coworkersArr.push({
+                  name: m.iterator_name,
+                  id: m.from === user.user_id ? m.to : m.from,
+                });
               }
 
               // שמירת מידע על הודעות שלא נקראו
@@ -56,8 +57,8 @@ function Messages() {
 
             // מיון אנשי קשר - עם הודעות שלא נקראו ראשונים
             const sortedCoworkers = coworkersArr.sort((a, b) => {
-              if (unreadMessages[a] && !unreadMessages[b]) return -1;
-              if (!unreadMessages[a] && unreadMessages[b]) return 1;
+              if (unreadMessages[a.name] && !unreadMessages[b.name]) return -1;
+              if (!unreadMessages[a.name] && unreadMessages[b.name]) return 1;
               return 0;
             });
 
@@ -67,7 +68,7 @@ function Messages() {
         console.error("Error fetching messages:", e);
       }
     });
-  }, []);
+  }, [user]);
 
   const updateMessage = (messArrToUpdate) => {
     const auth = getAuth();
@@ -96,21 +97,32 @@ function Messages() {
     });
   };
 
-  const sortMessages = (name) => {
-    const filteredArr = [];
+  const sortMessages = (co) => {
+    const name = co.name;
+    let filteredArr = [];
     allMessages.forEach((mes) => {
       if (mes.iterator_name === name) {
         filteredArr.push(mes);
       }
     });
 
+   filteredArr.sort((a, b) => {
+      const dateA = new Date((a.sent_time._seconds || a.sent_time.seconds) * 1000);
+      const dateB = new Date((b.sent_time._seconds || b.sent_time.seconds) * 1000);
+      console.log("dateA", dateA, "dateB", dateB);
+      return dateA - dateB;
+    });
+
+    const currentTime = new Date();
+
     //  בודק אם יש עדכונים לשליחה
     const messArrToUpdate = filteredArr
       .filter((m) => m.is_read === false && m.to === user.user_id)
       .map((m) => ({
         id: m.id,
-        is_read: true,
         user_id: user.user_id,
+        is_read: true,
+        read_time: currentTime,
       }));
 
     if (messArrToUpdate.length > 0) {
@@ -119,7 +131,7 @@ function Messages() {
     }
 
     setMessages(filteredArr);
-    setCurrentCoworker(name);
+    setCurrentCoworker(co);
   };
 
   useEffect(() => {
@@ -141,7 +153,7 @@ function Messages() {
                 key={i}
                 onClick={() => sortMessages(co)}
               >
-                {co}
+                {co.name}
               </div>
             );
           })}
@@ -164,14 +176,10 @@ function Messages() {
               );
             })}
           </div>
-          <div className={classes.messSend}>
-            <input
-              disabled={!currentCoworker}
-              className={classes.sendContent}
-              ref={messageRef}
-            ></input>
-            <button className="material-symbols-outlined">send</button>
-          </div>
+          <SendMessage
+            fetchData={fetchData}
+            currentCoworker={currentCoworker}
+          />
         </main>
       </div>
     </div>

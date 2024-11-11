@@ -14,15 +14,15 @@ const corsHandler = cors({
   allowedHeaders: ["Content-Type", "Authorization", "uid"],
 });
 
-//  פונקציה לעריכת הודעה
-export const editMessage = onRequest(async (req, res) => {
+// פונקציה לשליחת הודעה
+export const sendMessage = onRequest(async (req, res) => {
   // עטיפת כל הלוגיקה ב-Promise
   return new Promise((resolve) => {
     corsHandler(req, res, async () => {
       try {
         const uid = req.headers.uid;
         const authHeader = req.headers.authorization;
-        const messages = req.body;
+        const message = req.body;
 
         if (!uid) {
           res.status(403).json({
@@ -79,47 +79,34 @@ export const editMessage = onRequest(async (req, res) => {
 
         const userData = querySnapshot.docs[0].data();
 
-        //  עדכון ההודעות
-
-        for (let i = 0; i < messages.length; i++) {
-          const messId = messages[i].id;
-          const docRef = db.collection("messages").doc(messId);
-          const doc = await docRef.get();
-          if (!doc.exists) {
-            return res.status(404).json({
-              success: false,
-              message: "המסמך לא נמצא",
-            });
-          }
-          if (doc.data().from === userData.user_id) {
-            return res.status(403).json({
-              success: false,
-              message: "לא ניתן לערוך הודעות שנשלחו",
-              error: messages[i],
-            });
-          }
-          //  בדיקת הרשאות
-          if (messages[i].user_id !== userData.user_id) {
-            return res.status(403).json({
-              success: false,
-              message: "אין לך הרשאה לערוך את ההודעה",
-              error: messages[i],
-            });
-          }
-
-          delete messages[i].id;
-          delete messages[i].user_id;
-          // אם המסמך נמצא, המשך לעדכון
-          await docRef.update(messages[i]);
+        if (userData.job_title === "מטפל") {
+          res.status(403).json({
+            success: false,
+            message: "אין לך הרשאה לשלוח הודעות",
+          });
+          return resolve();
         }
+        
+        //  הוספת נתוני ברירת מחדל להודעה
+        const time = new Date();
+        message.from = userData.user_id;
+        message.is_read = false;
+        message.sent_time = time;
+        message.read_time = "";
+        message.for_keeping = false;
+
+        // שליחת ההודעה
+        await db.collection("messages").add(message);
+
         res.status(200).json({
           success: true,
-          message: "ההודעות עודכנו בהצלחה",
+          message: "ההודעה נשלחה בהצלחה",
         });
+        return resolve();
       } catch (error) {
         res.status(500).json({
           success: false,
-          message: "שגיאה בעריכת ההודעות",
+          message: "שגיאה בשליחת ההודעה",
           error: error.message,
         });
         return resolve();
