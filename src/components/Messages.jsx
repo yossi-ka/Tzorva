@@ -109,7 +109,6 @@ function Messages() {
    filteredArr.sort((a, b) => {
       const dateA = new Date((a.sent_time._seconds || a.sent_time.seconds) * 1000);
       const dateB = new Date((b.sent_time._seconds || b.sent_time.seconds) * 1000);
-      console.log("dateA", dateA, "dateB", dateB);
       return dateA - dateB;
     });
 
@@ -142,6 +141,7 @@ function Messages() {
   return (
     <div className={classes.messagesContainer}>
       <h1 className={classes.h1Mess}>ברוכים הבאים למערכת ההודעות של צורבא</h1>
+      <p className={classes.pMess}>שימו לב! הודעות שנקראו לפני 14 ימים יימחקו באופן אוטומטי.</p>
       <div className={classes.messContainer}>
         <aside>
           {coworkers.map((co, i) => {

@@ -13,6 +13,11 @@
   margin-bottom: 20px;
 }
 
+.pMess {
+  color: #575757;
+  margin-bottom: 20px;
+}
+
 /* העיצוב הכללי של מיכל ההודעות */
 .messContainer {
   display: flex;
@@ -52,8 +57,8 @@
 }
 
 .messContainer aside .selectedCoworker {
-  background-color: #cce5ff;
-  font-weight: bold;
+  border: #575757 2px solid;
+  background-color: #d4d4d4;
 }
 
 /* המרחב הראשי של ההודעות */
