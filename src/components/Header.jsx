@@ -69,17 +69,17 @@ function Header() {
             ? user.first_name + " " + user.last_name
             : "..."}
         </button>
-        {notifNum !== 0 && (
-          <span
-            onClick={() => navigate("/messages")}
-            className="material-symbols-outlined"
-          >
+        <span
+          onClick={() => navigate("/messages")}
+          className="material-symbols-outlined"
+        >
+          {notifNum !== 0 && (
             <div className={classes.notification}>
               <p>{notifNum}</p>
             </div>
-            notifications
-          </span>
-        )}
+          )}
+          notifications
+        </span>
       </div>
       <button className={classes.btnLogout} onClick={handleLogout}>
         התנתקות

@@ -14,6 +14,76 @@ function Messages() {
   const [messages, setMessages] = useState([]); //  רשימת ההודעות להצגה
   const [currentCoworker, setCurrentCoworker] = useState(""); //  המשתמש הנוכחי איתו מקיים איטראציה
 
+  const updateMessage = useCallback((messArrToUpdate) => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
+      try {
+        fetch(
+          `https://editmessage${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+          {
+            method: "PUT",
+            headers: {
+              uid: u.uid,
+              Authorization: `Bearer ${idToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(messArrToUpdate),
+          }
+        )
+          .then((res) => res.json())
+          .then((d) => {
+            console.log(d.message);
+          });
+      } catch (e) {
+        console.error("Error fetching messages:", e);
+      }
+    });
+  }, []);
+
+  const sortMessages = useCallback(
+    (co) => {
+      const name = co.name;
+      let filteredArr = [];
+      allMessages.forEach((mes) => {
+        if (mes.iterator_name === name) {
+          filteredArr.push(mes);
+        }
+      });
+
+      filteredArr.sort((a, b) => {
+        const dateA = new Date(
+          (a.sent_time._seconds || a.sent_time.seconds) * 1000
+        );
+        const dateB = new Date(
+          (b.sent_time._seconds || b.sent_time.seconds) * 1000
+        );
+        return dateA - dateB;
+      });
+
+      const currentTime = new Date();
+
+      //  בודק אם יש עדכונים לשליחה
+      const messArrToUpdate = filteredArr
+        .filter((m) => m.is_read === false && m.to === user.user_id)
+        .map((m) => ({
+          id: m.id,
+          user_id: user.user_id,
+          is_read: true,
+          read_time: currentTime,
+        }));
+
+      if (messArrToUpdate.length > 0) {
+        setNotifNum((prev) => prev - messArrToUpdate.length);
+        updateMessage(messArrToUpdate);
+      }
+
+      setMessages(filteredArr);
+      setCurrentCoworker(co);
+    },
+    [allMessages, user, setNotifNum, updateMessage]
+  );
+
   const fetchData = useCallback(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
@@ -63,75 +133,17 @@ function Messages() {
             });
 
             setCoworkers(sortedCoworkers);
+            console.log(currentCoworker);
+
+            if (currentCoworker) {
+              sortMessages(currentCoworker);
+            }
           });
       } catch (e) {
         console.error("Error fetching messages:", e);
       }
     });
-  }, [user]);
-
-  const updateMessage = (messArrToUpdate) => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, async (u) => {
-      const idToken = await u.getIdToken();
-      try {
-        fetch(
-          `https://editmessage${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
-          {
-            method: "PUT",
-            headers: {
-              uid: u.uid,
-              Authorization: `Bearer ${idToken}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(messArrToUpdate),
-          }
-        )
-          .then((res) => res.json())
-          .then((d) => {
-            console.log(d.message);
-          });
-      } catch (e) {
-        console.error("Error fetching messages:", e);
-      }
-    });
-  };
-
-  const sortMessages = (co) => {
-    const name = co.name;
-    let filteredArr = [];
-    allMessages.forEach((mes) => {
-      if (mes.iterator_name === name) {
-        filteredArr.push(mes);
-      }
-    });
-
-   filteredArr.sort((a, b) => {
-      const dateA = new Date((a.sent_time._seconds || a.sent_time.seconds) * 1000);
-      const dateB = new Date((b.sent_time._seconds || b.sent_time.seconds) * 1000);
-      return dateA - dateB;
-    });
-
-    const currentTime = new Date();
-
-    //  בודק אם יש עדכונים לשליחה
-    const messArrToUpdate = filteredArr
-      .filter((m) => m.is_read === false && m.to === user.user_id)
-      .map((m) => ({
-        id: m.id,
-        user_id: user.user_id,
-        is_read: true,
-        read_time: currentTime,
-      }));
-
-    if (messArrToUpdate.length > 0) {
-      setNotifNum((prev) => prev - messArrToUpdate.length);
-      updateMessage(messArrToUpdate);
-    }
-
-    setMessages(filteredArr);
-    setCurrentCoworker(co);
-  };
+  }, [user, currentCoworker, sortMessages]);
 
   useEffect(() => {
     document.title = "מערכת ההודעות של צורבא";
@@ -141,7 +153,9 @@ function Messages() {
   return (
     <div className={classes.messagesContainer}>
       <h1 className={classes.h1Mess}>ברוכים הבאים למערכת ההודעות של צורבא</h1>
-      <p className={classes.pMess}>שימו לב! הודעות שנקראו לפני 14 ימים יימחקו באופן אוטומטי.</p>
+      <p className={classes.pMess}>
+        שימו לב! הודעות שנקראו לפני 14 ימים יימחקו באופן אוטומטי.
+      </p>
       <div className={classes.messContainer}>
         <aside>
           {coworkers.map((co, i) => {
