@@ -1,6 +1,7 @@
 import classes from "../css/header.module.css";
 import { logout } from "../data-base/authentication";
 import React, { useEffect, useContext } from "react";
+import { useNotification } from "./massage-comp/NotificationContext";
 import { getCurrentUser } from "../data-base/authentication";
 
 import { UserContext } from "../App";
@@ -9,6 +10,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Header() {
   const { user, setUser } = useContext(UserContext);
+  const { notifNum } = useNotification();
 
   useEffect(() => {
     const unsubscribe = getCurrentUser(async (user) => {
@@ -48,6 +50,7 @@ function Header() {
     setUser({});
     navigate("/login");
   };
+
   return (
     <div className={classes.header}>
       <img
@@ -56,15 +59,28 @@ function Header() {
         alt="לוגו צורבא"
         onClick={() => navigate("/home")}
       />
-      <button
-        className={classes.btnProfile}
-        onClick={() => navigate("/profile")}
-      >
-        שלום, הרב{" "}
-        {user?.first_name && user?.last_name
-          ? user.first_name + " " + user.last_name
-          : "..."}
-      </button>
+      <div className={classes.profile}>
+        <button
+          className={classes.btnProfile}
+          onClick={() => navigate("/profile")}
+        >
+          שלום, הרב{" "}
+          {user?.first_name && user?.last_name
+            ? user.first_name + " " + user.last_name
+            : "..."}
+        </button>
+        {notifNum !== 0 && (
+          <span
+            onClick={() => navigate("/messages")}
+            className="material-symbols-outlined"
+          >
+            <div className={classes.notification}>
+              <p>{notifNum}</p>
+            </div>
+            notifications
+          </span>
+        )}
+      </div>
       <button className={classes.btnLogout} onClick={handleLogout}>
         התנתקות
         <span className="material-symbols-outlined">logout</span>

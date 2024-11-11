@@ -672,3 +672,90 @@ export const getTutors = onRequest((req, res) => {
     }
   });
 });
+
+// פונקציה לקבלת נתוני הודעות
+export const getMessages = onRequest((req, res) => {
+  corsHandler(req, res, async () => {
+    const uid = req.headers.uid;
+    const authHeader = req.headers.authorization;
+
+    if (!uid)
+      return res.status(403).send({
+        success: false,
+        message: "לא נשלח אימות uid בבקשה",
+      });
+
+    if (!authHeader)
+      return res.status(403).send({
+        success: false,
+        message: "לא נשלח אימות Token בבקשה",
+      });
+
+    const idToken =
+      authHeader && authHeader.startsWith("Bearer ")
+        ? authHeader.split(" ")[1]
+        : null;
+
+    let user;
+    try {
+      user = await admin.auth().verifyIdToken(idToken);
+    } catch (error) {
+      return res.status(401).send({
+        success: false,
+        message: "שגיאה באימות ה-ID Token",
+      });
+    }
+    const uidFromIdtoken = user.uid;
+    if (uid !== uidFromIdtoken) {
+      return res.status(403).send({
+        success: false,
+        message: "משתמש לא מאומת",
+      });
+    }
+
+    //  שליפת נתוני משתמש מ-firestore עפ"י uid
+    let userData = null;
+    try {
+      const q = db.collection("users").where("UID", "==", uid);
+      const querySnapshot = await q.get();
+      userData = querySnapshot.docs[0].data();
+    } catch (err) {
+      return res.status(500).send({
+        success: false,
+        message: "משתמש לא ידוע",
+      });
+    }
+
+    //  שליפת ההודעות
+    try {
+      // שאילתא לקבלת הודעות שנשלחו מהמשתמש
+      const QuerySnapshot1 = db
+        .collection("messages")
+        .where("from", "==", userData.user_id);
+
+      // שאילתא לקבלת הודעות שנשלחו למשתמש
+      const QuerySnapshot2 = db
+        .collection("messages")
+        .where("to", "==", userData.user_id);
+
+      const fromQuerySnapshot = await QuerySnapshot1.get();
+      const toQuerySnapshot = await QuerySnapshot2.get();
+
+      // מיזוג תוצאות משתי השאילתות
+      const messages = [
+        ...fromQuerySnapshot.docs.map((doc) => doc.data()),
+        ...toQuerySnapshot.docs.map((doc) => doc.data()),
+      ];
+
+      res.status(200).send({
+        success: true,
+        message: messages,
+      });
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: "שגיאה בזמן שליפת המידע",
+      });
+    }
+  });
+});

@@ -9,6 +9,7 @@ import Students from "./components/Students";
 import UsersManage from "./components/UsersManage";
 import Archive from "./components/Archive";
 import Intervention from "./components/Intervention";
+import Messages from "./components/Massages";
 
 function Routing() {
   return (
@@ -23,6 +24,7 @@ function Routing() {
           <Route path="/users-manage" element={<UsersManage />} />
           <Route path="/archive" element={<Archive />} />
           <Route path="/intervention/*" element={<Intervention />} />
+          <Route path="/messages" element={<Messages />} />
         </Route>
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

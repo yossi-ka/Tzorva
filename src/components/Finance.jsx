@@ -179,7 +179,7 @@ function Finance() {
               dataSource={financeToShow}
               bordered
               className={classes.financeTable}
-              rowKey="time"
+              rowKey={(id) => id.id}
               locale={{ emptyText: "אין נתונים פיננסים" }}
             />
           </ConfigProvider>

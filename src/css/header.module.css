@@ -17,6 +17,44 @@
   cursor: pointer;
 }
 
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.profile span {
+  font-size: 2rem;
+  color: #404040;
+  transition: color 0.3s ease;
+}
+
+.profile span:hover {
+  color: #000;
+}
+
+.profile .notification {
+  min-width: 12px;
+  min-height: 12px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  transform: translate(0px, -3px);
+  font-size: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  transition: all 0.5s ease;
+}
+
+.profile .notification p {
+  color: #fff;
+  font-weight: bold;
+  line-height: 1.5;
+  font-stretch: extra-condensed;
+}
 .btnProfile,
 .btnLogout {
   padding: 10px 15px; /* צמצום הרוחב של padding */

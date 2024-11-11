@@ -1,0 +1,186 @@
+.messagesContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  padding: 0 10vw;
+  font-family: Arial, sans-serif;
+}
+
+.h1Mess {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* העיצוב הכללי של מיכל ההודעות */
+.messContainer {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 70vh;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: right;
+}
+
+/* העיצוב עבור רשימת אנשי הקשר */
+.messContainer aside {
+  width: 25%;
+  padding: 15px;
+  overflow-y: auto;
+  border-left: 1px solid #ddd;
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.messContainer aside .coworker {
+  padding: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: right;
+}
+
+.messContainer aside div:hover {
+  background-color: #d4d4d4;
+}
+
+.messContainer aside .selectedCoworker {
+  background-color: #cce5ff;
+  font-weight: bold;
+}
+
+/* המרחב הראשי של ההודעות */
+.messContainer main {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-left: 1px solid #ddd;
+}
+
+/* תיבת ההקלדה */
+.messSend {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.sendContent {
+  flex: 1;
+}
+
+.sendContent {
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+}
+
+.sendContent:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* כפתור שליחת הודעה */
+.messSend button {
+  cursor: pointer;
+  color: #007bff;
+  margin-left: 10px;
+  font-size: 24px;
+  transform: rotateY(180deg);
+  margin-right: 0.5rem;
+  border: none;
+  background-color: transparent;
+  font-size: 2.5rem;
+}
+
+.material-symbols-outlined:hover {
+  color: #0056b3;
+}
+
+/**/
+/* messages.module.css */
+
+.messContainer main {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+}
+
+.messContent {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mess {
+  position: relative;
+  padding: 1.2rem;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  width: 70%;
+  word-wrap: break-word;
+}
+
+.date {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.mess.from {
+  background-color: #e6f7ff;
+  align-self: flex-start;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.mess.to {
+  background-color: #fff3e6;
+  align-self: flex-end;
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.messSend {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.sendContent {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 8px;
+}
+
+.sendContent:disabled {
+  background-color: #f1f1f1;
+}
+
+.sendButton {
+  cursor: pointer;
+  color: #007bff;
+  font-size: 24px;
+}
+
+.sendButton:hover {
+  color: #0056b3;
+}

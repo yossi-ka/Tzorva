@@ -36,7 +36,7 @@ function EditStudent({ student, setShowEditStudent, getstud }) {
       formData.student_id = student.student_id;
       setShowEditStudent(false);
 
-      await fetch(`https://editstudent-cjqo4fyw5a-uc.a.run.app`, {
+      await fetch(`https://editstudent`, {
         method: "POST",
         headers: {
           uid: user.uid,

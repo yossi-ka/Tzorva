@@ -23,6 +23,29 @@ export const formatDate = (timestamp) => {
   return `${day}/${month}/${year}`;
 };
 
+export const formatTime = (timestamp) => {
+
+  if (!timestamp) {
+    return "";
+  }
+
+  if (typeof timestamp === "string") {
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}, ${date.getHours()}:${date.getMinutes()}`;
+  }
+
+  const date = new Date((timestamp._seconds || timestamp.seconds) * 1000);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}, ${date.getHours()}:${date.getMinutes()}`;
+};
+
 export const formatDateToHebrew = (timestamp) => {
   if (!timestamp) {
     return "";

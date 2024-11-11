@@ -124,7 +124,7 @@ function Archive() {
               dataSource={archiveToShow}
               bordered
               className={classes.archiveTable}
-              rowKey="time"
+              rowKey={(record) => record.student_id}
               locale={{ emptyText: "לא קיימים תיעודים" }}
               expandable={{
                 expandedRowRender: (record) => (

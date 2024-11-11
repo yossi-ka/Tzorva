@@ -6,6 +6,7 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
+import { NotificationProvider } from "./components/massage-comp/NotificationContext.jsx";
 
 import { heIL } from "@mui/material/locale/index.js";
 
@@ -42,7 +43,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <CacheProvider value={cacheRtl}>
           <UserContext.Provider value={{ user, setUser }}>
-            <Routing />
+            <NotificationProvider>
+              <Routing />
+            </NotificationProvider>
           </UserContext.Provider>
         </CacheProvider>
       </ThemeProvider>
