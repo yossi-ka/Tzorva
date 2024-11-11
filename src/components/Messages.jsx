@@ -1,6 +1,12 @@
 import classes from "../css/messages.module.css";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useRef,
+} from "react";
 import { UserContext } from "../App";
 import { useNotification } from "./message-comp/NotificationContext";
 import { formatTime } from "../services/date";
@@ -9,10 +15,21 @@ import SendMessage from "./message-comp/SendMessage";
 function Messages() {
   const { user } = useContext(UserContext);
   const { setNotifNum } = useNotification();
-  const [coworkers, setCoworkers] = useState([]); //  רשימת אנשי הקשר שאיתם כבר קיים איטראציה
+  const [coworkers, setCoworkers] = useState([]);
   const [allMessages, setAllMessages] = useState([]);
-  const [messages, setMessages] = useState([]); //  רשימת ההודעות להצגה
-  const [currentCoworker, setCurrentCoworker] = useState(""); //  המשתמש הנוכחי איתו מקיים איטראציה
+  const [messages, setMessages] = useState([]);
+  const [currentCoworker, setCurrentCoworker] = useState("");
+
+  // Store stable references using useRef
+  const userRef = useRef();
+  const currentCoworkerRef = useRef();
+  const isFirstRender = useRef(true);
+
+  // Update refs when values change
+  useEffect(() => {
+    userRef.current = user;
+    currentCoworkerRef.current = currentCoworker;
+  }, [user, currentCoworker]);
 
   const updateMessage = useCallback((messArrToUpdate) => {
     const auth = getAuth();
@@ -63,12 +80,11 @@ function Messages() {
 
       const currentTime = new Date();
 
-      //  בודק אם יש עדכונים לשליחה
       const messArrToUpdate = filteredArr
-        .filter((m) => m.is_read === false && m.to === user.user_id)
+        .filter((m) => m.is_read === false && m.to === userRef.current.user_id)
         .map((m) => ({
           id: m.id,
-          user_id: user.user_id,
+          user_id: userRef.current.user_id,
           is_read: true,
           read_time: currentTime,
         }));
@@ -81,7 +97,7 @@ function Messages() {
       setMessages(filteredArr);
       setCurrentCoworker(co);
     },
-    [allMessages, user, setNotifNum, updateMessage]
+    [allMessages, setNotifNum, updateMessage]
   );
 
   const fetchData = useCallback(() => {
@@ -116,7 +132,7 @@ function Messages() {
               ) {
                 coworkersArr.push({
                   name: m.iterator_name,
-                  id: m.from === user.user_id ? m.to : m.from,
+                  id: m.from === userRef.current.user_id ? m.to : m.from,
                 });
               }
               if (m.is_read === false) {
@@ -132,29 +148,36 @@ function Messages() {
 
             setCoworkers(sortedCoworkers);
 
-            if (currentCoworker) {
-              sortMessages(currentCoworker);
+            if (currentCoworkerRef.current) {
+              sortMessages(currentCoworkerRef.current);
             }
           });
       } catch (e) {
         console.error("Error fetching messages:", e);
       }
     });
-  }, [user, sortMessages, currentCoworker]);
+  }, [sortMessages]);
 
   const handleSelectCoworker = (co) => {
     setCurrentCoworker(co);
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     if (currentCoworker) {
       sortMessages(currentCoworker);
     }
   }, [currentCoworker, sortMessages]);
+
+  // Initial data fetch
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      fetchData();
+    }
+  }, [fetchData, user]);
 
   return (
     <div className={classes.messagesContainer}>
