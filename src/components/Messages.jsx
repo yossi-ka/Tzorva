@@ -103,9 +103,10 @@ function Messages() {
           .then((res) => res.json())
           .then((d) => {
             setAllMessages(d.message);
+            console.log(d.message);
 
             const coworkersArr = [];
-            const unreadMessages = {}; //  מפתח = שם איש קשר, ערך = true אם הודעה לא נקראה
+            const unreadMessages = {};
 
             d.message.forEach((m) => {
               if (
@@ -118,14 +119,11 @@ function Messages() {
                   id: m.from === user.user_id ? m.to : m.from,
                 });
               }
-
-              // שמירת מידע על הודעות שלא נקראו
               if (m.is_read === false) {
                 unreadMessages[m.iterator_name] = true;
               }
             });
 
-            // מיון אנשי קשר - עם הודעות שלא נקראו ראשונים
             const sortedCoworkers = coworkersArr.sort((a, b) => {
               if (unreadMessages[a.name] && !unreadMessages[b.name]) return -1;
               if (!unreadMessages[a.name] && unreadMessages[b.name]) return 1;
@@ -133,7 +131,6 @@ function Messages() {
             });
 
             setCoworkers(sortedCoworkers);
-            console.log(currentCoworker);
 
             if (currentCoworker) {
               sortMessages(currentCoworker);
@@ -143,12 +140,21 @@ function Messages() {
         console.error("Error fetching messages:", e);
       }
     });
-  }, [user, currentCoworker, sortMessages]);
+  }, [user, sortMessages, currentCoworker]);
+
+  const handleSelectCoworker = (co) => {
+    setCurrentCoworker(co);
+  };
 
   useEffect(() => {
-    document.title = "מערכת ההודעות של צורבא";
     fetchData();
-  }, [fetchData]);
+  }, []);
+
+  useEffect(() => {
+    if (currentCoworker) {
+      sortMessages(currentCoworker);
+    }
+  }, [currentCoworker, sortMessages]);
 
   return (
     <div className={classes.messagesContainer}>
@@ -165,7 +171,7 @@ function Messages() {
                   currentCoworker === co ? classes.selectedCoworker : ""
                 }`}
                 key={i}
-                onClick={() => sortMessages(co)}
+                onClick={() => handleSelectCoworker(co)}
               >
                 {co.name}
               </div>
