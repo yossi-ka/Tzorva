@@ -449,3 +449,103 @@ export const editIntervention = onRequest(async (req, res) => {
     });
   });
 });
+
+//  פונקציה לעריכת הודעה
+export const editMessage = onRequest(async (req, res) => {
+  // עטיפת כל הלוגיקה ב-Promise
+  return new Promise((resolve) => {
+    corsHandler(req, res, async () => {
+      try {
+        const uid = req.headers.uid;
+        const authHeader = req.headers.authorization;
+        const messages = req.body;
+
+        if (!uid) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות uid בבקשה",
+          });
+          return resolve();
+        }
+
+        if (!authHeader) {
+          res.status(403).json({
+            success: false,
+            message: "לא נשלח אימות Token בבקשה",
+          });
+          return resolve();
+        }
+
+        const idToken = authHeader.startsWith("Bearer ")
+          ? authHeader.split(" ")[1]
+          : null;
+
+        let user;
+        try {
+          user = await admin.auth().verifyIdToken(idToken);
+        } catch (error) {
+          res.status(401).json({
+            success: false,
+            message: "שגיאה באימות ה-ID Token",
+          });
+          return resolve();
+        }
+
+        if (uid !== user.uid) {
+          res.status(403).json({
+            success: false,
+            message: "משתמש לא מאומת",
+          });
+          return resolve();
+        }
+
+        // שליפת נתוני משתמש
+        const querySnapshot = await db
+          .collection("users")
+          .where("UID", "==", uid)
+          .get();
+
+        if (querySnapshot.empty) {
+          res.status(500).json({
+            success: false,
+            message: "משתמש לא ידוע",
+          });
+          return resolve();
+        }
+
+        const userData = querySnapshot.docs[0].data();
+
+        //  עדכון הפעולה
+        messages.forEach(async (message) => {
+          const messageId = message.id;
+
+          const docRef = db.collection("messages").doc(messageId);
+
+          const doc = await docRef.get();
+
+          if (!doc.exists) {
+            return res.status(404).json({
+              success: false,
+              message: "ההודעה לא נמצאה",
+            });
+          }
+
+          // אם ההודעה נמצאה, המשך לעדכון
+          delete message.id;
+          await docRef.update(message);
+        });
+        res.status(200).json({
+          success: true,
+          message: "ההודעה עודכנה בהצלחה",
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "שגיאה בעריכת ההודעה",
+          error: error.message,
+        });
+        return resolve();
+      }
+    });
+  });
+});

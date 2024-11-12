@@ -22,8 +22,7 @@ function SendMessage({ currentCoworker, fetchData }) {
           },
           body: JSON.stringify({
             content: messageRef.current.value,
-            iterator_name: currentCoworker.name,
-            to: currentCoworker.id,
+            to: { id: currentCoworker.id, name: currentCoworker.name },
           }),
         }
       ).then(() => {

@@ -565,10 +565,13 @@ export const sendMessage = onRequest(async (req, res) => {
           });
           return resolve();
         }
-        
+
         //  הוספת נתוני ברירת מחדל להודעה
         const time = new Date();
-        message.from = userData.user_id;
+        message.from = {
+          id: userData.user_id,
+          name: userData.first_name + " " + userData.last_name,
+        };
         message.is_read = false;
         message.sent_time = time;
         message.read_time = "";

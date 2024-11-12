@@ -30,7 +30,7 @@ export const NotificationProvider = ({ children }) => {
         .then((res) => res.json())
         .then((d) => {
           const unreadMessages = d.message.filter(
-            (msg) => msg?.is_read === false && msg?.to === user.user_id
+            (msg) => msg?.is_read === false && msg?.to.id === user.user_id
           );
 
           setNotifNum(unreadMessages.length);

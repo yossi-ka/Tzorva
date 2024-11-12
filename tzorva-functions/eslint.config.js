@@ -1,4 +1,4 @@
- 
+
 export default [
   {
     files: ["**/*.js"], // הקובץ יפנה לכל קבצי JS
@@ -11,4 +11,4 @@ export default [
     },
   },
 ];
-  
+

@@ -437,7 +437,7 @@ export const getInterventions = onRequest((req, res) => {
             success: true,
             message: arr,
           });
-        } else if (userData.job_title ==="מנהל ת\"ת") {
+        } else if (userData.job_title === 'מנהל ת"ת') {
           if (studentData.city_of_school === userData.city) {
             res.status(200).send({
               success: true,
@@ -481,7 +481,7 @@ export const getInterventions = onRequest((req, res) => {
             success: true,
             message: arr,
           });
-        } else if (userData.job_title === "מנהל ת\"ת") {
+        } else if (userData.job_title === 'מנהל ת"ת') {
           const studentIdArr = [];
           const querySnapshot1 = await db
             .collection("students")
@@ -673,7 +673,7 @@ export const getTutors = onRequest((req, res) => {
   });
 });
 
-// פונקציה לקבלת נתוני הודעות
+// פונקציה לקבלת הודעות
 export const getMessages = onRequest((req, res) => {
   corsHandler(req, res, async () => {
     const uid = req.headers.uid;
@@ -731,20 +731,20 @@ export const getMessages = onRequest((req, res) => {
       // שאילתא לקבלת הודעות שנשלחו מהמשתמש
       const QuerySnapshot1 = db
         .collection("messages")
-        .where("from", "==", userData.user_id);
+        .where("from.id", "==", userData.user_id);
 
       // שאילתא לקבלת הודעות שנשלחו למשתמש
       const QuerySnapshot2 = db
         .collection("messages")
-        .where("to", "==", userData.user_id);
+        .where("to.id", "==", userData.user_id);
 
       const fromQuerySnapshot = await QuerySnapshot1.get();
       const toQuerySnapshot = await QuerySnapshot2.get();
 
       // מיזוג תוצאות משתי השאילתות
       const messages = [
-        ...fromQuerySnapshot.docs.map((doc) => doc.data()),
-        ...toQuerySnapshot.docs.map((doc) => doc.data()),
+        ...fromQuerySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+        ...toQuerySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
       ];
 
       res.status(200).send({

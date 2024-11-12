@@ -14,18 +14,17 @@ import SendMessage from "./message-comp/SendMessage";
 
 function Messages() {
   const { user } = useContext(UserContext);
-  const { setNotifNum } = useNotification();
+  const { notifNum, setNotifNum } = useNotification();
   const [coworkers, setCoworkers] = useState([]);
   const [allMessages, setAllMessages] = useState([]);
   const [messages, setMessages] = useState([]);
   const [currentCoworker, setCurrentCoworker] = useState("");
 
-  // Store stable references using useRef
   const userRef = useRef();
   const currentCoworkerRef = useRef();
   const isFirstRender = useRef(true);
+  const messagesRef = useRef(null);
 
-  // Update refs when values change
   useEffect(() => {
     userRef.current = user;
     currentCoworkerRef.current = currentCoworker;
@@ -47,11 +46,7 @@ function Messages() {
             },
             body: JSON.stringify(messArrToUpdate),
           }
-        )
-          .then((res) => res.json())
-          .then((d) => {
-            console.log(d.message);
-          });
+        ).then((res) => res.json());
       } catch (e) {
         console.error("Error fetching messages:", e);
       }
@@ -63,7 +58,7 @@ function Messages() {
       const name = co.name;
       let filteredArr = [];
       allMessages.forEach((mes) => {
-        if (mes.iterator_name === name) {
+        if (mes.to.name === name || mes.from.name === name) {
           filteredArr.push(mes);
         }
       });
@@ -81,7 +76,9 @@ function Messages() {
       const currentTime = new Date();
 
       const messArrToUpdate = filteredArr
-        .filter((m) => m.is_read === false && m.to === userRef.current.user_id)
+        .filter(
+          (m) => m.is_read === false && m.to.id === userRef.current.user_id
+        )
         .map((m) => ({
           id: m.id,
           user_id: userRef.current.user_id,
@@ -90,14 +87,16 @@ function Messages() {
         }));
 
       if (messArrToUpdate.length > 0) {
-        setNotifNum((prev) => prev - messArrToUpdate.length);
+        if (notifNum > 0) {
+          setNotifNum((prev) => prev - messArrToUpdate.length);
+        }
         updateMessage(messArrToUpdate);
       }
 
       setMessages(filteredArr);
       setCurrentCoworker(co);
     },
-    [allMessages, setNotifNum, updateMessage]
+    [allMessages, setNotifNum, updateMessage, notifNum]
   );
 
   const fetchData = useCallback(() => {
@@ -119,24 +118,38 @@ function Messages() {
           .then((res) => res.json())
           .then((d) => {
             setAllMessages(d.message);
-            console.log(d.message);
 
             const coworkersArr = [];
             const unreadMessages = {};
 
             d.message.forEach((m) => {
-              if (
-                !coworkersArr.some(
-                  (coworker) => coworker.name === m.iterator_name
-                )
-              ) {
+              // הגדרת שם המשתמש מחוץ לתנאים כדי לוודא שיהיה זמין לכל הקוד
+              const userName = `${userRef.current.first_name} ${userRef.current.last_name}`;
+
+              // בדיקה אם המידע של `from` או `to` כבר קיימים ברשימה
+              const mTo = coworkersArr.find(
+                (coworker) =>
+                  coworker.name === m.to.name && coworker.id === m.to.id
+              );
+              const mFrom = coworkersArr.find(
+                (coworker) =>
+                  coworker.name === m.from.name && coworker.id === m.from.id
+              );
+
+              // אם אף אחד מהם לא קיים, נוסיף את המשתמש המתאים לפי מזהה המשתמש הנוכחי
+              if (!(mTo || mFrom)) {
                 coworkersArr.push({
-                  name: m.iterator_name,
-                  id: m.from === userRef.current.user_id ? m.to : m.from,
+                  name: m.from.name === userName ? m.to.name : m.from.name,
+                  id:
+                    m.from.id === userRef.current.user_id ? m.to.id : m.from.id,
                 });
               }
-              if (m.is_read === false) {
-                unreadMessages[m.iterator_name] = true;
+
+              // בדיקה אם ההודעה לא נקראה, כדי להוסיף אותה לרשימת הודעות שלא נקראו
+              if (!m.is_read) {
+                unreadMessages[
+                  m.from.name === userName ? m.to.name : m.from.name
+                ] = true;
               }
             });
 
@@ -162,13 +175,21 @@ function Messages() {
     setCurrentCoworker(co);
   };
 
+  const scrollToBottom = () => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   useEffect(() => {
     if (currentCoworker) {
       sortMessages(currentCoworker);
     }
   }, [currentCoworker, sortMessages]);
-
-  // Initial data fetch
 
   useEffect(() => {
     if (!user) return;
@@ -202,12 +223,12 @@ function Messages() {
           })}
         </aside>
         <main>
-          <div className={classes.messContent}>
+          <div className={classes.messContent} ref={messagesRef}>
             {messages.map((mes, i) => {
               return (
                 <div
                   className={`${classes.mess} ${
-                    mes.from === user.user_id ? classes.from : classes.to
+                    mes.from.id === user.user_id ? classes.from : classes.to
                   }`}
                   key={i}
                 >
