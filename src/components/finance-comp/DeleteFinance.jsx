@@ -1,13 +1,19 @@
 import classes from "../../css/finance.module.css";
 import React, { useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function DeleteFinance({ finance, fetchData }) {
   const [showWarningForm, setShowWarningForm] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
   const handleDeleteFinance = async (fin) => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
+      setShowWarningForm(false);
+
       await fetch(
         `https://deletefinance${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
@@ -19,14 +25,24 @@ function DeleteFinance({ finance, fetchData }) {
           },
           body: JSON.stringify(fin),
         }
-      )
-        .then((res) => res.json())
-        .then((d) => {
-          console.log(d.message);
-
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("השורה נמחקה בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
           fetchData(u);
-        });
-      setShowWarningForm(false);
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
 
@@ -60,6 +76,7 @@ function DeleteFinance({ finance, fetchData }) {
           </div>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </div>
   );
 }

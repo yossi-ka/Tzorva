@@ -3,12 +3,21 @@ import React, { useState } from "react";
 import DeleteUser from "./DeleteUser";
 import EditUser from "./EditUser";
 import UpdatePermissions from "./UpdatePermissions";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function UserCard({ user, getuse }) {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
   const [showUpdatePermissions, setShowUpdatePermissions] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
+  const setAlert = {
+    setOpenAlert,
+    setMessags,
+    setState,
+  };
 
   return user?.job_title === "מנהל ארגון" ? (
     ""
@@ -59,6 +68,7 @@ function UserCard({ user, getuse }) {
           <div className={classes.overlaySure}></div>
           <div className={classes.deleteUserArea}>
             <DeleteUser
+              setAlert={setAlert}
               user={user}
               getuse={getuse}
               setShowDeleteForm={setShowDeleteWarning}
@@ -74,6 +84,7 @@ function UserCard({ user, getuse }) {
           ></div>
           <div className={classes.editUserArea}>
             <EditUser
+              setAlert={setAlert}
               user={user}
               getuse={getuse}
               setShowEditUser={setShowEditUser}
@@ -89,6 +100,7 @@ function UserCard({ user, getuse }) {
           ></div>
           <div className={classes.updatePermissionsArea}>
             <UpdatePermissions
+              setAlert={setAlert}
               setShowUpdatePermissions={setShowUpdatePermissions}
               user={user}
               getuse={getuse}
@@ -96,6 +108,7 @@ function UserCard({ user, getuse }) {
           </div>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </div>
   );
 }

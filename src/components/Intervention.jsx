@@ -36,7 +36,7 @@ function Intervention() {
       const uid = u.uid;
 
       try {
-        const financeData = await fetch(
+        await fetch(
           `https://getinterventions${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
           {
             method: "GET",
@@ -47,13 +47,13 @@ function Intervention() {
               "Content-Type": "application/json",
             },
           }
-        );
-        const data = await financeData.json();
-        console.log(data);
+        ).then((res) => {
+          const data = res.json();
 
-        const sortData = data.message.sort((a, b) => b.time - a.time);
+          const sortData = data.message.sort((a, b) => b.time - a.time);
 
-        setInterventionToShow(sortData);
+          setInterventionToShow(sortData);
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }

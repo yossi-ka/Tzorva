@@ -4,6 +4,7 @@ import { UserContext } from "../../App";
 
 function EditProfile({ setUpdateProfile }) {
   const { user } = useContext(UserContext);
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };

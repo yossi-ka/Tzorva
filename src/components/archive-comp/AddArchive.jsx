@@ -1,6 +1,7 @@
 import classes from "../../css/archive.module.css";
 import React, { useRef, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 export const statusArr = ["עלה לישיבה", "הסתיים טיפול", "אחר"];
 
@@ -12,6 +13,9 @@ function AddArchive({ fetchData }) {
   const bodyRef = useRef(null);
   const fathersNameRef = useRef(null);
   const [openForm, setOpenForm] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
 
   const handleAddArchive = async (e) => {
     e.preventDefault();
@@ -30,7 +34,9 @@ function AddArchive({ fetchData }) {
         time: date,
       };
 
-      const data = await fetch(
+      setOpenForm(false);
+
+      await fetch(
         `https://addarchive${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
           method: "POST",
@@ -41,12 +47,24 @@ function AddArchive({ fetchData }) {
           },
           body: JSON.stringify(newArchive),
         }
-      );
-      const { message } = await data.json();
-      console.log(message);
-
-      fetchData(u);
-      setOpenForm(false);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("התיעוד נוסף בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          fetchData(u);
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
 
@@ -134,6 +152,7 @@ function AddArchive({ fetchData }) {
           </form>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </>
   );
 }

@@ -2,9 +2,13 @@ import classes from "../../css/archive.module.css";
 import React, { useRef, useState } from "react";
 import { statusArr } from "./AddArchive";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function EditArchive({ archive, fetchData }) {
   const [showEditForm, setShowEditForm] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
 
   const titleRef = useRef();
   const amountRef = useRef();
@@ -39,12 +43,24 @@ function EditArchive({ archive, fetchData }) {
           },
           body: JSON.stringify({ ...formData, student_id: archive.student_id }),
         }
-      )
-        .then((res) => res.json())
-        .then((data) => {
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("עדכון בוצע בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
           fetchData(u);
-          console.log(data);
-        });
+        } else {
+          setMessags("עדכון נכשל, נסה שנית");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
   return (
@@ -111,6 +127,7 @@ function EditArchive({ archive, fetchData }) {
           </div>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </>
   );
 }

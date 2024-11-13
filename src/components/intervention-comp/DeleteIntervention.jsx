@@ -1,13 +1,19 @@
 import classes from "../../css/intervention.module.css";
 import React, { useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function DeleteIntervention({ intervention, fetchData }) {
   const [showWarningForm, setShowWarningForm] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
   const handleDeleteIntervention = async (inter) => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
+
+      setShowWarningForm(false);
 
       await fetch(
         `https://deleteintervention${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
@@ -21,14 +27,24 @@ function DeleteIntervention({ intervention, fetchData }) {
           },
           body: JSON.stringify(inter),
         }
-      )
-        .then((res) => res.json())
-        .then((d) => {
-          console.log(d.message);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("הטיפול נמחק בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
           fetchData(u);
-        });
-
-      setShowWarningForm(false);
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
 
@@ -62,6 +78,7 @@ function DeleteIntervention({ intervention, fetchData }) {
           </div>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </div>
   );
 }

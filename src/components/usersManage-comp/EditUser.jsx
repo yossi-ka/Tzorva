@@ -2,10 +2,12 @@ import classes from "../../css/users.module.css";
 import React, { useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-function EditUser({ user, setShowEditUser, getuse }) {
+function EditUser({ user, setShowEditUser, getuse, setAlert }) {
   const phoneRef = useRef();
   const emailRef = useRef();
   const jobRef = useRef();
+  const { setOpenAlert, setMessags, setState } = setAlert;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,12 +41,24 @@ function EditUser({ user, setShowEditUser, getuse }) {
           },
           body: JSON.stringify({ ...formData, user_id: user.user_id }),
         }
-      )
-        .then((res) => res.json())
-        .then((d) => {
-          console.log(d.message);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("פרטי המשתמש עודכנו בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
           getuse(u);
-        });
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
 
@@ -86,15 +100,18 @@ function EditUser({ user, setShowEditUser, getuse }) {
         <label className={classes.label} htmlFor="job">
           תפקיד:
         </label>
-        <input
+        <select
+          defaultValue={user.job_title}
           className={classes.input}
           ref={jobRef}
-          jobName={classes.input}
-          type="text"
-          id="job"
           name="job"
-          defaultValue={user.job_title}
-        />
+          id="job"
+        >
+          <option value={`מנהל ת"ת`}>מנהל ת"ת</option>
+          <option value="יועץ">יועץ</option>
+          <option value="מטפל">מטפל</option>
+        </select>
+
         <label className={classes.label} htmlFor="phone">
           טלפון:
         </label>

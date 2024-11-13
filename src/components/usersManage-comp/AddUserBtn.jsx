@@ -1,6 +1,7 @@
 import classes from "../../css/users.module.css";
 import React, { useRef, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function AddUserBtn({ getUsers }) {
   const userIdRef = useRef();
@@ -12,6 +13,10 @@ function AddUserBtn({ getUsers }) {
   const emailRef = useRef();
 
   const [showAddForm, setShowAddForm] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -39,7 +44,9 @@ function AddUserBtn({ getUsers }) {
           students: [],
         },
       };
-      const data = await fetch(
+      setShowAddForm(false);
+
+      await fetch(
         `https://adduser${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
           method: "POST",
@@ -50,11 +57,24 @@ function AddUserBtn({ getUsers }) {
           },
           body: JSON.stringify(newUser),
         }
-      );
-      const { message } = await data.json();
-      console.log(message);
-      getUsers(u);
-      setShowAddForm(false);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("המשתמש נוסף בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          getUsers(u);
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
   return (
@@ -146,6 +166,7 @@ function AddUserBtn({ getUsers }) {
           </div>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </div>
   );
 }

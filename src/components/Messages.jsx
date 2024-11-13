@@ -123,7 +123,6 @@ function Messages() {
             const unreadMessages = {};
 
             d.message.forEach((m) => {
-              // הגדרת שם המשתמש מחוץ לתנאים כדי לוודא שיהיה זמין לכל הקוד
               const userName = `${userRef.current.first_name} ${userRef.current.last_name}`;
 
               // בדיקה אם המידע של `from` או `to` כבר קיימים ברשימה
@@ -175,14 +174,10 @@ function Messages() {
     setCurrentCoworker(co);
   };
 
-  const scrollToBottom = () => {
+  useEffect(() => {
     if (messagesRef.current) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
     }
-  };
-
-  useEffect(() => {
-    scrollToBottom();
   }, [messages]);
 
   useEffect(() => {

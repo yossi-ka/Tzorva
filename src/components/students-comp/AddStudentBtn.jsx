@@ -6,11 +6,15 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function AddStudentBtn({ getstud }) {
   const [city, setCity] = useState("");
   const [clas, setClas] = useState("");
   const [urgency, setUrgency] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
   const studentIdRef = useRef();
   const firstNameRef = useRef();
   const lastNameRef = useRef();
@@ -48,12 +52,24 @@ function AddStudentBtn({ getstud }) {
           },
           body: JSON.stringify(newStudent),
         }
-      )
-        .then((res) => res.json())
-        .then((d) => {
-          console.log(d.message);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("התלמיד נוסף בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
           getstud(u);
-        });
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
 
@@ -184,6 +200,7 @@ function AddStudentBtn({ getstud }) {
           </div>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </div>
   );
 }

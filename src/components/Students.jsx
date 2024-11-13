@@ -17,39 +17,33 @@ function Students() {
   const [students, setStudents] = useState([]);
   const [studentsToShow, setStudentsToShow] = useState([]);
 
-  const getstud = async (currentUser) => {
-    // בדיקה אם יש משתמש מחובר
-    if (!currentUser) {
-      console.error("אין משתמש מחובר.");
-      return;
-    }
+  const getstud = () => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
+      const uid = u.uid;
 
-    try {
-      const idToken = await currentUser.getIdToken();
-      const uid = currentUser.uid;
-
-      const response = await fetch(
-        `https://getstudents${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
-        {
-          method: "GET",
-          headers: {
-            uid: uid,
-            authorization: `Bearer ${idToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-   
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      try {
+        await fetch(
+          `https://getstudents${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+          {
+            method: "GET",
+            headers: {
+              uid: uid,
+              authorization: `Bearer ${idToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((d) => {
+            setStudents(d.message);
+            setStudentsToShow(d.message);
+          });
+      } catch (error) {
+        console.error("Error fetching students:", error.message || error);
       }
-      const studentsData = await response.json();
-      setStudents(studentsData.message);
-      setStudentsToShow(studentsData.message);
-    } catch (error) {
-      console.error("Error fetching students:", error.message || error);
-    }
+    });
   };
 
   useEffect(() => {

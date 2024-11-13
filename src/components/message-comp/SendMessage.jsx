@@ -1,9 +1,13 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import classes from "../../css/messages.module.css";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function SendMessage({ currentCoworker, fetchData }) {
   const messageRef = useRef();
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
 
   const handleSneMessage = async () => {
     if (messageRef.current.value === "") return;
@@ -25,9 +29,24 @@ function SendMessage({ currentCoworker, fetchData }) {
             to: { id: currentCoworker.id, name: currentCoworker.name },
           }),
         }
-      ).then(() => {
-        fetchData();
-        messageRef.current.value = "";
+      ).then((res) => {
+        if (res.ok) {
+          messageRef.current.value = "";
+          setMessags("הטיפול נמחק בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          fetchData();
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
       });
     });
   };
@@ -42,6 +61,7 @@ function SendMessage({ currentCoworker, fetchData }) {
       <button onClick={handleSneMessage} className="material-symbols-outlined">
         send
       </button>
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </div>
   );
 }

@@ -10,6 +10,7 @@ import {
   FileOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function StudentCard({
   student,
@@ -22,6 +23,15 @@ function StudentCard({
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [showEditStudent, setShowEditStudent] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
+  const setAlert = {
+    setOpenAlert,
+    setMessags,
+    setState,
+  };
+
   const colorUrgency =
     student.urgency_level === "גבוה"
       ? "red"
@@ -39,28 +49,28 @@ function StudentCard({
 
   // Portal container style
   const formContainerStyle = {
-    position: 'fixed',
+    position: "fixed",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 1001,
-    pointerEvents: 'none'
+    pointerEvents: "none",
   };
 
   // Form wrapper style
   const formWrapperStyle = {
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    width: '90%',
-    maxWidth: '500px',
-    maxHeight: '90vh',
-    overflowY: 'auto',
-    pointerEvents: 'auto',
-    position: 'relative'
+    backgroundColor: "#fff",
+    borderRadius: "8px",
+    width: "90%",
+    maxWidth: "500px",
+    maxHeight: "90vh",
+    overflowY: "auto",
+    pointerEvents: "auto",
+    position: "relative",
   };
 
   return (
@@ -133,13 +143,13 @@ function StudentCard({
             setShowEditStudent(false);
           }}
           style={{
-            position: 'fixed',
+            position: "fixed",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 1000
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1000,
           }}
         />
       )}
@@ -148,6 +158,7 @@ function StudentCard({
         <div style={formContainerStyle}>
           <div style={formWrapperStyle}>
             <DeleteStudent
+              setAlert={setAlert}
               getstud={getstud}
               student={student}
               setShowDeleteForm={setShowDeleteForm}
@@ -160,6 +171,7 @@ function StudentCard({
         <div style={formContainerStyle}>
           <div style={formWrapperStyle}>
             <EditStudent
+              setAlert={setAlert}
               getstud={getstud}
               setShowEditStudent={setShowEditStudent}
               student={student}
@@ -167,6 +179,8 @@ function StudentCard({
           </div>
         </div>
       )}
+
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </>
   );
 }

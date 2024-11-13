@@ -3,7 +3,9 @@ import React from "react";
 // import { deleteUser } from "../../data-base/delete";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-function DeleteUser({ user, getuse, setShowDeleteForm }) {
+function DeleteUser({ user, getuse, setShowDeleteForm, setAlert }) {
+  const { setOpenAlert, setMessags, setState } = setAlert;
+
   const handleDeleteUser = async (e) => {
     e.preventDefault();
     const auth = getAuth();
@@ -20,12 +22,24 @@ function DeleteUser({ user, getuse, setShowDeleteForm }) {
           },
           body: JSON.stringify(user),
         }
-      )
-        .then((res) => res.json())
-        .then((d) => {
-          console.log(d.message);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("המשתמש נמחק בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
           getuse(u);
-        });
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
 
       setShowDeleteForm(false);
       // await deleteUser(user);

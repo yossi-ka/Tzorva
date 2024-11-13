@@ -3,10 +3,14 @@ import React, { useRef, useState, useContext, useEffect } from "react";
 import { UserContext } from "../../App";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function AddIntervention({ fetchData }) {
   const [studentsArr, setStudentsArr] = useState([]);
   const [tutorsArr, setTutorsArr] = useState([]);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
   const { user } = useContext(UserContext);
   const manager =
     user.job_title === "מנהל ארגון" ||
@@ -96,6 +100,7 @@ function AddIntervention({ fetchData }) {
           (student) => student.name === studentRef.current.value
         ).id,
       };
+      setOpenForm(false);
 
       const data = await fetch(
         `https://addintervention${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
@@ -108,12 +113,24 @@ function AddIntervention({ fetchData }) {
           },
           body: JSON.stringify(newIntervention),
         }
-      );
-
-      const { message } = await data.json();
-      console.log(message);
-      fetchData(u);
-      setOpenForm(false);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("הטיפול נוסף בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          fetchData(u);
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
 
@@ -202,6 +219,7 @@ function AddIntervention({ fetchData }) {
           </form>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </>
   );
 }

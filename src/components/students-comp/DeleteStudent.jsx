@@ -3,11 +3,12 @@ import React, { useRef, useState } from "react";
 // import { deleteStudent } from "../../data-base/delete";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-function DeleteStudent({ student, setShowDeleteForm, getstud }) {
+function DeleteStudent({ student, setShowDeleteForm, getstud, setAlert }) {
   const reasonRef = useRef(null);
   const textareaRef = useRef(null);
   const amountRef = useRef(null);
   const [showWarning, setShowWarning] = useState(false);
+  const { setOpenAlert, setMessags, setState } = setAlert;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,6 +20,17 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
+      const time = new Date();
+      const newArchive = {
+        full_name: student.first_name + " " + student.last_name,
+        student_id: student.student_id,
+        title: reasonRef.current.value,
+        invested_amount: amountRef.current.value,
+        body: textareaRef.current.value,
+        fathers_name: student.fathers_name,
+        time: time,
+      };
+      setShowDeleteForm(false);
 
       //  delete student
       fetch(
@@ -32,23 +44,15 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
           },
           body: JSON.stringify(student),
         }
-      )
-        .then((res) => res.json())
-        .then((d) => {
-          console.log(d.message);
-          getstud(u);
-          const time = new Date();
-          const newArchive = {
-            full_name: student.first_name + " " + student.last_name,
-            student_id: student.student_id,
-            title: reasonRef.current.value,
-            invested_amount: amountRef.current.value,
-            body: textareaRef.current.value,
-            fathers_name: student.fathers_name,
-            time: time,
-          };
-
-          setShowDeleteForm(false);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("התלמיד נמחק בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          getstud();
 
           //  add to archive
           fetch(
@@ -62,12 +66,32 @@ function DeleteStudent({ student, setShowDeleteForm, getstud }) {
               },
               body: JSON.stringify(newArchive),
             }
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data.message);
-            });
-        });
+          ).then((res) => {
+            if (res.ok) {
+              setMessags("פרטי התלמיד הועברו לארכיון");
+              setState("success");
+              setOpenAlert(true);
+              setTimeout(() => {
+                setOpenAlert(false);
+              }, 4000);
+            } else {
+              setMessags("שגיאה, אנא נסה שוב");
+              setState("error");
+              setOpenAlert(true);
+              setTimeout(() => {
+                setOpenAlert(false);
+              }, 4000);
+            }
+          });
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
 

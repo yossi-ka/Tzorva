@@ -2,6 +2,7 @@ import classes from "../../css/finance.module.css";
 import React, { useRef, useState } from "react";
 // import { addFinance } from "../../data-base/insert";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 export const revenuesArr = ["מימון תלמיד", "תרומה"];
 export const expensesArr = ["עלונים והדפסות", "אבחון / טיפול"];
@@ -12,13 +13,16 @@ function AddFinance({ fetchData }) {
   const detailsRef = useRef(null);
   const [type, setType] = useState("");
   const [openForm, setOpenForm] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
+
   const handleAddFinance = async (e) => {
     e.preventDefault();
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
-
       const idToken = await u.getIdToken();
-      
+
       const date = new Date();
       const newFinance = {
         type: type,
@@ -27,6 +31,7 @@ function AddFinance({ fetchData }) {
         details: detailsRef.current.value,
         time: date,
       };
+      setOpenForm(false);
 
       const data = await fetch(
         `https://addfinance${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
@@ -39,14 +44,25 @@ function AddFinance({ fetchData }) {
           },
           body: JSON.stringify(newFinance),
         }
-      );
-      const { message } = await data.json();
-      console.log(message);
-      
-      // await addFinance(newFinance);
-      fetchData(u);
-      setOpenForm(false);
-    })
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("השורה נוספה בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          fetchData(u);
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
+    });
   };
 
   return (
@@ -103,6 +119,7 @@ function AddFinance({ fetchData }) {
           </form>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </>
   );
 }
@@ -121,7 +138,7 @@ function RevenuesOptions({ categoryRef }) {
       </option>
 
       {revenuesArr.map((item, index) => (
-        <option key={ index} value={item}>
+        <option key={index} value={item}>
           {item}
         </option>
       ))}

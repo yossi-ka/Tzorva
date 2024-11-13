@@ -3,6 +3,7 @@ import React, { useRef, useState, useContext } from "react";
 import { formatDateToHebrew } from "../../services/date";
 import { UserContext } from "../../App";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function EditIntervention({ intervention, fetchData }) {
   const { user } = useContext(UserContext);
@@ -11,6 +12,9 @@ function EditIntervention({ intervention, fetchData }) {
     user.job_title === "יועץ" ||
     user.job_title === `מנהל ת"ת`;
   const [showEditForm, setShowEditForm] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
 
   const tutorRef = useRef();
   const studentRef = useRef();
@@ -58,11 +62,23 @@ function EditIntervention({ intervention, fetchData }) {
           },
           body: JSON.stringify({ ...formData, id: intervention.id }),
         }
-      )
-      .then((res)=>res.json())
-      .then((data)=>{
-        console.log(data);
-        fetchData(u);
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("הטיפול עודכן בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          fetchData(u);
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
       });
     });
   };
@@ -146,6 +162,7 @@ function EditIntervention({ intervention, fetchData }) {
           </div>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </>
   );
 }

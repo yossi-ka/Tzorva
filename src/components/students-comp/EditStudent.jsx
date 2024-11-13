@@ -2,19 +2,20 @@ import classes from "../../css/student.module.css";
 import React, { useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-function EditStudent({ student, setShowEditStudent, getstud }) {
+function EditStudent({ student, setShowEditStudent, getstud, setAlert }) {
   const fathersPhoneRef = useRef();
   const cityOfSchoolRef = useRef();
   const classRef = useRef();
   const urgencyRef = useRef();
+
+  const { setOpenAlert, setMessags, setState } = setAlert;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const auth = getAuth();
-    onAuthStateChanged(auth, async (user) => {
-      const idToken = await user.getIdToken();
-      console.log("token", idToken);
-      console.log("uid", user.uid);
+    onAuthStateChanged(auth, async (u) => {
+      const idToken = await u.getIdToken();
 
       const formData = {};
 
@@ -26,8 +27,8 @@ function EditStudent({ student, setShowEditStudent, getstud }) {
         formData.city_of_school = cityOfSchoolRef.current.value;
       }
 
-      if (classRef.current.value !== student.class) {
-        formData.class = classRef.current.value;
+      if (classRef.current.value !== student.class_school) {
+        formData.class_school = classRef.current.value;
       }
 
       if (urgencyRef.current.value !== student.urgency) {
@@ -36,20 +37,35 @@ function EditStudent({ student, setShowEditStudent, getstud }) {
       formData.student_id = student.student_id;
       setShowEditStudent(false);
 
-      await fetch(`https://editstudent`, {
-        method: "POST",
-        headers: {
-          uid: user.uid,
-          authorization: `Bearer ${idToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-        .then((res) => res.json())
-        .then((d) => {
-          console.log(d.message);
-          getstud(user);
-        });
+      await fetch(
+        `https://editstudent${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
+        {
+          method: "POST",
+          headers: {
+            uid: u.uid,
+            authorization: `Bearer ${idToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("פרטי התלמיד עודכנו בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          getstud();
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
 
@@ -115,7 +131,7 @@ function EditStudent({ student, setShowEditStudent, getstud }) {
           type="text"
           id="class"
           name="class"
-          defaultValue={student.class}
+          defaultValue={student.class_school}
         >
           <option value="גן">גן</option>
           <option value="מכינה">מכינה</option>

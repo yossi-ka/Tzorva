@@ -3,9 +3,13 @@ import React, { useRef, useState } from "react";
 import { expensesArr, revenuesArr } from "./AddFinance";
 import { formatDateToHebrew } from "../../services/date";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SnackbarMUI from "../../services/SnackbarMUI";
 
 function EditFinance({ finance, fetchData }) {
   const [showEditForm, setShowEditForm] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messags, setMessags] = useState("");
+  const [state, setState] = useState("");
 
   const categoryRef = useRef();
   const amountRef = useRef();
@@ -42,12 +46,24 @@ function EditFinance({ finance, fetchData }) {
           },
           body: JSON.stringify({ ...formData, finance_id: finance.id }),
         }
-      )
-        .then((res) => res.json())
-        .then((d) => {
-          console.log(d);
-          d.success && fetchData(u);
-        });
+      ).then((res) => {
+        if (res.ok) {
+          setMessags("השינויים נשמרו בהצלחה");
+          setState("success");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+          fetchData(u);
+        } else {
+          setMessags("שגיאה, אנא נסה שוב");
+          setState("error");
+          setOpenAlert(true);
+          setTimeout(() => {
+            setOpenAlert(false);
+          }, 4000);
+        }
+      });
     });
   };
   return (
@@ -55,7 +71,6 @@ function EditFinance({ finance, fetchData }) {
       <button className={classes.editBtn} onClick={() => setShowEditForm(true)}>
         📝 ערוך
       </button>
-
       {showEditForm && (
         <>
           <div className={classes.overlay}></div>
@@ -121,6 +136,7 @@ function EditFinance({ finance, fetchData }) {
           </div>
         </>
       )}
+      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </>
   );
 }

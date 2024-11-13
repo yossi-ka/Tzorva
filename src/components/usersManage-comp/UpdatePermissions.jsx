@@ -2,11 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import classes from "../../css/users.module.css";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
+function UpdatePermissions({
+  setShowUpdatePermissions,
+  user,
+  getuse,
+  setAlert,
+}) {
   const [currentPermissions, setCurrentPermissions] = useState(false);
   const [studentList, setStudentList] = useState([]);
   const [studentIdList1, setStudentIdList1] = useState([]);
   const [studentIdList2, setStudentIdList2] = useState([]);
+
+  const { setOpenAlert, setState, setMessags } = setAlert;
 
   const deleteInterventionRef = useRef();
   const financeRef = useRef();
@@ -19,13 +26,14 @@ function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
     const getStude = async () => {
       const auth = getAuth();
       onAuthStateChanged(auth, async (u) => {
+        const idToken = await u.getIdToken();
         await fetch(
           `https://getstudents${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
           {
             method: "GET",
             headers: {
               uid: u.uid,
-              authorization: `Bearer ${u.getIdToken()}`,
+              authorization: `Bearer ${idToken}`,
               "Content-Type": "application/json",
             },
           }
@@ -106,12 +114,24 @@ function UpdatePermissions({ setShowUpdatePermissions, user, getuse }) {
               access_permissions: newPermissions,
             }),
           }
-        )
-          .then((res) => res.json())
-          .then((d) => {
-            console.log(d.message);
+        ).then((res) => {
+          if (res.ok) {
+            setMessags("פרטי המשתמש עודכנו בהצלחה");
+            setState("success");
+            setOpenAlert(true);
+            setTimeout(() => {
+              setOpenAlert(false);
+            }, 4000);
             getuse(u);
-          });
+          } else {
+            setMessags("שגיאה, אנא נסה שוב");
+            setState("error");
+            setOpenAlert(true);
+            setTimeout(() => {
+              setOpenAlert(false);
+            }, 4000);
+          }
+        });
       }
     });
   };
