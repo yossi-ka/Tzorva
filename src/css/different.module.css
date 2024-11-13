@@ -77,3 +77,19 @@
 .select:hover {
   background-color: #e5e7eb;
 }
+
+/*  ייצוא לאקסל  */
+.exportExcel {
+  margin: 10px;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.exportExcel:hover {
+  background-color: #45a049;
+}

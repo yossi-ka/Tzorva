@@ -10,6 +10,7 @@ import he_IL from "antd/lib/locale/he_IL";
 import getSearchColumn from "../services/SearchANT";
 import { formatDateToHebrew } from "../services/date";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import ExportToExcel from "../services/ExportToExcel";
 
 function Intervention() {
   const [interventionToShow, setInterventionToShow] = useState([]);
@@ -47,8 +48,8 @@ function Intervention() {
               "Content-Type": "application/json",
             },
           }
-        ).then((res) => {
-          const data = res.json();
+        ).then( async(res) => {
+          const data = await res.json();
 
           const sortData = data.message.sort((a, b) => b.time - a.time);
 
@@ -135,6 +136,13 @@ function Intervention() {
           >
             הצג את כל התלמידים
           </button>
+        )}
+        {interventionToShow.length > 0 && (
+          <ExportToExcel
+            items={interventionToShow}
+            data="Interventions data"
+            fileName="interventions-tzorva.xlsx"
+          />
         )}
         <AddIntervention fetchData={fetchData} />
       </header>

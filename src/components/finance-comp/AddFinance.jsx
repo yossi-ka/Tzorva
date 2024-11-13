@@ -33,7 +33,7 @@ function AddFinance({ fetchData }) {
       };
       setOpenForm(false);
 
-      const data = await fetch(
+      await fetch(
         `https://addfinance${process.env.REACT_APP_URL_FIREBASE_FUNCTIONS}`,
         {
           method: "POST",

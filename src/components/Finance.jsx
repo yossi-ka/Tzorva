@@ -14,6 +14,7 @@ import { formatDate, formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Balance from "./finance-comp/Balance.jsx";
+import ExportToExcel from "../services/ExportToExcel.jsx";
 
 function Finance() {
   const [allFinance, setAllFinance] = useState([]);
@@ -162,6 +163,11 @@ function Finance() {
           <button onClick={filterByDate}>סנן</button>
         </div>
         <Balance financeToShow={financeToShow} />
+        <ExportToExcel
+          items={financeToShow}
+          fileName="finance-tzorva.xlsx"
+          data="Finance data"
+        />
         <AddFinance fetchData={fetchData} />
       </header>
       <div className={classes.financeContainer}>

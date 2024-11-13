@@ -10,6 +10,9 @@ import DeleteArchive from "./archive-comp/DeleteArchive";
 import { formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { FileExcelOutlined } from "@ant-design/icons";
+import * as XLSX from "xlsx";
+import ExportToExcel from "../services/ExportToExcel";
 
 function Archive() {
   const [archiveToShow, setArchiveToShow] = useState([]);
@@ -107,13 +110,24 @@ function Archive() {
       ),
     },
   ];
+  console.log(archiveToShow);
 
   return (
     <>
       <header className={classes.archiveHeader}>
         <h1 className={classes.archiveTitle}>ארכיון</h1>
-
-        <AddArchive fetchData={fetchData} />
+        <div>
+          {archiveToShow && archiveToShow.length > 0 ? (
+            <ExportToExcel
+              items={archiveToShow}
+              fileName="archive-tzorva.xlsx"
+              data="Archive data"
+            />
+          ) : (
+            <p>טוען נתונים...</p>
+          )}
+          <AddArchive fetchData={fetchData} />
+        </div>
       </header>
       <div className={classes.archiveContainer}>
         <div className={classes.archiveTable} dir="rtl">
