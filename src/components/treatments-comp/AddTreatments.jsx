@@ -1,11 +1,11 @@
-import classes from "../../css/intervention.module.css";
+import classes from "../../css/treatment.module.css";
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { UserContext } from "../../App";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import SnackbarMUI from "../../services/SnackbarMUI";
 
-function AddIntervention({ fetchData }) {
+function AddTreatment({ fetchData }) {
   const [studentsArr, setStudentsArr] = useState([]);
   const [tutorsArr, setTutorsArr] = useState([]);
   const [openAlert, setOpenAlert] = useState(false);
@@ -72,7 +72,7 @@ function AddIntervention({ fetchData }) {
     });
   }, [user.UID, manager]);
 
-  const handleAddIntervention = async (e) => {
+  const handleAddTreatment = async (e) => {
     e.preventDefault();
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
@@ -83,7 +83,7 @@ function AddIntervention({ fetchData }) {
       const time = Timestamp.now();
       const date = Timestamp.fromDate(selectedDate);
 
-      const newIntervention = {
+      const newTreatment = {
         student_name: studentRef.current.value,
         tutor_name: manager
           ? tutorRef.current.value
@@ -111,7 +111,7 @@ function AddIntervention({ fetchData }) {
             authorization: `Bearer ${idToken}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(newIntervention),
+          body: JSON.stringify(newTreatment),
         }
       ).then((res) => {
         if (res.ok) {
@@ -137,7 +137,7 @@ function AddIntervention({ fetchData }) {
   return (
     <>
       <button
-        className={classes.addInterventionBtn}
+        className={classes.addTreatmentBtn}
         onClick={() => setOpenForm(true)}
       >
         + הוספת טיפול
@@ -149,8 +149,8 @@ function AddIntervention({ fetchData }) {
             onClick={() => setOpenForm(false)}
           ></div>
           <form
-            onSubmit={handleAddIntervention}
-            className={classes.addInterventionForm}
+            onSubmit={handleAddTreatment}
+            className={classes.addTreatmentForm}
           >
             <h1 className={classes.title}>הוספת טיפול</h1>
             <label htmlFor="date">תאריך טיפול:</label>
@@ -224,4 +224,4 @@ function AddIntervention({ fetchData }) {
   );
 }
 
-export default AddIntervention;
+export default AddTreatment;

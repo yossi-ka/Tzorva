@@ -32,7 +32,7 @@ function SendMessage({ currentCoworker, fetchData }) {
       ).then((res) => {
         if (res.ok) {
           messageRef.current.value = "";
-          setMessags("הטיפול נמחק בהצלחה");
+          setMessags("ההודעה נשלחה בהצלחה");
           setState("success");
           setOpenAlert(true);
           setTimeout(() => {

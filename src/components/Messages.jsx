@@ -115,12 +115,12 @@ function Messages() {
             },
           }
         )
-          .then((res) => res.json())
+          .then(async (res) => await res.json())
           .then((d) => {
-            setAllMessages(d.message);
-
             const coworkersArr = [];
             const unreadMessages = {};
+
+            setAllMessages(d.message);
 
             d.message.forEach((m) => {
               const userName = `${userRef.current.first_name} ${userRef.current.last_name}`;

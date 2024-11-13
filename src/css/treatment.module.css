@@ -1,19 +1,19 @@
-/* intervention.module.css */
+/* treatment.module.css */
 
-.interventionHeader {
+.treatmentHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: -20px 20px 20px 20px;
   font-size: 1rem;
 }
-.interventionContainer {
+.treatmentContainer {
   padding: 20px;
   height: 100%;
   width: 100%;
 }
 
-.interventionTable {
+.treatmentTable {
   height: 600px;
   width: 100%;
   background: white;
@@ -38,14 +38,14 @@
   font-weight: 500;
 }
 
-.interventionTitle {
+.treatmentTitle {
   font-size: 2rem;
 }
 
 /*  add  */
 
 .ahowAllStudentsBtn,
-.addInterventionBtn {
+.addTreatmentBtn {
   color: white; /* צבע טקסט לבן */
   padding: 10px 20px; /* ריפוד */
   border: none; /* ללא גבול */
@@ -55,7 +55,7 @@
   transition: all 0.3s; /* תנועת צבע */
 }
 
-.addInterventionBtn {
+.addTreatmentBtn {
   background-color: #4caf50; /* צבע רקע ירוק */
 }
 
@@ -63,7 +63,7 @@
   background-color: #1c647e; /* צבע רקע כחול כהה */
 }
 
-.addInterventionBtn:hover,
+.addTreatmentBtn:hover,
 .ahowAllStudentsBtn:hover {
   opacity: 0.8;
 }
@@ -78,7 +78,7 @@
   z-index: 1;
 }
 
-.addInterventionForm {
+.addTreatmentForm {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -95,23 +95,23 @@
   gap: 12px;
 }
 
-.addInterventionForm h1 {
+.addTreatmentForm h1 {
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 15px;
   text-align: center;
 }
 
-.addInterventionForm label {
+.addTreatmentForm label {
   font-size: 0.9rem;
   color: #333;
   margin-bottom: 4px;
 }
 
-.addInterventionForm input[type="text"],
-.addInterventionForm input[type="date"],
-.addInterventionForm select,
-.addInterventionForm textarea {
+.addTreatmentForm input[type="text"],
+.addTreatmentForm input[type="date"],
+.addTreatmentForm select,
+.addTreatmentForm textarea {
   width: 100%;
   padding: 6px;
   font-size: 0.9rem;
@@ -120,7 +120,7 @@
   resize: vertical;
 }
 
-.addInterventionForm button {
+.addTreatmentForm button {
   background-color: #2196f3;
   color: white;
   font-size: 1rem;
@@ -132,19 +132,19 @@
   margin-top: 8px;
 }
 
-.addInterventionForm button:hover {
+.addTreatmentForm button:hover {
   background-color: #1e88e5;
 }
 
-.addInterventionForm option {
+.addTreatmentForm option {
   font-size: 0.9rem;
 }
 
-.addInterventionForm select:disabled {
+.addTreatmentForm select:disabled {
   background-color: #f0f0f0;
 }
 
-.addInterventionForm textarea {
+.addTreatmentForm textarea {
   overflow-y: auto;
   min-height: 60px;
   max-height: 100px;

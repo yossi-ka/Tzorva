@@ -10,8 +10,6 @@ import DeleteArchive from "./archive-comp/DeleteArchive";
 import { formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { FileExcelOutlined } from "@ant-design/icons";
-import * as XLSX from "xlsx";
 import ExportToExcel from "../services/ExportToExcel";
 
 function Archive() {

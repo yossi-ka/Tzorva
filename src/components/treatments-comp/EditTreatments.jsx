@@ -1,11 +1,11 @@
-import classes from "../../css/intervention.module.css";
+import classes from "../../css/treatment.module.css";
 import React, { useRef, useState, useContext } from "react";
 import { formatDateToHebrew } from "../../services/date";
 import { UserContext } from "../../App";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import SnackbarMUI from "../../services/SnackbarMUI";
 
-function EditIntervention({ intervention, fetchData }) {
+function EditTreatment({ intervention, fetchData }) {
   const { user } = useContext(UserContext);
   const manager =
     user.job_title === "מנהל ארגון" ||
@@ -167,4 +167,4 @@ function EditIntervention({ intervention, fetchData }) {
   );
 }
 
-export default EditIntervention;
+export default EditTreatment;

@@ -1,20 +1,20 @@
-import classes from "../css/intervention.module.css";
+import classes from "../css/treatment.module.css";
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import { UserContext } from "../App";
 import { useNavigate, useParams } from "react-router-dom";
 import { ConfigProvider, Table } from "antd";
-import AddIntervention from "./intervention-comp/AddIntervention";
-import DeleteIntervention from "./intervention-comp/DeleteIntervention";
-import EditIntervention from "./intervention-comp/EditIntervention";
+import AddTreatments from "./treatments-comp/AddTreatments";
+import DeleteTreatment from "./treatments-comp/DeleteTreatments";
+import EditTreatment from "./treatments-comp/EditTreatments";
 import he_IL from "antd/lib/locale/he_IL";
 import getSearchColumn from "../services/SearchANT";
 import { formatDateToHebrew } from "../services/date";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ExportToExcel from "../services/ExportToExcel";
 
-function Intervention() {
-  const [interventionToShow, setInterventionToShow] = useState([]);
-  const [delete_interventions, setDelete_interventions] = useState(false);
+function Treatments() {
+  const [treatmentsToShow, setTreatmentsToShow] = useState([]);
+  const [delete_treatments, setDelete_treatments] = useState(false);
   const { user } = useContext(UserContext);
   const manager =
     user.job_title === "יועץ" ||
@@ -48,12 +48,12 @@ function Intervention() {
               "Content-Type": "application/json",
             },
           }
-        ).then( async(res) => {
+        ).then(async (res) => {
           const data = await res.json();
 
           const sortData = data.message.sort((a, b) => b.time - a.time);
 
-          setInterventionToShow(sortData);
+          setTreatmentsToShow(sortData);
         });
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -63,7 +63,7 @@ function Intervention() {
   );
 
   useEffect(() => {
-    setDelete_interventions(
+    setDelete_treatments(
       user?.access_permissions?.actions?.delete_interventions === true
     );
     document.title = "טיפולים";
@@ -116,9 +116,9 @@ function Intervention() {
       key: "actions",
       render: (text, record) => (
         <div className={classes.rowActions}>
-          <EditIntervention intervention={record} fetchData={fetchData} />
-          {delete_interventions && (
-            <DeleteIntervention intervention={record} fetchData={fetchData} />
+          <EditTreatment treatment={record} fetchData={fetchData} />
+          {delete_treatments && (
+            <DeleteTreatment treatment={record} fetchData={fetchData} />
           )}
         </div>
       ),
@@ -127,34 +127,33 @@ function Intervention() {
 
   return (
     <>
-      <header className={classes.interventionHeader}>
-        <h1 className={classes.interventionTitle}>טיפולים</h1>
+      <header className={classes.treatmentHeader}>
+        <h1 className={classes.treatmentTitle}>טיפולים</h1>
         {rest && (
           <button
             className={classes.ahowAllStudentsBtn}
-            onClick={() => navigate("/intervention")}
+            onClick={() => navigate("/treatments")}
           >
             הצג את כל התלמידים
           </button>
         )}
-        {interventionToShow.length > 0 && (
+        {treatmentsToShow.length > 0 && (
           <ExportToExcel
-            items={interventionToShow}
-            data="Interventions data"
-            fileName="interventions-tzorva.xlsx"
+            items={treatmentsToShow}
+            data="treatments data"
+            fileName="treatments-tzorva.xlsx"
           />
         )}
-        <AddIntervention fetchData={fetchData} />
+        <AddTreatments fetchData={fetchData} />
       </header>
-      <div className={classes.interventionContainer}>
-        <div className={classes.interventionTable} dir="rtl">
+      <div className={classes.treatmentContainer}>
+        <div className={classes.treatmentTable} dir="rtl">
           <ConfigProvider locale={he_IL} diraction="rtl">
             <Table
               columns={columns}
               pagination={{ pageSize: 10 }}
-              dataSource={interventionToShow}
+              dataSource={treatmentsToShow}
               bordered
-              className={classes.interventionTable}
               rowKey={(record) => record.id}
               locale={{ emptyText: "לא קיימים טיפולים" }}
               expandable={{
@@ -178,4 +177,4 @@ function Intervention() {
   );
 }
 
-export default Intervention;
+export default Treatments;

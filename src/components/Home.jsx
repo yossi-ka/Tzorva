@@ -93,9 +93,9 @@ function Home() {
           </div>
         )}
 
-        <div className={`${classes.option} ${classes.interventionArea}`}>
+        <div className={`${classes.option} ${classes.treatmentArea}`}>
           <div
-            className={`${classes.interventionsAreaTitle} ${classes.areaTitle}`}
+            className={`${classes.treatmentsAreaTitle} ${classes.areaTitle}`}
           >
             <h1 className={classes.h1}>טיפולים</h1>
             <span
@@ -110,8 +110,8 @@ function Home() {
               צפייה בדוחו"ת טיפולים, עדכון והוספת טיפולים לתלמידים.
             </p>
             <button
-              className={`${classes.interventionsBtn} ${classes.btn}`}
-              onClick={() => navigate("/intervention")}
+              className={`${classes.treatmentsBtn} ${classes.btn}`}
+              onClick={() => navigate("/treatments")}
             >
               כניסה לטיפולים
             </button>

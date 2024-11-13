@@ -1,14 +1,14 @@
-import classes from "../../css/intervention.module.css";
+import classes from "../../css/treatment.module.css";
 import React, { useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import SnackbarMUI from "../../services/SnackbarMUI";
 
-function DeleteIntervention({ intervention, fetchData }) {
+function DeleteTreatment({ intervention, fetchData }) {
   const [showWarningForm, setShowWarningForm] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [messags, setMessags] = useState("");
   const [state, setState] = useState("");
-  const handleDeleteIntervention = async (inter) => {
+  const handleDeleteTreatment = async (inter) => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
@@ -64,7 +64,7 @@ function DeleteIntervention({ intervention, fetchData }) {
             <div className={classes.deleteBtns}>
               <button
                 className={classes.deleteBtn}
-                onClick={() => handleDeleteIntervention(intervention)}
+                onClick={() => handleDeleteTreatment(intervention)}
               >
                 מחק
               </button>
@@ -83,4 +83,4 @@ function DeleteIntervention({ intervention, fetchData }) {
   );
 }
 
-export default DeleteIntervention;
+export default DeleteTreatment;
