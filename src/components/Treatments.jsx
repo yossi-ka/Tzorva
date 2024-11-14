@@ -11,10 +11,12 @@ import getSearchColumn from "../services/SearchANT";
 import { formatDateToHebrew } from "../services/date";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ExportToExcel from "../services/ExportToExcel";
+import { CircularProgress } from "@mui/material";
 
 function Treatments() {
   const [treatmentsToShow, setTreatmentsToShow] = useState([]);
   const [delete_treatments, setDelete_treatments] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
   const manager =
     user.job_title === "יועץ" ||
@@ -50,9 +52,8 @@ function Treatments() {
           }
         ).then(async (res) => {
           const data = await res.json();
-
           const sortData = data.message.sort((a, b) => b.time - a.time);
-
+          setLoading(false);
           setTreatmentsToShow(sortData);
         });
       } catch (error) {
@@ -72,6 +73,10 @@ function Treatments() {
       fetchData(u);
     });
   }, [rest, user, fetchData]);
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   const columns = [
     {
@@ -155,7 +160,9 @@ function Treatments() {
               dataSource={treatmentsToShow}
               bordered
               rowKey={(record) => record.id}
-              locale={{ emptyText: "לא קיימים טיפולים" }}
+              locale={{
+                emptyText: loading ? <CircularProgress /> : "לא קיימים טיפולים",
+              }}
               expandable={{
                 expandedRowRender: (record) => (
                   <p

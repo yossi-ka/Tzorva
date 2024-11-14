@@ -11,6 +11,7 @@ import { UserContext } from "../App";
 import { useNotification } from "./message-comp/NotificationContext";
 import { formatTime } from "../services/date";
 import SendMessage from "./message-comp/SendMessage";
+import { CircularProgress } from "@mui/material";
 
 function Messages() {
   const { user } = useContext(UserContext);
@@ -19,16 +20,12 @@ function Messages() {
   const [allMessages, setAllMessages] = useState([]);
   const [messages, setMessages] = useState([]);
   const [currentCoworker, setCurrentCoworker] = useState("");
+  const [loadingCoworkers, setLoadingCoworkers] = useState(false); //loadingCoworkers
 
   const userRef = useRef();
   const currentCoworkerRef = useRef();
   const isFirstRender = useRef(true);
   const messagesRef = useRef(null);
-
-  useEffect(() => {
-    userRef.current = user;
-    currentCoworkerRef.current = currentCoworker;
-  }, [user, currentCoworker]);
 
   const updateMessage = useCallback((messArrToUpdate) => {
     const auth = getAuth();
@@ -92,7 +89,6 @@ function Messages() {
         }
         updateMessage(messArrToUpdate);
       }
-
       setMessages(filteredArr);
       setCurrentCoworker(co);
     },
@@ -157,7 +153,7 @@ function Messages() {
               if (!unreadMessages[a.name] && unreadMessages[b.name]) return 1;
               return 0;
             });
-
+            setLoadingCoworkers(false);
             setCoworkers(sortedCoworkers);
 
             if (currentCoworkerRef.current) {
@@ -195,6 +191,15 @@ function Messages() {
     }
   }, [fetchData, user]);
 
+  useEffect(() => {
+    userRef.current = user;
+    currentCoworkerRef.current = currentCoworker;
+  }, [user, currentCoworker]);
+
+  useEffect(() => {
+    setLoadingCoworkers(true);
+  }, []);
+
   return (
     <div className={classes.messagesContainer}>
       <h1 className={classes.h1Mess}>ברוכים הבאים למערכת ההודעות של צורבא</h1>
@@ -203,6 +208,11 @@ function Messages() {
       </p>
       <div className={classes.messContainer}>
         <aside>
+          {loadingCoworkers && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress color="inherit" size={30} sx={{ m: 2 }} />
+            </div>
+          )}
           {coworkers.map((co, i) => {
             return (
               <div

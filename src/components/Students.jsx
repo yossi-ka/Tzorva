@@ -7,6 +7,7 @@ import { UserContext } from "../App";
 import AddStudentBtn from "./students-comp/AddStudentBtn";
 import SearchField from "../services/SearchField";
 import SortStudents from "./students-comp/SortStudents";
+import { CircularProgress } from "@mui/material";
 
 function Students() {
   const { user } = useContext(UserContext);
@@ -16,6 +17,7 @@ function Students() {
   const [showDocs, setShowDocs] = useState(false);
   const [students, setStudents] = useState([]);
   const [studentsToShow, setStudentsToShow] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getstud = () => {
     const auth = getAuth();
@@ -37,6 +39,7 @@ function Students() {
         )
           .then((res) => res.json())
           .then((d) => {
+            setLoading(false);
             setStudents(d.message);
             setStudentsToShow(d.message);
           });
@@ -45,6 +48,10 @@ function Students() {
       }
     });
   };
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   useEffect(() => {
     document.title = "תלמידים";
@@ -75,6 +82,7 @@ function Students() {
         <div>{addStudent && <AddStudentBtn getstud={getstud} />}</div>
       </div>
 
+      {loading && <CircularProgress sx={{ m: "3rem" }} />}
       <div className={classes.studentsContainer}>
         {studentsToShow.map((student, index) => {
           return (

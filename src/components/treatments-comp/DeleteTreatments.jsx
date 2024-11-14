@@ -8,7 +8,7 @@ function DeleteTreatment({ intervention, fetchData }) {
   const [openAlert, setOpenAlert] = useState(false);
   const [messags, setMessags] = useState("");
   const [state, setState] = useState("");
-  const handleDeleteTreatment = async (inter) => {
+  const handleDeleteTreatment = async (treat) => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
       const idToken = await u.getIdToken();
@@ -25,9 +25,9 @@ function DeleteTreatment({ intervention, fetchData }) {
             Authorization: `Bearer ${idToken}`,
             uid: u.uid,
           },
-          body: JSON.stringify(inter),
+          body: JSON.stringify(treat),
         }
-      ).then((res) => {
+      ).then(async (res) => {
         if (res.ok) {
           setMessags("הטיפול נמחק בהצלחה");
           setState("success");

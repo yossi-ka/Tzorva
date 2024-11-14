@@ -15,11 +15,13 @@ import searchProps from "../services/SearchANT";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Balance from "./finance-comp/Balance.jsx";
 import ExportToExcel from "../services/ExportToExcel.jsx";
+import { CircularProgress } from "@mui/material";
 
 function Finance() {
   const [allFinance, setAllFinance] = useState([]);
   const [financeToShow, setFinanceToShow] = useState([]);
   const [showHebDate, setShowHebDate] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const fromDateRef = useRef();
@@ -46,6 +48,7 @@ function Finance() {
       const sortData = data.message.sort(
         (a, b) => new Date(a.time).getTime() + new Date(b.time).getTime()
       );
+      setLoading(false);
       setAllFinance(sortData);
       setFinanceToShow(sortData);
     } catch (error) {
@@ -65,6 +68,10 @@ function Finance() {
     });
     setFinanceToShow(filteredData);
   };
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   useEffect(() => {
     const access_permissions = user?.access_permissions;
@@ -186,7 +193,13 @@ function Finance() {
               bordered
               className={classes.financeTable}
               rowKey={(id) => id.id}
-              locale={{ emptyText: "אין נתונים פיננסים" }}
+              locale={{
+                emptyText: loading ? (
+                  <CircularProgress />
+                ) : (
+                  "אין נתונים פיננסים"
+                ),
+              }}
             />
           </ConfigProvider>
         </div>

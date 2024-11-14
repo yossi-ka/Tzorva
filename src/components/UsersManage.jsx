@@ -6,6 +6,7 @@ import AddUserBtn from "./usersManage-comp/AddUserBtn";
 import SearchField from "../services/SearchField";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 function UsersManage() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function UsersManage() {
   const { user } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [usersToShow, setUsersToShow] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getuse = async (u) => {
     if (!u) {
@@ -37,9 +39,7 @@ function UsersManage() {
       );
 
       const usersData = await response.json();
-      if (!response.ok) {
-        throw new Error(response.message);
-      }
+      setLoading(false);
       setUsers(usersData.message);
       setUsersToShow(usersData.message);
     } catch (error) {
@@ -59,6 +59,11 @@ function UsersManage() {
     document.title = "ניהול משתמשים";
   }, [user, navigate]);
 
+  useEffect(() => {
+    document.title = "ניהול משתמשים";
+    setLoading(true);
+  }, []);
+
   return (
     <div>
       <div className={classes.headerAddUserBtn}>
@@ -70,7 +75,7 @@ function UsersManage() {
         />
         <AddUserBtn getUsers={getuse} />
       </div>
-
+      {loading && <CircularProgress sx={{ m: "3rem" }} />}
       <div className={classes.userContainer}>
         {usersToShow.map((user, index) => (
           <UserCard key={index} user={user} getuse={getuse} />

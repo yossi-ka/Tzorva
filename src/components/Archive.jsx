@@ -11,9 +11,11 @@ import { formatDateToHebrew } from "../services/date";
 import searchProps from "../services/SearchANT";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ExportToExcel from "../services/ExportToExcel";
+import { CircularProgress } from "@mui/material";
 
 function Archive() {
   const [archiveToShow, setArchiveToShow] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -36,7 +38,7 @@ function Archive() {
       const sortData = data.message.sort(
         (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
       );
-
+      setLoading(false);
       setArchiveToShow(sortData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -56,6 +58,11 @@ function Archive() {
     });
     document.title = "ארכיון";
   }, [navigate, user]);
+
+  useEffect(() => {
+    document.title = "ארכיון";
+    setLoading(true);
+  }, []);
 
   const columns = [
     {
@@ -108,7 +115,6 @@ function Archive() {
       ),
     },
   ];
-  console.log(archiveToShow);
 
   return (
     <>
@@ -137,7 +143,9 @@ function Archive() {
               bordered
               className={classes.archiveTable}
               rowKey={(record) => record.student_id}
-              locale={{ emptyText: "לא קיימים תיעודים" }}
+              locale={{
+                emptyText: loading ? <CircularProgress /> : "לא קיימים תיעודים",
+              }}
               expandable={{
                 expandedRowRender: (record) => (
                   <p
