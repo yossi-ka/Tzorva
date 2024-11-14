@@ -11,55 +11,77 @@ const corsHandler = cors({
   origin: true,
   credentials: true,
   methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "uid"],
 });
 
-// פונקציה למחיקת הודעות ישנות
-export const deleteOldMessages = onRequest((req, res) => {
+// פונקציה לעריכת פרופיל
+export const editProfile = onRequest(async (req, res) => {
   corsHandler(req, res, async () => {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader)
-      return res.status(403).send({
-        success: false,
-        message: "לא נשלח אימות בבקשה",
-      });
-
-    if (authHeader !== "LhvaOjtO9ySzkrkUtPkEiN7CilO2") {
-      return res.status(403).send({
-        success: false,
-        message: "האימות שנשלח אינו תקין",
-      });
-    }
-
-    //  מחיקת ההודעות
     try {
-      const messageRef = db.collection("messages");
+      const uid = req.headers.uid;
+      const authHeader = req.headers.authorization;
+      const profile = req.body;
 
-      const querySnapshot = await messageRef.get();
+      if (!uid) {
+        return res.status(403).json({
+          success: false,
+          message: "לא נשלח אימות uid בבקשה",
+        });
+      }
 
-      querySnapshot.forEach(async (doc) => {
-        const mess = doc.data();
-        const now = new Date();
-        const messageDate = new Date(mess.read_time);
+      if (!authHeader) {
+        return res.status(403).json({
+          success: false,
+          message: "לא נשלח אימות Token בבקשה",
+        });
+      }
 
-        // מחיקה לאחר 14 ימים (1000 מילישניות * 60 שניות * 60 דקות * 24 שעות * 14 ימים)
-        if (
-          now.getTime() - messageDate.getTime() > 1000 * 60 * 60 * 24 * 14 &&
-          mess.is_read === true
-        ) {
-          await doc.ref.delete();
-        }
-      });
+      const idToken = authHeader.startsWith("Bearer ")
+        ? authHeader.split(" ")[1]
+        : null;
 
-      res.status(200).send({
+      let user;
+      try {
+        user = await admin.auth().verifyIdToken(idToken);
+      } catch (error) {
+        return res.status(401).json({
+          success: false,
+          message: "שגיאה באימות ה-ID Token",
+        });
+      }
+
+      if (uid !== user.uid) {
+        return res.status(403).json({
+          success: false,
+          message: "משתמש לא מאומת",
+        });
+      }
+
+      // שליפת נתוני משתמש
+      const querySnapshot = await db
+        .collection("users")
+        .where("UID", "==", uid)
+        .get();
+
+      if (querySnapshot.empty) {
+        return res.status(404).json({
+          success: false,
+          message: "משתמש לא ידוע",
+        });
+      }
+
+      // עריכת הפרופיל
+      const docRef = querySnapshot.docs[0].ref;
+      await docRef.update(profile);
+      return res.status(200).json({
         success: true,
-        message: "ההודעות נמחקו בהצלחה",
+        message: "הפרופיל עודכן בהצלחה",
       });
-    } catch (err) {
-      res.status(500).send({
+    } catch (error) {
+      return res.status(500).json({
         success: false,
-        message: "שגיאה בזמן מחיקת ההודעות",
+        message: "שגיאה בעריכת הפרופיל",
+        error: error.message,
       });
     }
   });

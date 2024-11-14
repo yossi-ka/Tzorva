@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { UserContext } from "../App.js";
 import { login } from "../data-base/authentication.js";
 import { useNavigate } from "react-router-dom";
-// import { findUserByUID } from "../data-base/select.js";
 
 function Login() {
   const { setUser } = useContext(UserContext);

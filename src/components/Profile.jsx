@@ -4,23 +4,33 @@ import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import ChangePassword from "./profile-comp/ChangePassword";
 import EditProfile from "./profile-comp/EditProfile";
+import SnackbarMUI from "../services/SnackbarMUI";
 
 function Profile() {
   const navigate = useNavigate();
   const [updateProfile, setUpdateProfile] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [state, setState] = useState("");
   const { user } = useContext(UserContext);
+
+  const handleAlert = {
+    setOpenAlert,
+    setMessage,
+    setState,
+  };
+
   useEffect(() => {
     document.title = "פרופיל משתמש";
   });
+
   useEffect(() => {
     if (updateProfile || changePassword) {
-      // הוספת מחלקה בעת הצורך
       document
         .querySelector(`.${classes.container}`)
         .classList.add(classes.disabled);
     } else {
-      // הסרת מחלקה בעת הצורך
       document
         .querySelector(`.${classes.container}`)
         .classList.remove(classes.disabled);
@@ -64,10 +74,22 @@ function Profile() {
           </button>
         </div>
       </div>
-      {updateProfile && <EditProfile setUpdateProfile={setUpdateProfile} />}
+      {updateProfile && (
+        <EditProfile
+          setUpdateProfile={setUpdateProfile}
+          handleAlert={handleAlert}
+        />
+      )}
 
       {changePassword && (
-        <ChangePassword setChangePassword={setChangePassword} />
+        <ChangePassword
+          setChangePassword={setChangePassword}
+          handleAlert={handleAlert}
+        />
+      )}
+
+      {openAlert && (
+        <SnackbarMUI openAlert={openAlert} message={message} state={state} />
       )}
     </>
   );

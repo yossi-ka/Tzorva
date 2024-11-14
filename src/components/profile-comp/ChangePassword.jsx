@@ -5,18 +5,17 @@ import {
   updateUserPassword,
   getCurrentPassword,
 } from "../../data-base/authentication";
-import SnackbarMUI from "../../services/SnackbarMUI";
 
-function ChangePassword({ setChangePassword }) {
+function ChangePassword({ setChangePassword, handleAlert }) {
   const { user } = useContext(UserContext);
   const [showDifferentPasswords, setShowDifferentPasswords] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [messags, setMessags] = useState("");
-  const [state, setState] = useState("");
+
   const oldPasswordRef = useRef();
   const newPasswordRef = useRef();
   const confirmPasswordRef = useRef();
+
+  const { setOpenAlert, setMessage, setState } = handleAlert;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,10 +33,10 @@ function ChangePassword({ setChangePassword }) {
       setChangePassword(false);
       setOpenAlert(true);
       setState("success");
-      setMessags("הסיסמה שונתה בהצלחה");
+      setMessage("הסיסמה שונתה בהצלחה");
       setTimeout(() => {
         setOpenAlert(false);
-      });
+      }, 3000);
     } else {
       setShowError(true);
     }
@@ -93,7 +92,6 @@ function ChangePassword({ setChangePassword }) {
           </button>
         </div>
       </form>
-      {openAlert && <SnackbarMUI state={state} message={messags} />}
     </div>
   );
 }
