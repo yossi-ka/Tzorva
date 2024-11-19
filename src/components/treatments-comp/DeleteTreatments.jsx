@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import SnackbarMUI from "../../services/SnackbarMUI";
 
-function DeleteTreatment({ intervention, fetchData }) {
+function DeleteTreatment({ treatment, fetchData }) {
   const [showWarningForm, setShowWarningForm] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [messags, setMessags] = useState("");
   const [state, setState] = useState("");
+  
   const handleDeleteTreatment = async (treat) => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (u) => {
@@ -64,7 +65,7 @@ function DeleteTreatment({ intervention, fetchData }) {
             <div className={classes.deleteBtns}>
               <button
                 className={classes.deleteBtn}
-                onClick={() => handleDeleteTreatment(intervention)}
+                onClick={() => handleDeleteTreatment(treatment)}
               >
                 מחק
               </button>

@@ -11,6 +11,7 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import SnackbarMUI from "../../services/SnackbarMUI";
+import Documents from "../Documents";
 
 function StudentCard({
   student,
@@ -23,6 +24,7 @@ function StudentCard({
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [showEditStudent, setShowEditStudent] = useState(false);
+  const [openDocs, setOpenDocs] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [messags, setMessags] = useState("");
   const [state, setState] = useState("");
@@ -106,7 +108,10 @@ function StudentCard({
             </div>
           )}
           {showDocs && (
-            <div className={classes.optionCard}>
+            <div
+              className={classes.optionCard}
+              onClick={() => setOpenDocs(true)}
+            >
               <FileOutlined />
             </div>
           )}
@@ -181,6 +186,8 @@ function StudentCard({
       )}
 
       {openAlert && <SnackbarMUI state={state} message={messags} />}
+
+      {showDocs && openDocs && <Documents studentName={student.first_name+' '+student.last_name} setOpenDocs={setOpenDocs} studentId={student.student_id} />}
     </>
   );
 }

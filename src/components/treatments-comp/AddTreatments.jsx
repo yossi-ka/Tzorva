@@ -2,7 +2,6 @@ import classes from "../../css/treatment.module.css";
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { UserContext } from "../../App";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Timestamp } from "firebase/firestore";
 import SnackbarMUI from "../../services/SnackbarMUI";
 
 function AddTreatment({ fetchData }) {
@@ -79,9 +78,7 @@ function AddTreatment({ fetchData }) {
       const idToken = await u.getIdToken();
       const selectedDate = new Date(dateRef.current.value);
 
-      // Create Firestore Timestamp objects
-      const time = Timestamp.now();
-      const date = Timestamp.fromDate(selectedDate);
+      const date = new Date();
 
       const newTreatment = {
         student_name: studentRef.current.value,
@@ -93,7 +90,7 @@ function AddTreatment({ fetchData }) {
           : user.user_id,
         intervention_title: titleRef.current.value,
         intervention_description: descriptionRef.current.value,
-        time,
+        time: selectedDate,
         date,
         place: placeRef.current.value,
         student_id: studentsArr.find(

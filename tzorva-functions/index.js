@@ -11,76 +11,104 @@ const corsHandler = cors({
   origin: true,
   credentials: true,
   methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT"],
-  allowedHeaders: ["Content-Type", "Authorization", "uid"],
+  allowedHeaders: ["Content-Type", "Authorization", "uid", "student_id"],
 });
 
-// פונקציה לעריכת פרופיל
-export const editProfile = onRequest(async (req, res) => {
+// פונקציה לקבלת מסמכים
+export const getDocuments = onRequest((req, res) => {
   corsHandler(req, res, async () => {
-    try {
-      const uid = req.headers.uid;
-      const authHeader = req.headers.authorization;
-      const profile = req.body;
+    const uid = req.headers.uid;
+    const authHeader = req.headers.authorization;
+    const studentId = req.headers.student_id;
 
-      if (!uid) {
-        return res.status(403).json({
-          success: false,
-          message: "לא נשלח אימות uid בבקשה",
-        });
-      }
+    if (!studentId) {
+      return res.status(400).send({
+        success: false,
+        message: "studentId חסר בבקשה",
+      });
+    }
 
-      if (!authHeader) {
-        return res.status(403).json({
-          success: false,
-          message: "לא נשלח אימות Token בבקשה",
-        });
-      }
+    if (!uid)
+      return res.status(403).send({
+        success: false,
+        message: "לא נשלח אימות uid בבקשה",
+      });
 
-      const idToken = authHeader.startsWith("Bearer ")
+    if (!authHeader)
+      return res.status(403).send({
+        success: false,
+        message: "לא נשלח אימות Token בבקשה",
+      });
+
+    const idToken =
+      authHeader && authHeader.startsWith("Bearer ")
         ? authHeader.split(" ")[1]
         : null;
 
-      let user;
-      try {
-        user = await admin.auth().verifyIdToken(idToken);
-      } catch (error) {
-        return res.status(401).json({
+    let user;
+    try {
+      user = await admin.auth().verifyIdToken(idToken);
+    } catch (error) {
+      return res.status(401).send({
+        success: false,
+        message: "שגיאה באימות ה-ID Token",
+      });
+    }
+    const uidFromIdtoken = user.uid;
+    if (uid !== uidFromIdtoken) {
+      return res.status(403).send({
+        success: false,
+        message: "משתמש לא מאומת",
+      });
+    }
+
+    //  שליפת נתוני משתמש מ-firestore עפ"י uid
+    let userData = null;
+    try {
+      const q = db.collection("users").where("UID", "==", uid);
+      const querySnapshot = await q.get();
+      userData = querySnapshot.docs[0].data();
+    } catch (err) {
+      return res.status(500).send({
+        success: false,
+        message: "משתמש לא ידוע",
+      });
+    }
+
+    if (userData.job_title === "מטפל") {
+      return res.status(403).send({
+        success: false,
+        message: "אין הרשאה לקבלת מסמכים",
+      });
+    }
+
+    //  שליפת המסמכים
+    try {
+      const q = db.collection("students").where("student_id", "==", studentId);
+
+      const qs = await q.get();
+      if (qs.empty) {
+        return res.status(404).send({
           success: false,
-          message: "שגיאה באימות ה-ID Token",
+          message: "לא נמצא תלמיד עם studentId זה",
         });
       }
 
-      if (uid !== user.uid) {
-        return res.status(403).json({
+      const studentData = qs.docs[0]?.data();
+      if (!studentData) {
+        return res.status(404).send({
           success: false,
-          message: "משתמש לא מאומת",
+          message: "לא נמצא מידע לתלמיד",
         });
       }
-
-      // שליפת נתוני משתמש
-      const querySnapshot = await db
-        .collection("users")
-        .where("UID", "==", uid)
-        .get();
-
-      if (querySnapshot.empty) {
-        return res.status(404).json({
-          success: false,
-          message: "משתמש לא ידוע",
-        });
-      }
-
-      // עריכת הפרופיל
-      const docRef = querySnapshot.docs[0].ref;
-      await docRef.update(profile);
-      return res.status(200).json({
+      res.status(200).send({
         success: true,
-        message: "הפרופיל עודכן בהצלחה",
+        message: studentData.documents,
       });
     } catch (error) {
-      return res.status(500).json({
+      res.status(500).send({
         success: false,
-        message: "שגיאה בעריכת הפרופיל",
+        message: "שגיאה בזמן שליפת המידע",
         error: error.message,
       });
     }
