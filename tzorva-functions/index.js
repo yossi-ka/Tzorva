@@ -11,22 +11,15 @@ const corsHandler = cors({
   origin: true,
   credentials: true,
   methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT"],
-  allowedHeaders: ["Content-Type", "Authorization", "uid", "student_id"],
+  allowedHeaders: ["Content-Type", "Authorization", "uid"],
 });
 
-// פונקציה לקבלת מסמכים
-export const getDocuments = onRequest((req, res) => {
+// פונקציה למחיקת מסמך
+export const deleteDocument = onRequest((req, res) => {
   corsHandler(req, res, async () => {
     const uid = req.headers.uid;
     const authHeader = req.headers.authorization;
-    const studentId = req.headers.student_id;
-
-    if (!studentId) {
-      return res.status(400).send({
-        success: false,
-        message: "studentId חסר בבקשה",
-      });
-    }
+    const url = req.body.url;
 
     if (!uid)
       return res.status(403).send({
@@ -68,48 +61,53 @@ export const getDocuments = onRequest((req, res) => {
       const q = db.collection("users").where("UID", "==", uid);
       const querySnapshot = await q.get();
       userData = querySnapshot.docs[0].data();
-    } catch (err) {
-      return res.status(500).send({
-        success: false,
-        message: "משתמש לא ידוע",
-      });
-    }
+    } catch (err) {}
 
     if (userData.job_title === "מטפל") {
       return res.status(403).send({
         success: false,
-        message: "אין הרשאה לקבלת מסמכים",
+        message: "אין לך הרשאה למחוק מסמכים",
       });
     }
 
-    //  שליפת המסמכים
+    //  מחיקת המסמך
     try {
-      const q = db.collection("students").where("student_id", "==", studentId);
+      const studentsQuery = await db.collection("students").get();
 
-      const qs = await q.get();
-      if (qs.empty) {
+      const matchingStudentDoc = studentsQuery.docs.find((doc) =>
+        doc.data().documents.some((document) => document.URL === url)
+      );
+
+      if (!matchingStudentDoc) {
         return res.status(404).send({
           success: false,
-          message: "לא נמצא תלמיד עם studentId זה",
+          message: "מסמך לא נמצא",
         });
       }
 
-      const studentData = qs.docs[0]?.data();
-      if (!studentData) {
-        return res.status(404).send({
-          success: false,
-          message: "לא נמצא מידע לתלמיד",
-        });
-      }
+      // לקחת את המסמך הראשון (אמור להיות יחיד)
+      const studentDoc = studentsQuery.docs[0];
+      const studentData = studentDoc.data();
+
+      // סינון המערך להסרת המסמך הספציפי
+      const updatedDocuments = studentData.documents.filter(
+        (doc) => doc.URL !== url
+      );
+
+      // עדכון המסמך עם המערך המעודכן
+      await db
+        .collection("students")
+        .doc(studentDoc.id)
+        .update({ documents: updatedDocuments });
+
       res.status(200).send({
         success: true,
-        message: studentData.documents,
+        message: "המסמך נמחק בהצלחה",
       });
-    } catch (error) {
+    } catch (err) {
       res.status(500).send({
         success: false,
-        message: "שגיאה בזמן שליפת המידע",
-        error: error.message,
+        message: "שגיאה בזמן מחיקת המסמך",
       });
     }
   });

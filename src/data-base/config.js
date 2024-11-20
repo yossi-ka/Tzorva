@@ -14,4 +14,4 @@ const serviceAccount = {
 const app = initializeApp(serviceAccount); // אתחול האפליקציה
 const db = getFirestore(app); // קבלת המופע של Firestore
 
-export { app, db }; // ייצוא db וגם app אם תצטרך את זה
+export { app, db }; 

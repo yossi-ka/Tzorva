@@ -187,7 +187,13 @@ function StudentCard({
 
       {openAlert && <SnackbarMUI state={state} message={messags} />}
 
-      {showDocs && openDocs && <Documents studentName={student.first_name+' '+student.last_name} setOpenDocs={setOpenDocs} studentId={student.student_id} />}
+      {showDocs && openDocs && (
+        <Documents
+          studentName={student.first_name + " " + student.last_name}
+          setOpenDocs={setOpenDocs}
+          studentId={student.student_id}
+        />
+      )}
     </>
   );
 }

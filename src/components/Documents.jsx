@@ -2,7 +2,8 @@ import classes from "../css/documents.module.css";
 import React, { useCallback, useEffect, useState } from "react";
 import AddDoc from "./documents-comp/AddDoc";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { CircularProgress } from "@mui/material";
+import { LinearProgress } from "@mui/material";
+import DocumentCard from "./documents-comp/DocumentCard";
 
 function Documents({ studentName, studentId, setOpenDocs }) {
   const [openAddForm, setOpenAddForm] = useState(false);
@@ -28,7 +29,6 @@ function Documents({ studentName, studentId, setOpenDocs }) {
         .then((res) => res.json())
         .then((d) => {
           setDocs(d.message);
-          console.log(d.message);
         });
     });
   }, [studentId]);
@@ -48,17 +48,13 @@ function Documents({ studentName, studentId, setOpenDocs }) {
           <h2>מסמכים - {studentName}</h2>
           <button onClick={() => setOpenAddForm(true)}>+ הוספת מסמך</button>
         </header>
+
         {docs.length > 0 ? (
           docs.map((doc, i) => (
-            <div key={i} className={classes.doc}>
-              <h3>{doc.description}</h3>
-              <a target="_blank" rel="noreferrer" href={doc.URL}>
-                <span className="material-symbols-outlined">open_in_new</span>
-              </a>
-            </div>
+            <DocumentCard fetchData={fetchData} doc={doc} key={i} />
           ))
         ) : (
-          <CircularProgress />
+          <LinearProgress />
         )}
 
         {openAddForm && (

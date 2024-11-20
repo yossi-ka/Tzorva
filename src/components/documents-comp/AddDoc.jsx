@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from "../../data-base/config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { CircularProgress } from "@mui/material";
 
 function AddDoc({ studentId, setOpenAddForm, fetchData }) {
   const [file, setFile] = useState(null);
@@ -27,7 +28,6 @@ function AddDoc({ studentId, setOpenAddForm, fetchData }) {
         if (storageRef && file) {
           const snapshot = await uploadBytes(storageRef, file);
           const downloadURL = await getDownloadURL(snapshot.ref);
-          setUploading(false);
           console.log("File uploaded:", downloadURL);
 
           await fetch(
@@ -45,7 +45,11 @@ function AddDoc({ studentId, setOpenAddForm, fetchData }) {
                 description: decriptionRef.current.value,
               }),
             }
-          ).then(() => fetchData());
+          ).then(() => {
+            fetchData();
+            setUploading(false);
+            setOpenAddForm(false);
+          });
         } else {
           console.error("Error: Invalid file or storage reference");
         }
@@ -88,7 +92,7 @@ function AddDoc({ studentId, setOpenAddForm, fetchData }) {
         />
 
         <button disabled={uploading || !file}>
-          {uploading ? "מוסיף..." : "הוסף"}
+          {uploading ? <CircularProgress size={12} /> : "הוסף"}
         </button>
       </form>
     </div>

@@ -36,6 +36,7 @@ function AddStudentBtn({ getstud }) {
         city_of_school: city,
         class_school: clas,
         urgency_level: urgency,
+        documents: [],
       };
       setShowForm(false);
 

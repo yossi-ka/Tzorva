@@ -103,6 +103,7 @@
   display: flex;
   flex-direction: column;
   z-index: 101;
+  overflow: auto;
 }
 
 .documentsArea header {
@@ -134,6 +135,8 @@
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 10px;
+  color: #3498db;
+  text-decoration: none;
 }
 
 .doc h3 {
@@ -143,6 +146,89 @@
   text-overflow: ellipsis;
 }
 
-.doc a {
-  color: #3498db;
+.doc .options span {
+  cursor: pointer;
+  opacity: 0.5;
+  padding: 0.5rem;
+  transition: all 0.6s ease;
+}
+
+.doc .options span:hover {
+  border-radius: 50%;
+  background-color: #fff;
+  opacity: 1;
+}
+
+.deleteDocArea {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.deleteDocArea .overlayDelete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.deleteDocArea .deleteDoc {
+  position: relative;
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+  z-index: 1001;
+}
+
+.deleteDocArea .deleteDoc h1 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  direction: rtl;
+}
+
+.deleteDocArea .deleteDocBtns {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.deleteDocArea .deleteDocBtns button {
+  flex: 1;
+  max-width: 4rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin: 0 20px;
+}
+
+.deleteDocArea .deleteDocBtns button:first-child {
+  background-color: #dc3545;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.deleteDocArea .deleteDocBtns button:last-child {
+  background-color: #6c757d;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.deleteDocArea .deleteDocBtns button:hover {
+  opacity: 0.9;
 }
