@@ -5,7 +5,8 @@ import { UserContext } from "../../App";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import SnackbarMUI from "../../services/SnackbarMUI";
 
-function EditTreatment({ intervention, fetchData }) {
+function EditTreatment({ treatment, fetchData }) {
+  
   const { user } = useContext(UserContext);
   const manager =
     user.job_title === "מנהל ארגון" ||
@@ -29,23 +30,23 @@ function EditTreatment({ intervention, fetchData }) {
       const idToken = await u.getIdToken();
 
       const formData = {};
-      if (manager && tutorRef.current.value !== intervention.tutor_name) {
+      if (manager && tutorRef.current.value !== treatment.tutor_name) {
         formData.tutor_name = tutorRef.current.value;
       }
 
-      if (studentRef.current.value !== intervention.student_name) {
+      if (studentRef.current.value !== treatment.student_name) {
         formData.student_name = studentRef.current.value;
       }
 
-      if (placeRef.current.value !== intervention.place) {
+      if (placeRef.current.value !== treatment.place) {
         formData.place = placeRef.current.value;
       }
 
-      if (titleRef.current.value !== intervention.intervention_title) {
-        formData.intervention_title = titleRef.current.value;
+      if (titleRef.current.value !== treatment.intervention_title) {
+        formData.treatment_title = titleRef.current.value;
       }
       if (
-        descriptionRef.current.value !== intervention.intervention_description
+        descriptionRef.current.value !== treatment.intervention_description
       ) {
         formData.intervention_description = descriptionRef.current.value;
       }
@@ -60,7 +61,7 @@ function EditTreatment({ intervention, fetchData }) {
             authorization: `Bearer ${idToken}`,
             uid: u.uid,
           },
-          body: JSON.stringify({ ...formData, id: intervention.id }),
+          body: JSON.stringify({ ...formData, id: treatment.id }),
         }
       ).then((res) => {
         if (res.ok) {
@@ -100,7 +101,7 @@ function EditTreatment({ intervention, fetchData }) {
                 type="text"
                 id="date"
                 name="date"
-                defaultValue={formatDateToHebrew(intervention.time)}
+                defaultValue={formatDateToHebrew(treatment.time)}
                 disabled
               />
               {manager && (
@@ -110,7 +111,7 @@ function EditTreatment({ intervention, fetchData }) {
                     type="text"
                     id="tutor"
                     name="tutor"
-                    defaultValue={intervention.tutor_name}
+                    defaultValue={treatment.tutor_name}
                     ref={tutorRef}
                     disabled
                   />
@@ -122,7 +123,7 @@ function EditTreatment({ intervention, fetchData }) {
                 type="text"
                 id="student"
                 name="student"
-                defaultValue={intervention.student_name}
+                defaultValue={treatment.student_name}
                 disabled
               />
               <label htmlFor="place">מקום מפגש:</label>
@@ -131,7 +132,7 @@ function EditTreatment({ intervention, fetchData }) {
                 type="text"
                 id="place"
                 name="place"
-                defaultValue={intervention.place}
+                defaultValue={treatment.place}
               />
               <label htmlFor="title">נושא טיפול:</label>
               <input
@@ -139,14 +140,14 @@ function EditTreatment({ intervention, fetchData }) {
                 type="text"
                 id="title"
                 name="title"
-                defaultValue={intervention.intervention_title}
+                defaultValue={treatment.intervention_title}
               />
               <label htmlFor="description">תיאור:</label>
               <textarea
                 ref={descriptionRef}
                 id="description"
                 name="description"
-                defaultValue={intervention.intervention_description}
+                defaultValue={treatment.intervention_description}
               />
 
               <div className={classes.lastBtns}>
