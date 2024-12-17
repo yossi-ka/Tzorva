@@ -94,32 +94,32 @@ function AddStudentBtn({ getstud }) {
               <input
                 ref={studentIdRef}
                 type="text"
-                placeholder="תעודת זהות"
+                placeholder="* תעודת זהות"
                 maxLength="9"
                 required
               />
               <input
                 ref={firstNameRef}
                 type="text"
-                placeholder="שם פרטי"
+                placeholder="* שם פרטי"
                 required
               />
               <input
                 ref={lastNameRef}
                 type="text"
-                placeholder="שם משפחה"
+                placeholder="* שם משפחה"
                 required
               />
               <input
                 ref={fatherNameRef}
                 type="text"
-                placeholder="שם האב"
+                placeholder="* שם האב"
                 required
               />
               <input
                 ref={fatherPhoneRef}
                 type="text"
-                placeholder="טלפון האב"
+                placeholder="* טלפון האב"
                 required
               />
               <Box className={classes.box}>

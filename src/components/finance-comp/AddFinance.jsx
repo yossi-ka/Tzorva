@@ -88,7 +88,7 @@ function AddFinance({ fetchData }) {
               defaultValue=""
             >
               <option value="" disabled>
-                -- בחר אפשרות --
+                * -- בחר אפשרות --
               </option>
               <option value="הכנסה">הכנסה</option>
               <option value="הוצאה">הוצאה</option>
@@ -98,16 +98,17 @@ function AddFinance({ fetchData }) {
             ) : (
               type === "הוצאה" && <ExpensesOptions categoryRef={categoryRef} />
             )}
-            <label htmlFor="amount">סכום</label>
+            <label htmlFor="amount">* סכום</label>
             <input
               ref={amountRef}
               type="number"
               name="amount"
               id="amount"
+              min={0}
               required
             />
 
-            <label htmlFor="details">פרטים נוספים</label>
+            <label htmlFor="details">* פרטים נוספים</label>
             <textarea
               ref={detailsRef}
               type="text"
@@ -134,7 +135,7 @@ function RevenuesOptions({ categoryRef }) {
       defaultValue=""
     >
       <option value="" disabled>
-        -- בחר אפשרות --
+        * -- בחר אפשרות --
       </option>
 
       {revenuesArr.map((item, index) => (
@@ -156,7 +157,7 @@ function ExpensesOptions({ categoryRef }) {
       defaultValue=""
     >
       <option value="" disabled>
-        -- בחר אפשרות --
+        * -- בחר אפשרות --
       </option>
       {expensesArr.map((item, index) => (
         <option key={index} value={item}>

@@ -50,7 +50,7 @@ function ChangePassword({ setChangePassword, handleAlert }) {
       ></div>
       <form onSubmit={handleSubmit} className={classes.formUpdatePassword}>
         <h1 className={classes.title}>שינוי סיסמה</h1>
-        <label htmlFor="oldPassword">הזן סיסמה ישנה:</label>
+        <label htmlFor="oldPassword">* הזן סיסמה ישנה:</label>
         <input
           ref={oldPasswordRef}
           required
@@ -59,7 +59,7 @@ function ChangePassword({ setChangePassword, handleAlert }) {
           name="oldPassword"
         />
         {showError && <p className={classes.error}>הסיסמה אינה תקינה</p>}
-        <label htmlFor="newPassword">הזן סיסמה חדשה: (מינימום 6 תווים)</label>
+        <label htmlFor="newPassword">* הזן סיסמה חדשה: (מינימום 6 תווים)</label>
         <input
           minLength={6}
           ref={newPasswordRef}
@@ -69,7 +69,7 @@ function ChangePassword({ setChangePassword, handleAlert }) {
           name="newPassword"
         />
         <label htmlFor="confirmPassword">
-          אימות סיסמה חדשה: (מינימום 6 תווים)
+          * אימות סיסמה חדשה: (מינימום 6 תווים)
         </label>
         <input
           minLength={6}

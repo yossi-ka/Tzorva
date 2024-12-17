@@ -124,7 +124,7 @@ function DeleteStudent({ student, setShowDeleteForm, getstud, setAlert }) {
           disabled
         />
         <label className={classes.label} htmlFor="reason">
-          סטטוס:
+          * סטטוס:
         </label>
         <select
           ref={reasonRef}
@@ -143,7 +143,7 @@ function DeleteStudent({ student, setShowDeleteForm, getstud, setAlert }) {
           </option>
         </select>
         <label className={classes.label} htmlFor="textarea">
-          סיכום קצר:
+          * סיכום קצר:
         </label>
         <textarea
           ref={textareaRef}
@@ -155,7 +155,7 @@ function DeleteStudent({ student, setShowDeleteForm, getstud, setAlert }) {
           rows={5}
         ></textarea>
         <label className={classes.label} htmlFor="amount">
-          סך הוצאות עבור תלמיד זה:
+          * סך הוצאות עבור תלמיד זה:
         </label>
         <input
           ref={amountRef}

@@ -150,7 +150,7 @@ function AddTreatment({ fetchData }) {
             className={classes.addTreatmentForm}
           >
             <h1 className={classes.title}>הוספת טיפול</h1>
-            <label htmlFor="date">תאריך טיפול:</label>
+            <label htmlFor="date">* תאריך טיפול:</label>
             <input type="date" id="date" name="date" ref={dateRef} required />
             {manager && (
               <>
@@ -162,7 +162,7 @@ function AddTreatment({ fetchData }) {
                   id="tutor"
                   ref={tutorRef}
                 >
-                  <option>-- בחר מטפל --</option>
+                  <option>* -- בחר מטפל --</option>
                   {tutorsArr?.map((tutor, index) => (
                     <option key={index} value={tutor.name}>
                       {tutor.name}
@@ -171,7 +171,7 @@ function AddTreatment({ fetchData }) {
                 </select>
               </>
             )}
-            <label htmlFor="student">תלמיד:</label>
+            <label htmlFor="student">* תלמיד:</label>
             <select
               required
               defaultValue=""
@@ -180,7 +180,7 @@ function AddTreatment({ fetchData }) {
               ref={studentRef}
             >
               <option value="" disabled>
-                -- בחר תלמיד --
+                * -- בחר תלמיד --
               </option>
               {studentsArr.map((student, index) => (
                 <option key={index} value={student.name}>
@@ -188,7 +188,7 @@ function AddTreatment({ fetchData }) {
                 </option>
               ))}
             </select>
-            <label htmlFor="place">מקום מפגש:</label>
+            <label htmlFor="place">* מקום מפגש:</label>
             <input
               type="text"
               id="place"
@@ -196,7 +196,7 @@ function AddTreatment({ fetchData }) {
               ref={placeRef}
               required
             />
-            <label htmlFor="title">נושא טיפול:</label>
+            <label htmlFor="title">* נושא טיפול:</label>
             <input
               type="text"
               id="title"
@@ -204,7 +204,7 @@ function AddTreatment({ fetchData }) {
               ref={titleRef}
               required
             />
-            <label htmlFor="description">פרטי התקדמות:</label>
+            <label htmlFor="description">* פרטי התקדמות:</label>
             <textarea
               type="text"
               id="description"

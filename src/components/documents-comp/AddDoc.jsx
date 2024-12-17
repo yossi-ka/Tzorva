@@ -75,7 +75,7 @@ function AddDoc({ studentId, setOpenAddForm, fetchData }) {
       ></div>
       <form onSubmit={uploadFile} className={classes.addDocForm}>
         <h2>הוספת מסמך</h2>
-        <label htmlFor="description">תיאור המסמך:</label>
+        <label htmlFor="description">* תיאור המסמך:</label>
         <input
           required
           type="text"

@@ -98,7 +98,7 @@ function AddUserBtn({ getUsers }) {
                 className={classes.input}
                 ref={userIdRef}
                 type="text"
-                placeholder="תעודת זהות"
+                placeholder="* תעודת זהות"
                 maxLength={9}
                 minLength={9}
                 required
@@ -107,35 +107,35 @@ function AddUserBtn({ getUsers }) {
                 ref={firstNameRef}
                 className={classes.input}
                 type="text"
-                placeholder="שם פרטי"
+                placeholder="* שם פרטי"
                 required
               />
               <input
                 className={classes.input}
                 ref={lastNameRef}
                 type="text"
-                placeholder="שם משפחה"
+                placeholder="* שם משפחה"
                 required
               />
               <input
                 className={classes.input}
                 ref={cityRef}
                 type="text"
-                placeholder="עיר"
+                placeholder="* עיר"
                 required
               />
               <input
                 className={classes.input}
                 ref={phoneRef}
                 type="text"
-                placeholder="טלפון"
+                placeholder="* טלפון"
                 required
               />
               <input
                 className={classes.input}
                 ref={emailRef}
                 type="email"
-                placeholder={`דוא"ל`}
+                placeholder={`* דוא"ל`}
                 required
               />
               <select
@@ -146,7 +146,7 @@ function AddUserBtn({ getUsers }) {
                 id="role"
               >
                 <option value="" disabled>
-                  -- בחר אפשרות --
+                  * -- בחר אפשרות --
                 </option>
                 <option value="admin">מנהל ת"ת</option>
                 <option value="user">יועץ</option>

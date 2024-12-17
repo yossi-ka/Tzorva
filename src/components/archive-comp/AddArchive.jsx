@@ -84,7 +84,7 @@ function AddArchive({ fetchData }) {
           ></div>
           <form onSubmit={handleAddArchive} className={classes.addArchiveForm}>
             <h1 className={classes.h1}>הוספת תיעוד באופן ידני</h1>
-            <label htmlFor="student_id">תעודת זהות</label>
+            <label htmlFor="student_id">* תעודת זהות</label>
             <input
               ref={idRef}
               type="text"
@@ -94,7 +94,7 @@ function AddArchive({ fetchData }) {
               required
             />
 
-            <label htmlFor="full_name">שם מלא</label>
+            <label htmlFor="full_name">* שם מלא</label>
             <input
               ref={nameRef}
               type="text"
@@ -103,7 +103,7 @@ function AddArchive({ fetchData }) {
               required
             />
 
-            <label htmlFor="fathers_name">שם האב</label>
+            <label htmlFor="fathers_name">* שם האב</label>
             <input
               ref={fathersNameRef}
               type="text"
@@ -112,16 +112,17 @@ function AddArchive({ fetchData }) {
               required
             />
 
-            <label htmlFor="invested_amount">סכום כולל</label>
+            <label htmlFor="invested_amount">* סכום כולל</label>
             <input
               ref={amountRef}
               type="number"
               name="invested_amount"
               id="invested_amount"
+              min={0}
               required
             />
 
-            <label htmlFor="type">סטטוס טיפול</label>
+            <label htmlFor="type">* סטטוס טיפול</label>
             <select
               ref={titleRef}
               name="type"
@@ -139,7 +140,7 @@ function AddArchive({ fetchData }) {
               ))}
             </select>
 
-            <label htmlFor="body">תיאור</label>
+            <label htmlFor="body">* תיאור</label>
             <textarea
               ref={bodyRef}
               type="text"
