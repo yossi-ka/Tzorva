@@ -8,6 +8,7 @@ import AddStudentBtn from "./students-comp/AddStudentBtn";
 import SearchField from "../services/SearchField";
 import SortStudents from "./students-comp/SortStudents";
 import { CircularProgress } from "@mui/material";
+import FilterStudents from "./students-comp/FilterStudents";
 
 function Students() {
   const { user } = useContext(UserContext);
@@ -74,6 +75,10 @@ function Students() {
           itemsToShow={studentsToShow}
           setItemsToShow={setStudentsToShow}
           placeholder="חיפוש תלמיד"
+        />
+        <FilterStudents
+          studentsToShow={studentsToShow}
+          setStudentsToShow={setStudentsToShow}
         />
         <SortStudents
           allStudents={students}
