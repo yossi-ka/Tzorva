@@ -197,6 +197,7 @@ function Messages() {
   }, [user, currentCoworker]);
 
   useEffect(() => {
+    document.title = "צורבא - הודעות";
     setLoadingCoworkers(true);
   }, []);
 
